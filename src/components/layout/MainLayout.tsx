@@ -4,11 +4,11 @@ import Footer from "./Footer"
 
 const MainLayout = () => {
     return (
-        <>
+        <div className="bg-background min-h-screen">
             <Navbar />
             <Outlet />
             <Footer />
-        </>
+        </div>
     )
 }
 
