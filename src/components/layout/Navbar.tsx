@@ -1,4 +1,5 @@
 import { Heart,Search,User } from "lucide-react"
+import MobileNav from "../MobileNav"
 
 
 
@@ -56,8 +57,14 @@ const Navbar: React.FC = () => {
 
             <div className="bg-primary-foreground   text-white ">
 
-                <div className="wrapper flex" >
-                    <nav className="header-links contents font-semibold text-base lg:text-lg">
+                <div className="wrapper flex justify-between" >
+
+                    {/* for small device */}
+                    <nav className="sm:hidden" >
+                        <MobileNav />
+                    </nav>
+
+                    <nav className="hidden sm:contents font-semibold text-base  lg:text-lg">
                         <ul className="flex items-center ml-4 xl:ml-8 mr-auto">
                             {['Home','Services','About','Projects','Skills','Contacts','Pages'].map((link,index) => (
                                 <li className={`p-3 xl:p-4 ${index === 0 ? 'active' : ''}`} key={link}>
