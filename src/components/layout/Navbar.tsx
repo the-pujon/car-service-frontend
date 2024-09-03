@@ -35,9 +35,9 @@ const Navbar: React.FC = () => {
                     <nav className="contents">
                         <ul className="ml-4 xl:w-48 flex items-center justify-end">
                             <li className="ml-2 lg:ml-4 relative inline-block">
-                                <a href="">
-                                    <User size={50} className=" p-2 text-gray-500" />
-                                </a>
+                                {/*<a href="#user">*/}
+                                <User size={50} className=" p-2 text-gray-500" />
+                                {/*</a>*/}
                             </li>
                             <li className="ml-2 lg:ml-4 relative inline-block">
                                 <a href="">

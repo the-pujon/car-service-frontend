@@ -54,12 +54,12 @@ const Hero = () => {
                             Protect your car and the planet with our eco-friendly car cleaning services.
                         </h2>
                         <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center justify-center gap-x-6">
-                            <a className="bg-foreground hover:bg-gray-200 hover:text-black text-white font-bold px-4 xl:px-6 py-2 xl:py-3 w-full sm:w-fit" >
+                            <button className="bg-foreground hover:bg-gray-200 hover:text-black text-white font-bold px-4 xl:px-6 py-2 xl:py-3 w-full sm:w-fit" >
                                 <>Book Now</>
-                            </a>
-                            <a className="bg-foreground hover:bg-gray-200 hover:text-black text-white font-bold px-4 xl:px-6 py-2 xl:py-3 w-full sm:w-fit" >
+                            </button>
+                            <button className="bg-foreground hover:bg-gray-200 hover:text-black text-white font-bold px-4 xl:px-6 py-2 xl:py-3 w-full sm:w-fit" >
                                 <>Check our services</>
-                            </a>
+                            </button>
                         </div>
                     </div>
                     <div className="relative mx-auto mt-10 max-w-7xl">
@@ -70,6 +70,7 @@ const Hero = () => {
                             navigation={false}
                             pagination={false}
                             autoplay={true}
+                            grabCursor={true}
                             modules={[EffectFade,Navigation,Pagination,Autoplay]}
                             className="mySwiper border border-white rounded-2xl "
                         >
@@ -81,16 +82,6 @@ const Hero = () => {
                                     </SwiperSlide>
                                 ))
                             }
-                            {/*
-                            <SwiperSlide>
-                                <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-                            </SwiperSlide>
-                            <SwiperSlide>
-                                <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                            </SwiperSlide>
-                            <SwiperSlide>
-                                <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-                            </SwiperSlide>*/}
                         </Swiper>
                     </div>
                 </div >
