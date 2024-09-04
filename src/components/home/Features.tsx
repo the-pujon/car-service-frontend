@@ -5,7 +5,7 @@ import featureIcon4 from "../../assets/feature/Icon-4.png"
 
 const Features = () => {
     return (
-        <div className="wrapper grid grid-cols-4 divide-white place-items-center divide-x border-y-[1px] border-white">
+        <div className="wrapper py-10 grid grid-cols-4 divide-white place-items-center divide-x border-y-[1px] border-white">
             <div className="flex flex-col text-xl text-white  justify-center items-start py-6 px-9 font-semibold w-full">
                 <img src={featureIcon1} />
                 Contactless Washing

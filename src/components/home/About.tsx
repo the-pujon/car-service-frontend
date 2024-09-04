@@ -5,18 +5,18 @@ import { Button } from "../ui/button";
 
 const About = () => {
     return (
-        <div className="wrapper pt-20">
-            <div className="flex gap-9">
-                <div className="relative w-10/12">
-                    <img src={hero1} alt="" className="w-[44rem]" />
+        <div className="wrapper py-32">
+            <div className="flex gap-9 justify-center">
+                <div className="relative w-11/12">
+                    <img src={hero1} alt="" className="" />
                     <img
                         src={hero2}
                         alt=""
-                        className="w-72 absolute -right-4 border-[12px] border-background -bottom-4"
+                        className="w-72 absolute -right-10 border-[12px] border-background -bottom-4"
                     />
                 </div>
                 <div className="flex flex-col gap-5">
-                    <h2 className="text-3xl font-light  ">Who we are?</h2>
+                    <p className='tracking-widest'>WHO WE ARE?</p>
                     <h1 className="text-5xl font-bold">
                         Professional Car Wash and Detailing Center
                     </h1>
