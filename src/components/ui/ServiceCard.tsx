@@ -1,4 +1,4 @@
-import { ArrowRightIcon,MoveRight,SettingsIcon } from "lucide-react";
+import { MoveRight,SettingsIcon } from "lucide-react";
 import { Card,CardContent,CardFooter } from "./card";
 import { Button } from "./button";
 
