@@ -7,6 +7,7 @@ import { Textarea } from '../ui/textarea'
 import feedback from "@/assets/icons/Feedback-rafiki.png"
 
 type Inputs = {
+    name: string
     email: string
     message: string
     rating: number
@@ -22,6 +23,7 @@ const Review = () => {
     } = useForm<Inputs>({
         mode: 'onBlur',
         defaultValues: {
+            name: '',
             email: '',
             message: '',
             rating: 0,
@@ -64,6 +66,8 @@ const Review = () => {
                             />
                             {errors.rating && <div>Rating is required.</div>}
                         </div>
+                        <Input required type="name" placeholder="Name" id="name" {...register('name',{ required: true })} />
+                        {errors.name && <div>Name is required.</div>}
                         <Input required type="email" placeholder="Email" id="name" {...register('email',{ required: true })} />
                         {errors.email && <div>Email is required.</div>}
                         <Textarea rows={8} placeholder="Type your message here." id="message" {...register('message',{ required: true })} />
