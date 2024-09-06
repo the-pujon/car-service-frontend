@@ -43,3 +43,7 @@
 .wrapper {
   @apply max-w-screen-2xl mx-auto px-2 md:px-5;
 }
+
+.button {
+  @apply bg-foreground text-white hover:text-black px-5 tracking-widest font-bold uppercase;
+}

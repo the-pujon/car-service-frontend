@@ -1,4 +1,4 @@
-import { Rating } from '@smastrom/react-rating'
+import { Rating,ThinStar } from '@smastrom/react-rating'
 import { useForm,SubmitHandler,Controller } from "react-hook-form"
 import '@smastrom/react-rating/style.css'
 import { Button } from '../ui/button'
@@ -30,9 +30,22 @@ const Review = () => {
         },
     });
 
+    //form submitting
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         alert(JSON.stringify(data,undefined,2));
     }
+
+
+    const myStyles = {
+        itemShapes: ThinStar,
+        activeFillColor: '#0435BE',
+        //inactiveFillColor: '#fbf1a9',
+
+        itemStrokeWidth: 1,
+        inactiveStrokeColor: '#0435BE',
+        activeStrokeColor: '#0435BE'
+    }
+
     return (
         <div className='wrapper py-32'>
             <div className='flex items-center'>
@@ -61,6 +74,7 @@ const Review = () => {
                                         onChange={onChange}
                                         visibleLabelId="rating_label"
                                         onBlur={onBlur}
+                                        itemStyles={myStyles}
                                     />
                                 )}
                             />
@@ -75,7 +89,7 @@ const Review = () => {
 
 
 
-                        <Button type="submit" className='bg-foreground hover:bg-gray-200 hover:text-black text-white font-bold'>
+                        <Button type="submit" className='button'>
                             Submit review
                         </Button>
                     </form>

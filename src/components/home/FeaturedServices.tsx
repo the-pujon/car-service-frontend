@@ -4,7 +4,7 @@ import ServiceCard from '../ui/ServiceCard'
 
 const FeaturedServices = () => {
     return (
-        <div className="wrapper pt-10">
+        <div className="wrapper pt-32">
 
             <div className='flex justify-between items-end pb-10'>
                 <div className='w-1/2 space-y-3'>
