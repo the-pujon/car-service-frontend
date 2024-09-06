@@ -2,6 +2,7 @@ import React from 'react'
 import TestimonialCard from '../ui/TestimonialCard'
 import { Button } from '../ui/button'
 import { Link } from 'react-router-dom'
+import { Star } from 'lucide-react'
 
 const Testimonials = () => {
     return (
@@ -27,16 +28,18 @@ const Testimonials = () => {
                             </p>
                         </div>
 
-                        <Button
-                            //variant='link'
-                            asChild
-                            //className="mt-6 inline-flex shrink-0 items-center gap-2 rounded-full border border-rose-600 px-5 py-3 text-rose-600 transition hover:bg-rose-600 hover:text-white md:mt-0"
+                        <div className='flex flex-col items-end'>
+                            <div className='flex items-center py-4'>
+                                <Star className='text-foreground' size={100} /> <p className='text-5xl font-bold'>4.5 <sub className='font-normal text-lg tracking-wider'>(23 customers)</sub> </p>
+                            </div>
 
-                            className='bg-foreground hover:bg-gray-200 hover:text-black text-white font-bold'
-                        >
-                            <Link to='#' className="font-medium"> Read all reviews </Link>
-
-                        </Button>
+                            <Button
+                                asChild
+                                className='bg-foreground hover:bg-gray-200 hover:text-black text-white font-bold'
+                            >
+                                <Link to='#' className="font-medium"> Check all ratings and reviews </Link>
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
