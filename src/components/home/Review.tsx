@@ -55,7 +55,7 @@ const Review = () => {
                     <p className='text-sm pt-2 text-gray-300'>
                         Give us your valuable ratings and tell us our mistakes or how can we improve
                     </p>
-                    <img src={feedback} className='w-[35rem]' alt="" />
+                    <img src={feedback} className='w-[35rem] z-20' alt="" />
                 </div>
                 <div className='w-1/2'>
                     <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6'>
@@ -80,11 +80,11 @@ const Review = () => {
                             />
                             {errors.rating && <div>Rating is required.</div>}
                         </div>
-                        <Input required type="name" placeholder="Name" id="name" {...register('name',{ required: true })} />
+                        <Input className='backdrop-blur-sm' required type="name" placeholder="Name" id="name" {...register('name',{ required: true })} />
                         {errors.name && <div>Name is required.</div>}
-                        <Input required type="email" placeholder="Email" id="name" {...register('email',{ required: true })} />
+                        <Input className='backdrop-blur-sm' required type="email" placeholder="Email" id="name" {...register('email',{ required: true })} />
                         {errors.email && <div>Email is required.</div>}
-                        <Textarea rows={8} placeholder="Type your message here." id="message" {...register('message',{ required: true })} />
+                        <Textarea className='backdrop-blur-sm' rows={8} placeholder="Type your message here." id="message" {...register('message',{ required: true })} />
 
 
 
