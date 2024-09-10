@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 
 const About = () => {
     return (
-        <div className="wrapper py-32">
+        <div className="wrapper py-32 z-30">
             <div className="flex gap-9 justify-center">
                 <div className="relative w-11/12">
                     <img src={hero1} alt="" className="" />

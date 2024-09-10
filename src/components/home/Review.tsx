@@ -89,7 +89,7 @@ const Review = () => {
 
 
 
-                        <Button type="submit" className='button'>
+                        <Button type="submit" className='button hover:bg-white'>
                             Submit review
                         </Button>
                     </form>
