@@ -6,11 +6,13 @@ import SignIn from "@/pages/Authentication/SignIn";
 import Booking from "@/pages/Booking/Booking";
 import Services from "@/pages/Services/Services";
 import ServiceDetails from "@/pages/ServiceDetails/ServiceDetails";
+import Error from "@/pages/Error/Error";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
+        errorElement: <Error />,
         children: [
             {
                 path: "/",
