@@ -69,7 +69,7 @@ const Navbar: React.FC = () => {
                         <ul className="flex items-center ml-4 xl:ml-8 mr-auto">
                             {['Home','Services','About','Reviews'].map((link,index) => (
                                 //<li className={`p-3 xl:p-4 ${index === 0 ? 'active' : ''}`} key={link}>
-                                <Link to="#" key={index} className="p-3 xl:p-4 -tracking-wider hover:text-foreground transition-colors duration-150">
+                                <Link to={link === 'Home' ? '/' : link.toLowerCase()} key={index} className="p-3 xl:p-4 -tracking-wider hover:text-foreground transition-colors duration-150">
                                     <span>{link}</span>
                                 </Link>
                                 //</li>
