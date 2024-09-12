@@ -7,6 +7,8 @@ import Booking from "@/pages/Booking/Booking";
 import Services from "@/pages/Services/Services";
 import ServiceDetails from "@/pages/ServiceDetails/ServiceDetails";
 import Error from "@/pages/Error/Error";
+import DashboardLayout from "@/pages/Dashboard/DashboardLayout";
+import AdminOverview from "@/pages/Dashboard/Admin/AdminOverview/AdminOverview";
 
 const router = createBrowserRouter([
     {
@@ -42,6 +44,15 @@ const router = createBrowserRouter([
             {
                 path: "signin",
                 element: <SignIn />,
+            }
+        ]
+    },{
+        path: "/dashboard",
+        element: <DashboardLayout />,
+        children: [
+            {
+                path: "",
+                element: <AdminOverview />
             }
         ]
     }

@@ -16,7 +16,7 @@ const Error: React.FC = () => {
                         className="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-foreground group-hover:translate-y-0 group-hover:translate-x-0"
                     ></span>
                     <span className="relative block px-8 py-3 bg-[#1A2238] border border-current">
-                        <>Go Home</> {/* Use Link from react-router-dom */}
+                        <>Go Home</>
                     </span>
                 </Link>
             </button>
