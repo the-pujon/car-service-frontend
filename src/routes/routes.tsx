@@ -9,6 +9,7 @@ import ServiceDetails from "@/pages/ServiceDetails/ServiceDetails";
 import Error from "@/pages/Error/Error";
 import DashboardLayout from "@/pages/Dashboard/DashboardLayout";
 import AdminOverview from "@/pages/Dashboard/Admin/AdminOverview/AdminOverview";
+import ServiceManagement from "@/pages/Dashboard/Admin/ServiceManagement/ServiceManagement";
 
 const router = createBrowserRouter([
     {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
             {
                 path: "",
                 element: <AdminOverview />
+            },
+            {
+                path: 'services',
+                element: <ServiceManagement />
             }
         ]
     }
