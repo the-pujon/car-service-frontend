@@ -5,15 +5,24 @@ import Github from '@/assets/icons/Github';
 import { UserPlus } from 'lucide-react';
 import { SubmitHandler,useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
+import { useSignupMutation } from '@/redux/api/baseApi';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 type Inputs = {
     name: string
     email: string
     password: string
+    phone: number
+    address: string
     //rating: number
 }
 
 const SignUp: React.FC = () => {
+
+    const navigate = useNavigate()
+    const [signup,{ isLoading,isError,isSuccess,error }] = useSignupMutation()
+
 
     const {
         register,
@@ -25,13 +34,28 @@ const SignUp: React.FC = () => {
             name: '',
             email: '',
             password: '',
-            //rating: 0,
+            phone: 0,
+            address: ''
         },
     });
 
     //form submitting
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        alert(JSON.stringify(data,undefined,2));
+        signup(data)
+    }
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+
+    if (isSuccess) {
+        navigate('/auth/signin')
+        toast.success('Account has been created')
+    }
+
+    if (isError) {
+        const apiError = error as { data?: { message?: string } }
+        toast.error(apiError.data?.message || "Something went wrong");
     }
 
 
@@ -75,10 +99,14 @@ const SignUp: React.FC = () => {
                             <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-xs">
                                 <Input className='backdrop-blur-sm text-white' required type="name" placeholder="Name" id="name" {...register('name',{ required: true })} />
                                 {errors.name && <div>Name is required.</div>}
-                                <Input className='backdrop-blur-sm my-2 text-white' required type="email" placeholder="Email" id="name" {...register('email',{ required: true })} />
+                                <Input className='backdrop-blur-sm my-2 text-white' required type="email" placeholder="Email" id="email" {...register('email',{ required: true })} />
                                 {errors.email && <div>Email is required.</div>}
                                 <Input className='backdrop-blur-sm text-white' required type="password" placeholder="Password" id="password" {...register('password',{ required: true })} />
                                 {errors.password && <div>Password is required.</div>}
+                                <Input className='backdrop-blur-sm text-white my-2' required type="tel" placeholder="Phone" id="phone" {...register('phone',{ required: true })} />
+                                {errors.phone && <div>phone is required.</div>}
+                                <Input className='backdrop-blur-sm text-white' required type="text" placeholder="Address" id="address" {...register('address',{ required: true })} />
+                                {errors.address && <div>address is required.</div>}
                                 <Button
                                     className="mt-5 tracking-wide font-semibold bg-foreground text-gray-100 w-full py-4 rounded-lg hover:text-black hover:bg-white transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
                                 >

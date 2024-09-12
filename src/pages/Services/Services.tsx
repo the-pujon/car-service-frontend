@@ -6,6 +6,7 @@ import React,{ useState } from 'react'
 import service1 from '../../assets/Image/Services/Full Services Wash.jpg'
 import { RadioGroup,RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
+import { useGetServicesQuery } from '@/redux/api/baseApi'
 
 const Services: React.FC = () => {
 
@@ -33,6 +34,10 @@ const Services: React.FC = () => {
         // Add any additional logic needed when a radio button is selected
         //alert(value);
     };
+
+
+    const { data,isError,isLoading } = useGetServicesQuery(undefined)
+    console.log(data)
 
 
     return (
