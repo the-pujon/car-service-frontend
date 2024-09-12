@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { useSignupMutation } from '@/redux/api/baseApi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import Loading from '@/components/ui/Loading';
 
 type Inputs = {
     name: string
@@ -44,9 +45,7 @@ const SignUp: React.FC = () => {
         signup(data)
     }
 
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
+
 
     if (isSuccess) {
         navigate('/auth/signin')
@@ -61,7 +60,8 @@ const SignUp: React.FC = () => {
 
 
     return (
-        <div className="min-h-screen bg-background text-gray-900 flex justify-center">
+        <div className="min-h-screen relative bg-background text-gray-900 flex justify-center">
+            {isLoading && <Loading />}
             <div className="max-w-screen-xl m-0 sm:m-10 bg-primary-foreground shadow sm:rounded-lg flex justify-center flex-1">
                 <div className="lg:w-1/2 xl:w-5/12 pt-24">
                     <div>
