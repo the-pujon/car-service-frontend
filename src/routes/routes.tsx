@@ -10,6 +10,7 @@ import Error from "@/pages/Error/Error";
 import DashboardLayout from "@/pages/Dashboard/DashboardLayout";
 import AdminOverview from "@/pages/Dashboard/Admin/AdminOverview/AdminOverview";
 import ServiceManagement from "@/pages/Dashboard/Admin/ServiceManagement/ServiceManagement";
+import SlotManagement from "@/pages/Dashboard/Admin/SlotManagement/SlotManagement";
 
 const router = createBrowserRouter([
     {
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
             {
                 path: 'services',
                 element: <ServiceManagement />
+            },
+            {
+                path: 'slots',
+                element: <SlotManagement />
             }
         ]
     }
