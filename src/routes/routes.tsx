@@ -11,6 +11,7 @@ import DashboardLayout from "@/pages/Dashboard/DashboardLayout";
 import AdminOverview from "@/pages/Dashboard/Admin/AdminOverview/AdminOverview";
 import ServiceManagement from "@/pages/Dashboard/Admin/ServiceManagement/ServiceManagement";
 import SlotManagement from "@/pages/Dashboard/Admin/SlotManagement/SlotManagement";
+import UserManagement from "@/pages/Dashboard/Admin/UserManagement/UserManagement";
 
 const router = createBrowserRouter([
     {
@@ -63,6 +64,11 @@ const router = createBrowserRouter([
             {
                 path: 'slots',
                 element: <SlotManagement />
+            },
+            {
+                path: 'users',
+                element: <UserManagement />
+
             }
         ]
     }
