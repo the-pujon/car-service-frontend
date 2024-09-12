@@ -16,7 +16,6 @@ type Inputs = {
     password: string
     phone: number
     address: string
-    //rating: number
 }
 
 const SignUp: React.FC = () => {
@@ -46,10 +45,9 @@ const SignUp: React.FC = () => {
     }
 
 
-
     if (isSuccess) {
         navigate('/auth/signin')
-        toast.success('Account has been created')
+        toast.success('Account has been created. Please Login now')
     }
 
     if (isError) {
