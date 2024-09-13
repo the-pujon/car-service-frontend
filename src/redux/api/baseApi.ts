@@ -25,7 +25,20 @@ export const baseApi = createApi({
         };
       },
     }),
+
+    //for signin
+    signin: builder.mutation({
+      query: (data) => {
+        //console.log(data);
+        return {
+          url: "/auth/login",
+          method: "POST",
+          body: data,
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetServicesQuery, useSignupMutation } = baseApi;
+export const { useGetServicesQuery, useSignupMutation, useSigninMutation } =
+  baseApi;

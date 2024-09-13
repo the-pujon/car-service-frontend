@@ -5,6 +5,10 @@ import Github from '@/assets/icons/Github';
 import { UserPlus } from 'lucide-react';
 import { SubmitHandler,useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
+import { useSigninMutation } from '@/redux/api/baseApi';
+import { toast } from 'sonner';
+import Loading from '@/components/ui/Loading';
 
 type Inputs = {
     name: string
@@ -14,6 +18,9 @@ type Inputs = {
 }
 
 const SignIn: React.FC = () => {
+
+    const navigate = useNavigate()
+    const [signin,{ data,isLoading,isError,isSuccess,error }] = useSigninMutation()
 
     const {
         register,
@@ -31,13 +38,28 @@ const SignIn: React.FC = () => {
 
     //form submitting
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        alert(JSON.stringify(data,undefined,2));
+        signin(data)
+    }
+
+    if (isSuccess) {
+        //navigate('/auth/signin')
+        localStorage.setItem("access-token",data.token);
+        navigate('/')
+        console.log(data)
+        toast.success('Login successful')
+    }
+
+    if (isError) {
+        console.log(error)
+        const apiError = error as { data?: { message?: string } }
+        toast.error(apiError.data?.message || "Something went wrong");
     }
 
 
 
     return (
-        <div className="min-h-screen bg-background text-gray-900 flex justify-center">
+        <div className="relative min-h-screen bg-background text-gray-900 flex justify-center">
+            {isLoading && <Loading />}
             <div className="max-w-screen-xl m-0 sm:m-10 bg-primary-foreground shadow sm:rounded-lg flex justify-center flex-1">
                 <div className="lg:w-1/2 xl:w-5/12 pt-24">
                     <div>
