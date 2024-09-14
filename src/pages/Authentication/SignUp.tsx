@@ -5,10 +5,10 @@ import Github from '@/assets/icons/Github';
 import { UserPlus } from 'lucide-react';
 import { SubmitHandler,useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
-import { useSignupMutation } from '@/redux/api/baseApi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import Loading from '@/components/ui/Loading';
+import { useSignupMutation } from '@/redux/features/auth/authApi';
 
 type Inputs = {
     name: string

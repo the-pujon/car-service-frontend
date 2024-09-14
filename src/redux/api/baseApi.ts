@@ -13,32 +13,7 @@ export const baseApi = createApi({
         };
       },
     }),
-
-    //for signup
-    signup: builder.mutation({
-      query: (data) => {
-        console.log(data);
-        return {
-          url: "/auth/signup",
-          method: "POST",
-          body: data,
-        };
-      },
-    }),
-
-    //for signin
-    signin: builder.mutation({
-      query: (data) => {
-        //console.log(data);
-        return {
-          url: "/auth/login",
-          method: "POST",
-          body: data,
-        };
-      },
-    }),
   }),
 });
 
-export const { useGetServicesQuery, useSignupMutation, useSigninMutation } =
-  baseApi;
+export const { useGetServicesQuery } = baseApi;

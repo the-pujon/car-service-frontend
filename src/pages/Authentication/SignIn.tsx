@@ -186,11 +186,11 @@ import { UserPlus } from 'lucide-react';
 import { SubmitHandler,useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
-import { useSigninMutation } from '@/redux/api/baseApi';
 import { toast } from 'sonner';
 import Loading from '@/components/ui/Loading';
 import { useAppDispatch } from '@/redux/hook';
 import { setUser } from '@/redux/features/auth/authSlice';
+import { useSigninMutation } from '@/redux/features/auth/authApi';
 
 type Inputs = {
     email: string;
