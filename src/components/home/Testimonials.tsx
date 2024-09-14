@@ -3,8 +3,18 @@ import TestimonialCard from '../ui/TestimonialCard'
 import { Button } from '../ui/button'
 import { Link } from 'react-router-dom'
 import { Star } from 'lucide-react'
+import { useAppSelector } from '@/redux/hook'
+import { useCurrentToken } from '@/redux/features/auth/authSlice'
+import { isTokenExpired } from '@/utils/isTokenExpired'
 
 const Testimonials = () => {
+
+    const token = useAppSelector(useCurrentToken)
+
+    const verifiedToken = isTokenExpired(token)
+
+    console.log(verifiedToken)
+
     return (
         <div>
             <section className="wrapper pt-32">
