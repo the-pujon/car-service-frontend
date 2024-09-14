@@ -6,7 +6,7 @@ import React,{ useState } from 'react'
 import service1 from '../../assets/Image/Services/Full Services Wash.jpg'
 import { RadioGroup,RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
-import { useGetServicesQuery } from '@/redux/api/baseApi'
+import { useGetServicesQuery } from '@/redux/features/service/serviceApi'
 
 const Services: React.FC = () => {
 
