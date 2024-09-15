@@ -1,5 +1,6 @@
 import { Logs } from 'lucide-react'
 import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuTrigger } from './ui/dropdown-menu'
+import { Link } from 'react-router-dom'
 
 const MobileNav = () => {
     return (
@@ -10,11 +11,14 @@ const MobileNav = () => {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent className='bg-primary-foreground'>
-                    {['Home','Services','About','Projects','Skills','Contacts','Pages'].map((link,index) => (
-                        <DropdownMenuItem className={`p-3 xl:p-4 ${index === 0 ? 'active' : ''}`} key={link}>
-                            <a href="#">
+                    {["Home","Services","About","Reviews"].map((link,index) => (
+                        <DropdownMenuItem asChild key={index}>
+                            <Link
+                                to={link === "Home" ? "/" : link.toLowerCase()}
+                                className="p-3 xl:p-4 -tracking-wider hover:text-foreground transition-colors duration-150"
+                            >
                                 <span>{link}</span>
-                            </a>
+                            </Link>
                         </DropdownMenuItem>
                     ))}
                 </DropdownMenuContent>

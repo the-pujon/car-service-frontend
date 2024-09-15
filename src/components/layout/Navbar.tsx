@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
                                             <DropdownMenuItem asChild>
-                                                <Link to="/dashboard">Profile</Link>
+                                                <Link to="/dashboard">Dashboard</Link>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
                                                 onClick={() => dispatch(signOut())}
