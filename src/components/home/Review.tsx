@@ -5,6 +5,10 @@ import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import feedback from "@/assets/icons/Feedback-rafiki.png"
+import { useAppSelector } from '@/redux/hook'
+import { isTokenExpired } from '@/utils/isTokenExpired'
+import { useCurrentToken } from '@/redux/features/auth/authSlice'
+import Overlay from './Overlay'
 
 type Inputs = {
     name: string
@@ -30,6 +34,10 @@ const Review = () => {
         },
     });
 
+    const token = useAppSelector(useCurrentToken)
+
+    const expiredToken = isTokenExpired(token)
+
     //form submitting
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         alert(JSON.stringify(data,undefined,2));
@@ -47,7 +55,7 @@ const Review = () => {
     }
 
     return (
-        <div className='wrapper py-32'>
+        <div className='wrapper pb-32'>
             <div className='flex items-center'>
                 <div className='w-full'>
 
@@ -57,8 +65,12 @@ const Review = () => {
                     </p>
                     <img src={feedback} className='w-[35rem] z-20' alt="" />
                 </div>
-                <div className='w-1/2'>
-                    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6'>
+                <div className='w-1/2 relative'>
+                    {
+                        expiredToken && <Overlay title={'Want to give feedback?'} />
+                    }
+
+                    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-5'>
                         <div className='max-w-sm'>
                             {/*<div id="rating_label"></div>*/}
                             <Controller

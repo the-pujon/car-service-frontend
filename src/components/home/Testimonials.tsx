@@ -6,18 +6,22 @@ import { Star } from 'lucide-react'
 import { useAppSelector } from '@/redux/hook'
 import { useCurrentToken } from '@/redux/features/auth/authSlice'
 import { isTokenExpired } from '@/utils/isTokenExpired'
+import Overlay from './Overlay'
 
-const Testimonials = () => {
+const Testimonials: React.FC = () => {
 
     const token = useAppSelector(useCurrentToken)
 
-    const verifiedToken = isTokenExpired(token)
+    const expiredToken = isTokenExpired(token)
 
-    console.log(verifiedToken)
+    console.log(expiredToken)
 
     return (
-        <div>
-            <section className="wrapper pt-32">
+        <div className='relative' >
+            {
+                expiredToken && <Overlay title={'Read trusted reviews from our customers'} />
+            }
+            <section className="wrapper py-32">
                 <div className="mx-auto">
                     <div className="md:flex md:items-end md:justify-between">
                         <div className="max-w-xl">

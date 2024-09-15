@@ -5,10 +5,24 @@ import Features from "@/components/home/Features"
 import Hero from "@/components/home/Hero"
 import Review from "@/components/home/Review"
 import Testimonials from "@/components/home/Testimonials"
+import { useEffect } from "react"
 //import Testimonials from "@/components/home/Testimonials"
 //import Testimonials from './../../components/home/Testimonials';
 
 const Home = () => {
+    useEffect(() => {
+        // Check for hash in URL
+        const hash = window.location.hash;
+
+        if (hash) {
+            // Scroll to the element with the corresponding ID
+            const element = document.querySelector(hash);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    },[]);
+
     return (
         <div>
             <Hero />
@@ -16,7 +30,9 @@ const Home = () => {
             <Features />
             <FeaturedServices />
             <Experience />
-            <Testimonials />
+            <div id="testimonials" >
+                <Testimonials />
+            </div>
             <Review />
 
         </div>

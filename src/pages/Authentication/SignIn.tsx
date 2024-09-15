@@ -38,7 +38,7 @@ const SignIn: React.FC = () => {
             const res = await signin(data).unwrap();
             dispatch(setUser({ user: res.data,token: res.token }));
             toast.success('Successfully Logged in',{ id: toastId,duration: 2000 });
-            navigate('/');
+            navigate('/#testimonials');
 
 
         } catch (err) {
