@@ -11,6 +11,15 @@ const serviceApi = baseApi.injectEndpoints({
         };
       },
     }),
+    addService: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/services",
+          method: "POST",
+          body: data,
+        };
+      },
+    }),
   }),
 });
 
