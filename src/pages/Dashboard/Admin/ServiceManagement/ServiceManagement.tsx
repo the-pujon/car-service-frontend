@@ -27,9 +27,7 @@ const ServiceManagement = () => {
 
     const { data: services,isLoading,isError } = useGetServicesQuery(undefined);
 
-    console.log(services);
 
-    console.log(isLoading,isError);
 
     return (
         <div className="text-white w-full max-w-screen-2xl mx-auto pt-5">
