@@ -76,10 +76,13 @@ const AddService = () => {
                 setValue('image',result.data.url,{ shouldDirty: true });
                 const serviceData = getValues()
 
-
-                addService(serviceData)
-                //toast.success("Service Added Successfully")
-                toast.success('Service Added Successfully',{ id: toastId,duration: 2000 });
+                try {
+                    await addService(serviceData).unwrap();
+                    toast.success('Service Added Successfully',{ id: toastId,duration: 2000 });
+                } catch (serviceError) {
+                    console.error('Error adding service:',serviceError);
+                    toast.error("Failed to add service",{ id: toastId });
+                }
             } else {
                 console.error('Failed to upload image');
                 toast.error("Failed to upload image")

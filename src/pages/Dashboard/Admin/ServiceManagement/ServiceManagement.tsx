@@ -29,21 +29,19 @@ import {
 } from "@/components/ui/table";
 import { useDeleteServiceMutation,useGetServicesQuery } from "@/redux/features/service/serviceApi";
 import { Edit,Trash } from "lucide-react";
+import { toast } from "sonner";
 
 const ServiceManagement = () => {
-    //const [isAddServiceModalOpen,setIsAddServiceModalOpen] = useState(false)
 
-    const { data: services,isLoading,isError } = useGetServicesQuery(undefined);
+    const { data: services,isLoading,isError,error } = useGetServicesQuery(undefined);
     const [deleteService] = useDeleteServiceMutation();
 
-    //console.log(services)
 
-    //const handleDeleteService = async () => {
-    //    if (serviceToDelete) {
-    //        await deleteService(serviceToDelete);
-    //        setServiceToDelete(null); // Reset the serviceToDelete state
-    //    }
-    //};
+    if (isError) {
+        console.error(error);
+        const apiError = error as { data?: { message?: string } };
+        toast.error(apiError.data?.message || "Something went wrong");
+    }
 
 
 
@@ -120,7 +118,10 @@ const ServiceManagement = () => {
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => deleteService(service._id)}>
+                                                    <AlertDialogAction onClick={async () => {
+                                                        await deleteService(service._id)
+                                                        toast.success("Service Deleted")
+                                                    }}>
                                                         Delete
                                                     </AlertDialogAction>
                                                 </AlertDialogFooter>
