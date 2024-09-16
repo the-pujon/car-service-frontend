@@ -25,7 +25,7 @@ const SignIn: React.FC = () => {
     const { register,handleSubmit,formState: { errors } } = useForm<Inputs>({
         mode: 'onBlur',
         defaultValues: {
-            email: 'webcoder@programming-hero.com',
+            email: 'web@programming-hero1.com',
             password: 'ph-password',
         },
     });

@@ -705,6 +705,8 @@ import { Button } from '../ui/button';
 import { Card,CardContent } from '../ui/card';
 import { Clock,DollarSign,Upload,X } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
+import { useAddServiceMutation } from '@/redux/features/service/serviceApi';
+import Loading from '../ui/Loading';
 
 interface Service {
     _id: string;
@@ -719,6 +721,8 @@ const AddService = () => {
     const [imageFile,setImageFile] = useState<File | null>(null);
     const [imagePreview,setImagePreview] = useState<string | null>(null);
     const [isUploading,setIsUploading] = useState(false);
+
+    const [addService,{ isLoading,isError }] = useAddServiceMutation(undefined)
 
     const { register,handleSubmit,reset,setValue,watch,getValues } = useForm<Omit<Service,'_id'>>({
         defaultValues: {
@@ -757,33 +761,40 @@ const AddService = () => {
         const formData = new FormData();
         formData.append('image',imageFile);
 
-        setValue('image',"result.data.url",{ shouldDirty: true });
+        //setValue('image',"result.data.url",{ shouldDirty: true });
 
         //console.log(getValues())
-        const serviceData = getValues()
-        console.log(serviceData)
+
 
         console.log(data)
 
         // Uncomment and replace with your image upload logic
-        // const imgbbAPI = import.meta.env.VITE_IMGBB_API_KEY;
-        // const imgbbURL = import.meta.env.VITE_IMGBB_API_URL;
+        const imgbbAPI = import.meta.env.VITE_IMGBB_API_KEY;
+        const imgbbURL = import.meta.env.VITE_IMGBB_API_URL;
 
         try {
-            // const response = await fetch(`${imgbbURL}?key=${imgbbAPI}`, {
-            //     method: 'POST',
-            //     body: formData,
-            // });
+            const response = await fetch(`${imgbbURL}?key=${imgbbAPI}`,{
+                method: 'POST',
+                body: formData,
+            });
 
-            // const result = await response.json();
+            const result = await response.json();
 
-            // if (result.success) {
-            //     setValue('image', result.data.url, { shouldDirty: true });
-            // } else {
-            //     console.error('Failed to upload image');
-            // }
+            if (result.success) {
+                setValue('image',result.data.url,{ shouldDirty: true });
+                const serviceData = getValues()
+                //console.log(serviceData)
 
-            console.log('Service to be added:',data);
+
+
+                addService(serviceData)
+
+
+            } else {
+                console.error('Failed to upload image');
+            }
+
+            //console.log('Service to be added:',data);
 
             // Reset the form fields
             reset();
@@ -797,12 +808,16 @@ const AddService = () => {
     };
 
     return (
-        <DialogContent className="backdrop-blur-md w-full max-w-[60rem] text-white">
+        <DialogContent className="backdrop-blur-md w-full max-w-[60rem] text-white ">
+
             <DialogHeader>
                 <DialogTitle>Add New Service</DialogTitle>
                 <DialogDescription>Enter the details for the new service.</DialogDescription>
             </DialogHeader>
-            <div className="w-full max-w-4xl mx-auto p-4 bg-background">
+            <div className="w-full max-w-4xl mx-auto p-4 bg-background relative">
+                {
+                    isLoading && <Loading />
+                }
                 <Card className="border-none shadow-lg">
                     <CardContent>
                         <div className="grid md:grid-cols-2 gap-6">

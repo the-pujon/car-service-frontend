@@ -11,6 +11,7 @@ import {
 
     DialogTrigger,
 } from "@/components/ui/dialog";
+import Loading from "@/components/ui/Loading";
 import {
     Table,
     TableBody,
@@ -27,10 +28,15 @@ const ServiceManagement = () => {
 
     const { data: services,isLoading,isError } = useGetServicesQuery(undefined);
 
+    console.log(services)
+
 
 
     return (
-        <div className="text-white w-full max-w-screen-2xl mx-auto pt-5">
+        <div className="text-white w-full max-w-screen-2xl mx-auto pt-5 h-[80vh] relative">
+            {
+                isLoading && <Loading />
+            }
             <div className="flex justify-between gap-2">
                 <div className="flex flex-col gap-2">
                     <h2 className="text-4xl font-bold">Service Management</h2>
