@@ -1,6 +1,13 @@
 import AddService from "@/components/Dashboard/AddService";
 import {
     AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
@@ -20,15 +27,23 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useGetServicesQuery } from "@/redux/features/service/serviceApi";
+import { useDeleteServiceMutation,useGetServicesQuery } from "@/redux/features/service/serviceApi";
 import { Edit,Trash } from "lucide-react";
 
 const ServiceManagement = () => {
     //const [isAddServiceModalOpen,setIsAddServiceModalOpen] = useState(false)
 
     const { data: services,isLoading,isError } = useGetServicesQuery(undefined);
+    const [deleteService] = useDeleteServiceMutation();
 
-    console.log(services)
+    //console.log(services)
+
+    //const handleDeleteService = async () => {
+    //    if (serviceToDelete) {
+    //        await deleteService(serviceToDelete);
+    //        setServiceToDelete(null); // Reset the serviceToDelete state
+    //    }
+    //};
 
 
 
@@ -96,20 +111,20 @@ const ServiceManagement = () => {
                                                 </Button>
 
                                             </AlertDialogTrigger>
-                                            {/*<AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    This action cannot be undone. This will permanently delete the service.
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction onClick={() => handleDeleteService(service.id)}>
-                                                    Delete
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>*/}
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action cannot be undone. This will permanently delete the service.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => deleteService(service._id)}>
+                                                        Delete
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
                                         </AlertDialog>
                                     </TableCell>
                                 </TableRow>
