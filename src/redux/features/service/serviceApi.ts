@@ -10,6 +10,7 @@ const serviceApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      providesTags: ["services"],
     }),
     addService: builder.mutation({
       query: (data) => {
@@ -19,6 +20,7 @@ const serviceApi = baseApi.injectEndpoints({
           body: data,
         };
       },
+      invalidatesTags: ["services"],
     }),
   }),
 });

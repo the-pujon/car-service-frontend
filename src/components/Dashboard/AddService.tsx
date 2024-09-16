@@ -759,7 +759,9 @@ const AddService = () => {
 
         setValue('image',"result.data.url",{ shouldDirty: true });
 
-        console.log(getValues())
+        //console.log(getValues())
+        const serviceData = getValues()
+        console.log(serviceData)
 
         console.log(data)
 

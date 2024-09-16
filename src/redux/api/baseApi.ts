@@ -54,6 +54,7 @@ const baseQueryWithErrorHandling: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithErrorHandling,
+  tagTypes: ["services"],
   endpoints: () => ({}),
 });
 
