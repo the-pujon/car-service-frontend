@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import React,{ useEffect,useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { DialogClose,DialogContent,DialogDescription,DialogHeader,DialogTitle } from '../ui/dialog';
 import { Label } from '../ui/label';
@@ -7,7 +7,7 @@ import { Button } from '../ui/button';
 import { Card,CardContent } from '../ui/card';
 import { Clock,DollarSign,Upload } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
-import { useAddServiceMutation } from '@/redux/features/service/serviceApi';
+import { useGetServiceByIdQuery,useUpdateServiceMutation } from '@/redux/features/service/serviceApi';
 import { toast } from 'sonner';
 
 interface Service {
@@ -19,22 +19,37 @@ interface Service {
     image: string;
 }
 
-const AddService = () => {
+const UpdateService = ({ serviceId }: { serviceId: string }) => {
+
+
+    const { data: service } = useGetServiceByIdQuery(serviceId);
+
     const [imageFile,setImageFile] = useState<File | null>(null);
     const [imagePreview,setImagePreview] = useState<string | null>(null);
     const [isUploading,setIsUploading] = useState(false);
 
-    const [addService,{ isError,error }] = useAddServiceMutation(undefined)
+    const [updateService,{ isError,error }] = useUpdateServiceMutation(undefined)
 
     const { register,handleSubmit,reset,setValue,getValues } = useForm<Omit<Service,'_id'>>({
         defaultValues: {
-            name: '',
-            description: '',
-            price: 0,
-            duration: 0,
-            image: '',
+            name: service?.data?.name || '',
+            description: service?.data?.description || '',
+            price: service?.data?.price || 0,
+            duration: service?.data?.duration || 0,
+            image: service?.data?.image || '',
         },
     });
+
+    useEffect(() => {
+        if (service?.data) {
+            setValue('name',service.data.name);
+            setValue('description',service.data.description);
+            setValue('price',service.data.price);
+            setValue('duration',service.data.duration);
+            setValue('image',service.data.image);
+            setImagePreview(service.data.image);
+        }
+    },[service,setValue]);
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -45,56 +60,71 @@ const AddService = () => {
         setImageFile(file);
     };
 
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onSubmit = async (_data: Omit<Service,'_id'>) => {
         setIsUploading(true);
-
-        if (!imageFile) {
-            console.error('Image file is missing');
-            setIsUploading(false);
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('image',imageFile);
-
-        const imgbbAPI = import.meta.env.VITE_IMGBB_API_KEY;
-        const imgbbURL = import.meta.env.VITE_IMGBB_API_URL;
-
         const toastId = toast.loading('Adding...');
 
-        try {
-            const response = await fetch(`${imgbbURL}?key=${imgbbAPI}`,{
-                method: 'POST',
-                body: formData,
-            });
+        if (imageFile) {
+            const formData = new FormData();
+            formData.append('image',imageFile);
 
-            const result = await response.json();
+            const imgbbAPI = import.meta.env.VITE_IMGBB_API_KEY;
+            const imgbbURL = import.meta.env.VITE_IMGBB_API_URL;
 
-            if (result.success) {
-                setValue('image',result.data.url,{ shouldDirty: true });
-                const serviceData = getValues()
 
-                try {
-                    await addService(serviceData).unwrap();
-                    toast.success('Service Added Successfully',{ id: toastId,duration: 2000 });
-                } catch (serviceError) {
-                    console.error('Error adding service:',serviceError);
-                    toast.error("Failed to add service",{ id: toastId });
+
+            try {
+                const response = await fetch(`${imgbbURL}?key=${imgbbAPI}`,{
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    setValue('image',result.data.url,{ shouldDirty: true });
+                    const serviceData = getValues()
+                    const updatedServiceData = { ...serviceData,_id: serviceId };
+
+                    try {
+                        await updateService(updatedServiceData).unwrap();
+                        toast.success('Service Added Successfully',{ id: toastId,duration: 2000 });
+                    } catch (serviceError) {
+                        console.error('Error adding service:',serviceError);
+                        toast.error("Failed to add service",{ id: toastId });
+                    }
+                } else {
+                    console.error('Failed to upload image');
+                    toast.error("Failed to upload image")
                 }
-            } else {
-                console.error('Failed to upload image');
-                toast.error("Failed to upload image")
+                reset();
+                setImageFile(null);
+                setImagePreview(null);
+            } catch (error) {
+                console.error('Error uploading image:',error);
+            } finally {
+                setIsUploading(false);
             }
+        }
+
+        if (!imageFile) {
+            const updatedServiceData = { ..._data,_id: serviceId };
+            console.log(updatedServiceData)
+
+            try {
+                await updateService(updatedServiceData).unwrap();
+                toast.success('Service Added Successfully',{ id: toastId,duration: 2000 });
+            } catch (serviceError) {
+                console.error('Error adding service:',serviceError);
+                toast.error("Failed to add service",{ id: toastId });
+            }
+
             reset();
             setImageFile(null);
             setImagePreview(null);
-        } catch (error) {
-            console.error('Error uploading image:',error);
-        } finally {
-            setIsUploading(false);
         }
+
+
     };
 
     if (isError) {
@@ -208,4 +238,4 @@ const AddService = () => {
     );
 };
 
-export default AddService;
+export default UpdateService;

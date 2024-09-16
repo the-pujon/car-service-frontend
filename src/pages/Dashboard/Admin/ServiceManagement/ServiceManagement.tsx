@@ -1,4 +1,5 @@
 import AddService from "@/components/Dashboard/AddService";
+import UpdateService from "@/components/Dashboard/UpdateService";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -29,12 +30,19 @@ import {
 } from "@/components/ui/table";
 import { useDeleteServiceMutation,useGetServicesQuery } from "@/redux/features/service/serviceApi";
 import { Edit,Trash } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const ServiceManagement = () => {
 
     const { data: services,isLoading,isError,error } = useGetServicesQuery(undefined);
     const [deleteService] = useDeleteServiceMutation();
+    const [serviceId,setServiceId] = useState<string | null>(null);
+
+
+    console.log(serviceId)
+
+
 
 
     if (isError) {
@@ -95,12 +103,15 @@ const ServiceManagement = () => {
                                     <TableCell className="flex gap-2">
                                         <Dialog>
                                             <DialogTrigger asChild>
-                                                <Button variant="outline" className="mr-2">
+                                                <Button onClick={() => setServiceId(service._id)} variant="outline" className="mr-2">
                                                     <Edit />
                                                 </Button>
 
                                             </DialogTrigger>
-                                            <DialogContent>update components here</DialogContent>
+                                            {/*<DialogContent>update components here</DialogContent>*/}
+                                            {
+                                                serviceId === service._id && <UpdateService serviceId={serviceId as string} />
+                                            }
                                         </Dialog>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>

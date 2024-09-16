@@ -29,12 +29,21 @@ const serviceApi = baseApi.injectEndpoints({
     }),
     // For updating a service by ID
     updateService: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/services/${id}`,
-        method: "PUT",
-        body: data,
-      }),
+      query: (data) => {
+        return {
+          url: `/services/${data._id}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
       invalidatesTags: ["services"],
+    }),
+    getServiceById: builder.query({
+      query: (id) => ({
+        url: `/services/${id}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, id) => [{ type: "services", id }],
     }),
   }),
 });
@@ -45,4 +54,5 @@ export const {
   useAddServiceMutation,
   useDeleteServiceMutation,
   useUpdateServiceMutation,
+  useGetServiceByIdQuery,
 } = serviceApi;
