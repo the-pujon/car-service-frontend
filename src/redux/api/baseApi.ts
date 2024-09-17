@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   BaseQueryApi,
   BaseQueryFn,
@@ -25,7 +26,6 @@ const baseQueryWithErrorHandling: BaseQueryFn<
   FetchArgs,
   BaseQueryApi,
   DefinitionType
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 > = async (args, api, extraOptions): Promise<any> => {
   try {
     const result = await baseQuery(args, api, extraOptions);
@@ -39,14 +39,21 @@ const baseQueryWithErrorHandling: BaseQueryFn<
         );
       } else if (result.error.status === 404) {
         toast.error("Resource not found.");
+      } else if (result.error.status === 500) {
+        console.error("Server error:", result.error);
+        toast.error(
+          "An unexpected server error occurred. Please try again later."
+        );
       } else {
         console.error("An unexpected error occurred:", result.error);
+        toast.error("An unexpected error occurred. Please try again.");
       }
     }
 
     return result;
   } catch (error) {
     console.error("An error occurred during the request:", error);
+    toast.error("An error occurred. Please try again later.");
     throw error;
   }
 };
@@ -54,7 +61,7 @@ const baseQueryWithErrorHandling: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithErrorHandling,
-  tagTypes: ["services", "bookings", "users"],
+  tagTypes: ["services", "bookings", "users", "slots"],
   endpoints: () => ({}),
 });
 

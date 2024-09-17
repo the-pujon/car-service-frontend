@@ -1,12 +1,29 @@
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useCreateSlotMutation,useGetSlotAvailabilityQuery,useUpdateSlotStatusMutation } from '@/redux/features/slot/slotApi'
+import { useGetServicesQuery } from '@/redux/features/service/serviceApi'
 import { useState,useEffect } from 'react'
-import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card'
-import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from '@/components/ui/table'
-import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table'
+import { ChevronDown,ChevronRight } from 'lucide-react'
+import { toast } from 'sonner'
+import Loading from '@/components/ui/Loading'
 type TService = {
     _id: string;
     name: string;
@@ -41,11 +58,16 @@ type NewSlot = {
     isBooked: 'available' | 'booked' | 'canceled'
 }
 
+type GroupedSlots = {
+    [serviceId: string]: {
+        serviceName: string;
+        slots: Slot[];
+    };
+};
+
 export default function SlotManagement() {
-    const [slots,setSlots] = useState<Slot[]>([])
-    const [services,setServices] = useState<TService[]>([])
-    const [loading,setLoading] = useState(true)
-    const [error,setError] = useState<string | null>(null)
+    const [groupedSlots,setGroupedSlots] = useState<GroupedSlots>({})
+    const [expandedServices,setExpandedServices] = useState<Set<string>>(new Set())
     const [newSlot,setNewSlot] = useState<NewSlot>({
         service: '',
         date: '',
@@ -54,93 +76,83 @@ export default function SlotManagement() {
         isBooked: 'available'
     })
 
+    const [createSlot,{ isLoading: isCreating }] = useCreateSlotMutation()
+    const { data: availableSlots,isLoading: slotsLoading,error: slotsError } = useGetSlotAvailabilityQuery({})
+    const { data: services,isLoading: servicesLoading,error: servicesError } = useGetServicesQuery({})
+    const [updateSlotStatus] = useUpdateSlotStatusMutation()
+
     useEffect(() => {
-        fetchSlots()
-        fetchServices()
-    },[])
-
-    const fetchSlots = async () => {
-        setLoading(true)
-        try {
-            // In a real application, replace this with an actual API call
-            const response: SlotData = {
-                success: true,
-                statusCode: 200,
-                message: "Available slots retrieved successfully",
-                data: [
-                    // ... (paste the sample data here)
-                ]
-            }
-            setSlots(response.data)
-        } catch (err) {
-            setError('Failed to fetch slots')
-        } finally {
-            setLoading(false)
+        if (availableSlots) {
+            const grouped = availableSlots.data.reduce((acc: GroupedSlots,slot: Slot) => {
+                const serviceId = slot.service._id;
+                if (!acc[serviceId]) {
+                    acc[serviceId] = {
+                        serviceName: slot.service.name,
+                        slots: []
+                    };
+                }
+                acc[serviceId].slots.push(slot);
+                return acc;
+            },{});
+            setGroupedSlots(grouped);
         }
-    }
-
-    const fetchServices = async () => {
-        try {
-            // In a real application, replace this with an actual API call
-            const sampleServices: TService[] = [
-                {
-                    _id: '1',
-                    name: 'Car Wash',
-                    description: 'Professional car washing service',
-                    price: 50,
-                    duration: 60,
-                    isDeleted: false,
-                    image: 'https://example.com/car-wash.jpg'
-                },
-                {
-                    _id: '2',
-                    name: 'Bangla Wash',
-                    description: 'Eiusmod mollit ad co',
-                    price: 103,
-                    duration: 39,
-                    isDeleted: false,
-                    image: 'https://i.ibb.co/KDpV0GZ/hero8.jpg'
-                },
-                // Add more sample services as needed
-            ]
-            setServices(sampleServices)
-        } catch (err) {
-            setError('Failed to fetch services')
-        }
-    }
-
-    const updateSlotStatus = async (slotId: string,newStatus: 'available' | 'cancelled') => {
-        // In a real application, make an API call to update the slot status
-        setSlots(prevSlots =>
-            prevSlots.map(slot =>
-                slot._id === slotId ? { ...slot,isBooked: newStatus } : slot
-            )
-        )
-    }
+    },[availableSlots])
 
     const handleCreateSlot = async (e: React.FormEvent) => {
         e.preventDefault()
-        // In a real application, make an API call to create the new slot
-        console.log('Creating new slot:',newSlot)
-        // Reset the form after submission
-        setNewSlot({
-            service: '',
-            date: '',
-            startTime: '',
-            endTime: '',
-            isBooked: 'available'
-        })
-        // Optionally, refetch the slots to include the new one
-        // await fetchSlots()
+        try {
+            await createSlot(newSlot).unwrap()
+            toast.success('Slot created successfully')
+            setNewSlot({
+                service: '',
+                date: '',
+                startTime: '',
+                endTime: '',
+                isBooked: 'available'
+            })
+        } catch (err) {
+            toast.error('Failed to create slot')
+        }
     }
 
-    if (loading) return <div>Loading...</div>
-    if (error) return <div>Error: {error}</div>
+    const handleUpdateSlotStatus = async (slotId: string,newStatus: 'available' | 'cancelled') => {
+        const toastId = toast.loading('Updating slot status...');
+        try {
+            const result = await updateSlotStatus({ id: slotId,isBooked: newStatus }).unwrap();
+            if (result.success) {
+                toast.success('Slot status updated successfully',{ id: toastId });
+            } else {
+                toast.error(`Failed to update slot status: ${result.message}`,{ id: toastId });
+            }
+        } catch (err) {
+            console.error('Error updating slot status:',err);
+            toast.error('An error occurred. Please try again later.',{ id: toastId });
+        }
+
+    }
+
+    const toggleServiceExpansion = (serviceId: string) => {
+        setExpandedServices(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(serviceId)) {
+                newSet.delete(serviceId);
+            } else {
+                newSet.add(serviceId);
+            }
+            return newSet;
+        });
+    }
+
+    //if (slotsLoading || servicesLoading) return <div>Loading...</div>
+    if (slotsError || servicesError) return <div>Error: An error occurred</div>
 
     return (
-        <Card className="w-full max-w-4xl mx-auto">
+        <div className="w-full max-w-screen-2xl mx-auto text-white relative">
+            {
+                slotsLoading || servicesLoading && <Loading />
+            }
             <CardHeader>
-                <CardTitle>Slot Management</CardTitle>
+                <CardTitle className='text-3xl font-semibold'>Slot Management</CardTitle>
             </CardHeader>
             <CardContent>
                 <form onSubmit={handleCreateSlot} className="space-y-4 mb-8">
@@ -155,7 +167,7 @@ export default function SlotManagement() {
                                     <SelectValue placeholder="Select a service" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {services.map((service) => (
+                                    {services?.data.map((service: TService) => (
                                         <SelectItem key={service._id} value={service._id}>
                                             {service.name}
                                         </SelectItem>
@@ -194,49 +206,70 @@ export default function SlotManagement() {
                             />
                         </div>
                     </div>
-                    <Button type="submit">Create Slot</Button>
+                    <Button type="submit" disabled={isCreating}>
+                        {isCreating ? 'Creating...' : 'Create Slot'}
+                    </Button>
                 </form>
 
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Service</TableHead>
-                            <TableHead>Date</TableHead>
-                            <TableHead>Time</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Action</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {slots.map((slot) => (
-                            <TableRow key={slot._id}>
-                                <TableCell>{slot.service.name}</TableCell>
-                                <TableCell>{slot.date}</TableCell>
-                                <TableCell>{`${slot.startTime} - ${slot.endTime}`}</TableCell>
-                                <TableCell>{slot.isBooked}</TableCell>
-                                <TableCell>
-                                    {slot.isBooked === 'booked' ? (
-                                        <span className="text-gray-500">Cannot modify</span>
-                                    ) : (
-                                        <Select
-                                            onValueChange={(value) => updateSlotStatus(slot._id,value as 'available' | 'cancelled')}
-                                            defaultValue={slot.isBooked}
-                                        >
-                                            <SelectTrigger className="w-[180px]">
-                                                <SelectValue placeholder="Select status" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="available">Available</SelectItem>
-                                                <SelectItem value="cancelled">Cancelled</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    )}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                <div className="mt-8">
+                    <h2 className="text-3xl font-semibold mb-4">Available Slots by Service</h2>
+                    <p className="mb-4 text-sm">Click on a service to view or manage its slots.</p>
+                    {Object.entries(groupedSlots).map(([serviceId,{ serviceName,slots }]) => (
+                        <div key={serviceId} className="mb-4 border rounded-lg overflow-hidden">
+                            <Button
+                                variant="ghost"
+                                className="w-full justify-between p-4 text-left"
+                                onClick={() => toggleServiceExpansion(serviceId)}
+                            >
+                                <span>{serviceName} ({slots.length} slots)</span>
+                                {expandedServices.has(serviceId) ? <ChevronDown /> : <ChevronRight />}
+                            </Button>
+                            {expandedServices.has(serviceId) && (
+                                <div className="p-4">
+                                    <p className="mb-2">Manage slots for {serviceName}:</p>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Date</TableHead>
+                                                <TableHead>Time</TableHead>
+                                                <TableHead>Status</TableHead>
+                                                <TableHead>Action</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {slots.map((slot) => (
+                                                <TableRow key={slot._id}>
+                                                    <TableCell>{slot.date}</TableCell>
+                                                    <TableCell>{`${slot.startTime} - ${slot.endTime}`}</TableCell>
+                                                    <TableCell>{slot.isBooked}</TableCell>
+                                                    <TableCell>
+                                                        {slot.isBooked === 'booked' ? (
+                                                            <span className="text-gray-500">Booked</span>
+                                                        ) : (
+                                                            <Select
+                                                                onValueChange={(value) => handleUpdateSlotStatus(slot._id,value as 'available' | 'cancelled')}
+                                                                defaultValue={slot.isBooked}
+                                                            >
+                                                                <SelectTrigger className="w-[180px]">
+                                                                    <SelectValue placeholder="Select status" />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    <SelectItem value="available">Available</SelectItem>
+                                                                    <SelectItem value="canceled">Canceled</SelectItem>
+                                                                </SelectContent>
+                                                            </Select>
+                                                        )}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
             </CardContent>
-        </Card>
+        </div>
     )
 }
