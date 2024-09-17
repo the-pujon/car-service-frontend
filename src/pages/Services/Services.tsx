@@ -1,4 +1,5 @@
-import { useState,useEffect } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from 'react'
 import { Select,SelectContent,SelectGroup,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select'
 import ServiceCard from '@/components/ui/ServiceCard'
 import { Search } from 'lucide-react'
@@ -7,23 +8,24 @@ import { Label } from '@/components/ui/label'
 import { useGetServicesQuery } from '@/redux/features/service/serviceApi'
 import Loading from '@/components/ui/Loading'
 
+
+interface Category {
+    value: string;
+    name: string;
+}
+
+const categories: Category[] = [
+    { value: 'all',name: 'All' },
+    { value: 'basicWash',name: 'Basic Wash' },
+    { value: 'detailing',name: 'Detailing' },
+    { value: 'specialtyService',name: 'Specialty Service' },
+    { value: 'premiumPackages',name: 'Premium Packages' },
+    { value: 'ecoFriendly',name: 'Eco-Friendly Services' },
+    { value: 'convenience',name: 'Convenience Services' },
+    { value: 'additional',name: 'Additional Services' }
+];
+
 const Services: React.FC = () => {
-
-    interface Category {
-        value: string;
-        name: string;
-    }
-
-    const categories: Category[] = [
-        { value: 'all',name: 'All' },
-        { value: 'basicWash',name: 'Basic Wash' },
-        { value: 'detailing',name: 'Detailing' },
-        { value: 'specialtyService',name: 'Specialty Service' },
-        { value: 'premiumPackages',name: 'Premium Packages' },
-        { value: 'ecoFriendly',name: 'Eco-Friendly Services' },
-        { value: 'convenience',name: 'Convenience Services' },
-        { value: 'additional',name: 'Additional Services' }
-    ];
 
     const [selectedCategory,setSelectedCategory] = useState<string>('all');
     const [searchTerm,setSearchTerm] = useState<string>('');
@@ -44,12 +46,12 @@ const Services: React.FC = () => {
     };
 
     const filteredAndSortedServices = services?.data
-        ?.filter(service =>
+        ?.filter((service: any) =>
             (selectedCategory === 'all' || service.category === selectedCategory) &&
             (service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 service.description.toLowerCase().includes(searchTerm.toLowerCase()))
         )
-        .sort((a,b) => {
+        .sort((a: any,b: any) => {
             if (sortOrder === 'high') return b.price - a.price;
             if (sortOrder === 'low') return a.price - b.price;
             return 0;
@@ -105,14 +107,14 @@ const Services: React.FC = () => {
                             isLoading && <Loading />
                         }
                         <div className='grid grid-cols-1 gap-y-4 gap-x-2 md:grid-cols-2 lg:grid-cols-3 my-8'>
-                            {filteredAndSortedServices?.map(service => (
+                            {filteredAndSortedServices?.map((service: any) => (
                                 <ServiceCard
                                     key={service._id}
                                     image={service.image}
                                     description={service.description}
                                     title={service.name}
                                     price={service.price}
-                                //duration={service.duration}
+                                    _id={service._id}
                                 />
                             ))}
                         </div>

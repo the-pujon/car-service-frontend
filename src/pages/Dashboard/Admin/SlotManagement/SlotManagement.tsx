@@ -75,6 +75,8 @@ export default function SlotManagement() {
     const { data: services,isLoading: servicesLoading,error: servicesError } = useGetServicesQuery({})
     const [updateSlotStatus] = useUpdateSlotStatusMutation()
 
+    //console.log(serv)
+
     useEffect(() => {
         if (availableSlots) {
             const grouped = availableSlots.data.reduce((acc: GroupedSlots,slot: Slot) => {
@@ -138,7 +140,7 @@ export default function SlotManagement() {
     }
 
     //if (slotsLoading || servicesLoading) return <div>Loading...</div>
-    if (slotsError || servicesError) return <div>Error: An error occurred</div>
+    //if (slotsError || servicesError) return <div>Error: An error occurred</div>
 
     return (
         <div className="w-full max-w-screen-2xl mx-auto text-white relative">
@@ -206,63 +208,71 @@ export default function SlotManagement() {
                 <div className="mt-8">
                     <h2 className="text-3xl font-semibold mb-4">Available Slots by Service</h2>
                     <p className="mb-4 text-sm">Click on a service to view or manage its slots.</p>
-                    <div className="relative">
-                        {(slotsLoading || servicesLoading) && <Loading />}
-                        {Object.entries(groupedSlots).map(([serviceId,{ serviceName,slots }]) => (
-                            <div key={serviceId} className="mb-4 border rounded-lg overflow-hidden">
-                                <Button
-                                    variant="ghost"
-                                    className="w-full justify-between p-4 text-left"
-                                    onClick={() => toggleServiceExpansion(serviceId)}
-                                >
-                                    <span>{serviceName} ({slots.length} slots)</span>
-                                    {expandedServices.has(serviceId) ? <ChevronDown /> : <ChevronRight />}
-                                </Button>
-                                {expandedServices.has(serviceId) && (
-                                    <div className="p-4">
-                                        <p className="mb-2">Manage slots for {serviceName}:</p>
-                                        <Table>
-                                            <TableHeader>
-                                                <TableRow>
-                                                    <TableHead>Date</TableHead>
-                                                    <TableHead>Time</TableHead>
-                                                    <TableHead>Status</TableHead>
-                                                    <TableHead>Action</TableHead>
-                                                </TableRow>
-                                            </TableHeader>
-                                            <TableBody>
-                                                {slots.map((slot) => (
-                                                    <TableRow key={slot._id}>
-                                                        <TableCell>{slot.date}</TableCell>
-                                                        <TableCell>{`${slot.startTime} - ${slot.endTime}`}</TableCell>
-                                                        <TableCell>{slot.isBooked}</TableCell>
-                                                        <TableCell>
-                                                            {slot.isBooked === 'booked' ? (
-                                                                <span className="text-gray-500">Booked</span>
-                                                            ) : (
-                                                                <Select
-                                                                    onValueChange={(value) => handleUpdateSlotStatus(slot._id,value as 'available' | 'cancelled')}
-                                                                    defaultValue={slot.isBooked}
-                                                                >
-                                                                    <SelectTrigger className="w-[180px]">
-                                                                        <SelectValue placeholder="Select status" />
-                                                                    </SelectTrigger>
-                                                                    <SelectContent>
-                                                                        <SelectItem value="available">Available</SelectItem>
-                                                                        <SelectItem value="canceled">Canceled</SelectItem>
-                                                                    </SelectContent>
-                                                                </Select>
-                                                            )}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
-                                            </TableBody>
-                                        </Table>
+                    {
+                        services ? <div className="relative">
+                            {(slotsLoading || servicesLoading) && <Loading />}
+                            {Object.keys(groupedSlots).length === 0 ? (
+                                <p className="text-center text-gray-500">No slots available at the moment.</p>
+                            ) : (
+                                Object.entries(groupedSlots).map(([serviceId,{ serviceName,slots }]) => (
+                                    <div key={serviceId} className="mb-4 border rounded-lg overflow-hidden">
+                                        <Button
+                                            variant="ghost"
+                                            className="w-full justify-between p-4 text-left"
+                                            onClick={() => toggleServiceExpansion(serviceId)}
+                                        >
+                                            <span>{serviceName} ({slots.length} slots)</span>
+                                            {expandedServices.has(serviceId) ? <ChevronDown /> : <ChevronRight />}
+                                        </Button>
+                                        {expandedServices.has(serviceId) && (
+                                            <div className="p-4">
+                                                <p className="mb-2">Manage slots for {serviceName}:</p>
+                                                <Table>
+                                                    <TableHeader>
+                                                        <TableRow>
+                                                            <TableHead>Date</TableHead>
+                                                            <TableHead>Time</TableHead>
+                                                            <TableHead>Status</TableHead>
+                                                            <TableHead>Action</TableHead>
+                                                        </TableRow>
+                                                    </TableHeader>
+                                                    {
+                                                        slots ? <TableBody>
+                                                            {slots.map((slot) => (
+                                                                <TableRow key={slot._id}>
+                                                                    <TableCell>{slot.date}</TableCell>
+                                                                    <TableCell>{`${slot.startTime} - ${slot.endTime}`}</TableCell>
+                                                                    <TableCell>{slot.isBooked}</TableCell>
+                                                                    <TableCell>
+                                                                        {slot.isBooked === 'booked' ? (
+                                                                            <span className="text-gray-500">Booked</span>
+                                                                        ) : (
+                                                                            <Select
+                                                                                onValueChange={(value) => handleUpdateSlotStatus(slot._id,value as 'available' | 'cancelled')}
+                                                                                defaultValue={slot.isBooked}
+                                                                            >
+                                                                                <SelectTrigger className="w-[180px]">
+                                                                                    <SelectValue placeholder="Select status" />
+                                                                                </SelectTrigger>
+                                                                                <SelectContent>
+                                                                                    <SelectItem value="available">Available</SelectItem>
+                                                                                    <SelectItem value="canceled">Canceled</SelectItem>
+                                                                                </SelectContent>
+                                                                            </Select>
+                                                                        )}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            ))}
+                                                        </TableBody> : <div>No slots available at the moment.</div>
+                                                    }
+                                                </Table>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
+                                ))
+                            )}
+                        </div> : <div>No Service available at the moment.</div>
+                    }
 
                 </div>
             </CardContent>

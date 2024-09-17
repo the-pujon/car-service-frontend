@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import AddService from "@/components/Dashboard/AddService";
 import UpdateService from "@/components/Dashboard/UpdateService";
 import {
@@ -13,10 +14,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
-
 import {
     Dialog,
-
     DialogTrigger,
 } from "@/components/ui/dialog";
 import Loading from "@/components/ui/Loading";
@@ -34,13 +33,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 const ServiceManagement = () => {
-
     const { data: services,isLoading,isError,error } = useGetServicesQuery(undefined);
     const [deleteService] = useDeleteServiceMutation();
     const [serviceId,setServiceId] = useState<string | null>(null);
-
-
-
 
     if (isError) {
         console.error(error);
@@ -48,23 +43,16 @@ const ServiceManagement = () => {
         toast.error(apiError.data?.message || "Something went wrong");
     }
 
-
-
     return (
         <div className="text-white h-screen p-5 relative overflow-y-auto">
-            {
-                isLoading && <Loading />
-            }
+            {isLoading && <Loading />}
             <div className="flex justify-between gap-2">
                 <div className="flex flex-col gap-2">
                     <h2 className="text-4xl font-bold">Service Management</h2>
                     <p className="text-sm text-gray-500">Manage your services</p>
                 </div>
                 <div>
-                    <Dialog
-                    //open={isAddServiceModalOpen}
-                    //onOpenChange={setIsAddServiceModalOpen}
-                    >
+                    <Dialog>
                         <DialogTrigger asChild>
                             <Button className="mb-4">Add Service</Button>
                         </DialogTrigger>
@@ -80,45 +68,33 @@ const ServiceManagement = () => {
                             <TableHead>Description</TableHead>
                             <TableHead>Price</TableHead>
                             <TableHead>Duration</TableHead>
-                            <TableHead>Category</TableHead> {/* New column */}
+                            <TableHead>Category</TableHead>
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {services?.data && services.data.length > 0 ? (
-                            services.data.map((service: {
-                                _id: string;
-                                name: string;
-                                description: string;
-                                price: number;
-                                duration: number;
-                                category: string; // Add category to the type
-                            }) => (
+                            services.data.map((service: any) => (
                                 <TableRow key={service._id}>
                                     <TableCell>{service.name}</TableCell>
                                     <TableCell>{service.description}</TableCell>
                                     <TableCell>${service.price}</TableCell>
                                     <TableCell>{service.duration} minutes</TableCell>
-                                    <TableCell className="capitalize">{service.category}</TableCell> {/* New cell */}
+                                    <TableCell className="capitalize">{service.category}</TableCell>
                                     <TableCell className="flex gap-2">
                                         <Dialog>
                                             <DialogTrigger asChild>
                                                 <Button onClick={() => setServiceId(service._id)} variant="outline" className="mr-2">
                                                     <Edit />
                                                 </Button>
-
                                             </DialogTrigger>
-                                            {/*<DialogContent>update components here</DialogContent>*/}
-                                            {
-                                                serviceId === service._id && <UpdateService serviceId={serviceId as string} />
-                                            }
+                                            {serviceId === service._id && <UpdateService serviceId={serviceId as string} />}
                                         </Dialog>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="destructive">
                                                     <Trash />
                                                 </Button>
-
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
@@ -129,10 +105,12 @@ const ServiceManagement = () => {
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={async () => {
-                                                        await deleteService(service._id)
-                                                        toast.success("Service Deleted")
-                                                    }}>
+                                                    <AlertDialogAction
+                                                        onClick={async () => {
+                                                            await deleteService(service._id);
+                                                            toast.success("Service Deleted");
+                                                        }}
+                                                    >
                                                         Delete
                                                     </AlertDialogAction>
                                                 </AlertDialogFooter>
