@@ -5,7 +5,7 @@ const usersApi = baseApi.injectEndpoints({
     // For getting all users (typically an admin operation)
     getUsers: builder.query({
       query: () => ({
-        url: "/users",
+        url: "/auth/users",
         method: "GET",
       }),
       providesTags: ["users"],
@@ -13,15 +13,15 @@ const usersApi = baseApi.injectEndpoints({
     // For getting a single user by ID
     getUserById: builder.query({
       query: (id) => ({
-        url: `/users/${id}`,
+        url: `/auth/users/${id}`,
         method: "GET",
       }),
       providesTags: (result, error, id) => [{ type: "users", id }],
     }),
     // For updating a user's profile
-    updateUser: builder.mutation({
+    updateUserProfile: builder.mutation({
       query: (data) => ({
-        url: `/users/${data.id}`,
+        url: `/auth/update-profile`,
         method: "PATCH",
         body: data,
       }),
@@ -30,10 +30,18 @@ const usersApi = baseApi.injectEndpoints({
     // For deleting a user (typically an admin operation)
     deleteUser: builder.mutation({
       query: (id) => ({
-        url: `/users/${id}`,
+        url: `/auth/users/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["users"],
+    }),
+    updateUserRole: builder.mutation({
+      query: (data) => ({
+        url: `/auth/update-role/${data.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: "users", id }],
     }),
   }),
 });
@@ -41,6 +49,7 @@ const usersApi = baseApi.injectEndpoints({
 export const {
   useGetUsersQuery,
   useGetUserByIdQuery,
-  useUpdateUserMutation,
+  useUpdateUserProfileMutation,
   useDeleteUserMutation,
+  useUpdateUserRoleMutation,
 } = usersApi;

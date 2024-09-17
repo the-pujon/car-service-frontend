@@ -1,76 +1,88 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
-import { Dialog,DialogContent,DialogHeader,DialogTitle,DialogTrigger } from '@/components/ui/dialog'
+import { Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle,DialogTrigger } from '@/components/ui/dialog'
 import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select'
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from '@/components/ui/table'
-import React,{ useState } from 'react'
-import { format } from "date-fns"
+import React,{ useState,useEffect } from 'react'
+import { useGetUsersQuery,useUpdateUserRoleMutation } from '@/redux/features/users/usersApi'
+import { toast } from 'sonner'
+import { useGetBookingsByCustomerIdQuery } from '@/redux/features/bookings/bookingApi'
+import Loading from '@/components/ui/Loading'
+// Remove the import for useGetBookingsQuery
 
-const UserManagement = () => {
-    const [users,setUsers] = useState([
+type TUser = {
+    _id: string
+    name: string
+    email: string
+    phone: string
+    role: string
+    address: string
+}
+
+const UserManagement: React.FC = () => {
+
+    //get users
+    const { data: users,isLoading: isLoadingUsers } = useGetUsersQuery(undefined)
+
+    //update user role
+    const [updateUser] = useUpdateUserRoleMutation()
+
+    const [selectedUser,setSelectedUser] = useState<TUser | null>(null)
+    const [userBookings,setUserBookings] = useState<any[]>([])
+
+
+    const { data: fetchedBookings,isLoading: isLoadingUserBookings } = useGetBookingsByCustomerIdQuery(
+        selectedUser?._id || 'no-user',
         {
-            _id: "66e899e45b96f9b5c7a9d2dc",
-            name: "Programming Hero",
-            email: "web@programming-hero2.com",
-            phone: "1234567890",
-            role: "user",
-            address: "123 Main Street, City, Country",
-            createdAt: "2024-09-16T20:49:40.367Z",
-            updatedAt: "2024-09-16T20:49:40.367Z",
-        },
-    ])
+            skip: !selectedUser,
+            refetchOnMountOrArgChange: true
+        }
+    )
 
-    const [bookings,setBookings] = useState([
-        {
-            _id: "66e89aea5b96f9b5c7a9d30e",
-            customer: {
-                _id: "66e899e45b96f9b5c7a9d2dc",
-                name: "Programming Hero",
-                email: "web@programming-hero2.com",
-                phone: "1234567890",
-                role: "user",
-                address: "123 Main Street, City, Country",
-                createdAt: "2024-09-16T20:49:40.367Z",
-                updatedAt: "2024-09-16T20:49:40.367Z",
-            },
-            service: {
-                _id: "66e86bbb5b96f9b5c7a9d270",
-                name: "Bangla Wash",
-                description: "Eiusmod mollit ad co",
-                price: 103,
-                duration: 39,
-                isDeleted: false,
-                image: "https://i.ibb.co/KDpV0GZ/hero8.jpg",
-                createdAt: "2024-09-16T17:32:43.938Z",
-                updatedAt: "2024-09-16T20:39:30.755Z",
-            },
-            slot: {
-                _id: "66e89a8b5b96f9b5c7a9d2ec",
-                service: "66e86bbb5b96f9b5c7a9d270",
-                date: "2024-06-15",
-                startTime: "09:39",
-                endTime: "10:18",
-                isBooked: "booked",
-            },
-            vehicleType: "car",
-            vehicleBrand: "Camry",
-            vehicleModel: "Camry",
-            manufacturingYear: 2020,
-            registrationPlate: "ABC123",
-        },
-    ])
+    useEffect(() => {
+        if (fetchedBookings) {
+            setUserBookings(fetchedBookings.data || [])
+        } else {
+            setUserBookings([])
+        }
+    },[fetchedBookings])
 
-    const handleUpdateUserRole = (id,newRole) => {
-        const updatedUsers = users.map((user) =>
-            user._id === id ? { ...user,role: newRole } : user
-        )
-        setUsers(updatedUsers)
+    console.log(users)
+
+    //update user role
+    const handleUpdateUserRole = async (id: string,newRole: string) => {
+
+        const toastID = toast.loading("Updating user role...")
+
+        console.log(id)
+        try {
+            await updateUser({ id,role: newRole }).unwrap()
+            toast.success("User role updated successfully",{ id: toastID })
+        } catch (error) {
+            console.error('Failed to update user role:',error)
+            toast.error("Failed to update user role",{ id: toastID })
+        }
     }
 
-    const [selectedUser,setSelectedUser] = useState(null)
+    const handleDialogOpenChange = (open: boolean) => {
+        if (!open) {
+            setSelectedUser(null);
+            setUserBookings([]);
+            console.log("hi")
+        }
+    };
+
+    const handleViewBookings = (user: TUser) => {
+        setSelectedUser(user);
+        setUserBookings([]); // Clear previous bookings when a new user is selected
+    };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 overflow-y-scroll relative h-screen">
+            {
+                isLoadingUsers && <Loading />
+            }
             <Card>
                 <CardHeader>
                     <CardTitle>User Management</CardTitle>
@@ -85,20 +97,18 @@ const UserManagement = () => {
                                 <TableHead>Phone</TableHead>
                                 <TableHead>Role</TableHead>
                                 <TableHead>Address</TableHead>
-                                <TableHead>Created At</TableHead>
                                 <TableHead>Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {users.map((user) => (
+                            {users?.data?.map((user: TUser) => (
                                 <TableRow key={user._id}>
                                     <TableCell>{user.name}</TableCell>
                                     <TableCell>{user.email}</TableCell>
                                     <TableCell>{user.phone}</TableCell>
                                     <TableCell>{user.role}</TableCell>
                                     <TableCell>{user.address}</TableCell>
-                                    <TableCell>{format(new Date(user.createdAt),"PPP")}</TableCell>
-                                    <TableCell>
+                                    <TableCell className="flex items-center">
                                         <Select
                                             onValueChange={(value) => handleUpdateUserRole(user._id,value)}
                                             defaultValue={user.role}
@@ -111,30 +121,34 @@ const UserManagement = () => {
                                                 <SelectItem value="admin">Admin</SelectItem>
                                             </SelectContent>
                                         </Select>
-                                        <Dialog>
+                                        <Dialog onOpenChange={handleDialogOpenChange}>
                                             <DialogTrigger asChild>
-                                                <Button variant="outline" className="ml-2" onClick={() => setSelectedUser(user)}>
+                                                <Button variant="outline" className="ml-2" onClick={() => handleViewBookings(user)}>
                                                     View Bookings
                                                 </Button>
                                             </DialogTrigger>
-                                            <DialogContent className="max-w-4xl">
+                                            <DialogContent className="max-w-4xl max-h-[60vh] overflow-y-scroll text-white">
                                                 <DialogHeader>
-                                                    <DialogTitle>Bookings for {selectedUser?.name}</DialogTitle>
+                                                    <DialogTitle className='text-2xl text-white font-light'>Bookings for <span className='font-medium tracking-wider'>{selectedUser?.name}</span></DialogTitle>
+                                                    <DialogDescription>
+                                                        View all bookings for this user
+                                                    </DialogDescription>
                                                 </DialogHeader>
-                                                <Table>
-                                                    <TableHeader>
-                                                        <TableRow>
-                                                            <TableHead>Service</TableHead>
-                                                            <TableHead>Date</TableHead>
-                                                            <TableHead>Time</TableHead>
-                                                            <TableHead>Vehicle</TableHead>
-                                                            <TableHead>Price</TableHead>
-                                                        </TableRow>
-                                                    </TableHeader>
-                                                    <TableBody>
-                                                        {bookings
-                                                            .filter((booking) => booking.customer._id === selectedUser?._id)
-                                                            .map((booking) => (
+                                                {isLoadingUserBookings ? (
+                                                    <Loading />
+                                                ) : userBookings.length > 0 ? (
+                                                    <Table>
+                                                        <TableHeader>
+                                                            <TableRow>
+                                                                <TableHead>Service</TableHead>
+                                                                <TableHead>Date</TableHead>
+                                                                <TableHead>Time</TableHead>
+                                                                <TableHead>Vehicle</TableHead>
+                                                                <TableHead>Price</TableHead>
+                                                            </TableRow>
+                                                        </TableHeader>
+                                                        <TableBody className='text-white'>
+                                                            {userBookings.map((booking: any) => (
                                                                 <TableRow key={booking._id}>
                                                                     <TableCell>{booking.service.name}</TableCell>
                                                                     <TableCell>{booking.slot.date}</TableCell>
@@ -143,44 +157,14 @@ const UserManagement = () => {
                                                                     <TableCell>${booking.service.price}</TableCell>
                                                                 </TableRow>
                                                             ))}
-                                                    </TableBody>
-                                                </Table>
+                                                        </TableBody>
+                                                    </Table>
+                                                ) : (
+                                                    <p className="text-center py-4">No bookings found for this user.</p>
+                                                )}
                                             </DialogContent>
                                         </Dialog>
                                     </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>All Bookings</CardTitle>
-                    <CardDescription>View all user bookings</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Customer</TableHead>
-                                <TableHead>Service</TableHead>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Time</TableHead>
-                                <TableHead>Vehicle</TableHead>
-                                <TableHead>Price</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {bookings.map((booking) => (
-                                <TableRow key={booking._id}>
-                                    <TableCell>{booking.customer.name}</TableCell>
-                                    <TableCell>{booking.service.name}</TableCell>
-                                    <TableCell>{booking.slot.date}</TableCell>
-                                    <TableCell>{`${booking.slot.startTime} - ${booking.slot.endTime}`}</TableCell>
-                                    <TableCell>{`${booking.vehicleType} - ${booking.vehicleBrand} ${booking.vehicleModel} (${booking.registrationPlate})`}</TableCell>
-                                    <TableCell>${booking.service.price}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
