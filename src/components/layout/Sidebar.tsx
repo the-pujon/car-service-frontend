@@ -18,7 +18,7 @@ export function Sidebar() {
             <nav className="mt-8">
                 {menuItems.map((item) => (
                     <Link
-                        to={item.id}
+                        to={item.id === "overview" ? "" : item.id}
                         key={item.id}
                         className={`flex items-center w-full px-4 py-2 text-left hover:bg-background transition-all duration-300 bg-primary-foreground"
                             }`}

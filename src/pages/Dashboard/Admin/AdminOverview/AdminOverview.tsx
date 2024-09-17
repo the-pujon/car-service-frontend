@@ -1,42 +1,53 @@
-import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from '@/components/ui/table'
 import React from 'react'
+import { useGetBookingsQuery } from '@/redux/features/bookings/bookingApi'
+import Loading from '@/components/ui/Loading'
 
-const AdminOverview = () => {
-    const recentBookings = [
-        { id: 1,user: "John Doe",service: "Haircut",date: "2023-06-15",time: "10:00 AM" },
-        { id: 2,user: "Jane Smith",service: "Manicure",date: "2023-06-15",time: "11:00 AM" },
-    ]
+const AdminOverview: React.FC = () => {
+    const { data: bookings,isLoading } = useGetBookingsQuery(undefined)
+
+    const recentBookings = bookings?.data?.slice(0,15) || []
 
     return (
-        <Card>
+        <div className='text-white relative h-screen'>
+            {
+                isLoading && <Loading />
+            }
             <CardHeader>
                 <CardTitle>Recent Bookings</CardTitle>
                 <CardDescription>Overview of the most recent bookings</CardDescription>
             </CardHeader>
             <CardContent>
+
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>User</TableHead>
+                            <TableHead>Customer</TableHead>
                             <TableHead>Service</TableHead>
                             <TableHead>Date</TableHead>
                             <TableHead>Time</TableHead>
+                            <TableHead>Vehicle</TableHead>
+                            <TableHead>Price</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {recentBookings.map((booking) => (
-                            <TableRow key={booking.id}>
-                                <TableCell>{booking.user}</TableCell>
-                                <TableCell>{booking.service}</TableCell>
-                                <TableCell>{booking.date}</TableCell>
-                                <TableCell>{booking.time}</TableCell>
+                        {recentBookings.map((booking: any) => (
+                            <TableRow key={booking._id}>
+                                <TableCell>{booking.customer.name}</TableCell>
+                                <TableCell>{booking.service.name}</TableCell>
+                                <TableCell>{booking.slot.date}</TableCell>
+                                <TableCell>{`${booking.slot.startTime} - ${booking.slot.endTime}`}</TableCell>
+                                <TableCell>{booking.vehicleType} - {booking.vehicleBrand} {booking.vehicleModel} ({booking.registrationPlate})</TableCell>
+                                <TableCell>${booking.service.price}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
+
             </CardContent>
-        </Card>
+        </div>
     )
 }
 

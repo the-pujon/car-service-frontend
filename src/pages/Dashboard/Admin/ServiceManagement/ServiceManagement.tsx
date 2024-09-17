@@ -12,6 +12,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { CardContent } from "@/components/ui/card";
 
 import {
     Dialog,
@@ -39,9 +40,6 @@ const ServiceManagement = () => {
     const [serviceId,setServiceId] = useState<string | null>(null);
 
 
-    console.log(serviceId)
-
-
 
 
     if (isError) {
@@ -53,7 +51,7 @@ const ServiceManagement = () => {
 
 
     return (
-        <div className="text-white w-full max-w-screen-2xl mx-auto pt-5 h-[80vh] relative">
+        <div className="text-white h-screen p-5 relative overflow-y-auto">
             {
                 isLoading && <Loading />
             }
@@ -74,7 +72,7 @@ const ServiceManagement = () => {
                     </Dialog>
                 </div>
             </div>
-            <div>
+            <CardContent>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -143,7 +141,7 @@ const ServiceManagement = () => {
                         )}
                     </TableBody>
                 </Table>
-            </div>
+            </CardContent>
         </div>
     );
 };

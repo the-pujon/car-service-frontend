@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button'
-import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
+import { CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
 import { Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle,DialogTrigger } from '@/components/ui/dialog'
 import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select'
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from '@/components/ui/table'
@@ -83,12 +83,14 @@ const UserManagement: React.FC = () => {
             {
                 isLoadingUsers && <Loading />
             }
-            <Card>
+
+            <div className='text-white '>
                 <CardHeader>
                     <CardTitle>User Management</CardTitle>
                     <CardDescription>Manage your users</CardDescription>
                 </CardHeader>
                 <CardContent>
+
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -170,7 +172,7 @@ const UserManagement: React.FC = () => {
                         </TableBody>
                     </Table>
                 </CardContent>
-            </Card>
+            </div>
         </div>
     )
 }
