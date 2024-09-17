@@ -80,23 +80,26 @@ const ServiceManagement = () => {
                             <TableHead>Description</TableHead>
                             <TableHead>Price</TableHead>
                             <TableHead>Duration</TableHead>
+                            <TableHead>Category</TableHead> {/* New column */}
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {services?.data?.map(
-                            (service: {
+                        {services?.data && services.data.length > 0 ? (
+                            services.data.map((service: {
                                 _id: string;
                                 name: string;
                                 description: string;
                                 price: number;
                                 duration: number;
+                                category: string; // Add category to the type
                             }) => (
                                 <TableRow key={service._id}>
                                     <TableCell>{service.name}</TableCell>
                                     <TableCell>{service.description}</TableCell>
                                     <TableCell>${service.price}</TableCell>
                                     <TableCell>{service.duration} minutes</TableCell>
+                                    <TableCell className="capitalize">{service.category}</TableCell> {/* New cell */}
                                     <TableCell className="flex gap-2">
                                         <Dialog>
                                             <DialogTrigger asChild>
@@ -137,7 +140,13 @@ const ServiceManagement = () => {
                                         </AlertDialog>
                                     </TableCell>
                                 </TableRow>
-                            )
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={6} className="text-center py-4">
+                                    No services available
+                                </TableCell>
+                            </TableRow>
                         )}
                     </TableBody>
                 </Table>

@@ -1,5 +1,5 @@
 import React,{ useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller,useForm } from 'react-hook-form';
 import { DialogClose,DialogContent,DialogDescription,DialogHeader,DialogTitle } from '../ui/dialog';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
@@ -9,6 +9,7 @@ import { Clock,DollarSign,Upload } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
 import { useAddServiceMutation } from '@/redux/features/service/serviceApi';
 import { toast } from 'sonner';
+import { Select,SelectContent,SelectGroup,SelectItem,SelectTrigger,SelectValue } from '../ui/select';
 
 interface Service {
     _id: string;
@@ -17,7 +18,18 @@ interface Service {
     price: number;
     duration: number;
     image: string;
+    category: string; // Add this line
 }
+
+const categories = [
+    { value: 'basicWash',name: 'Basic Wash' },
+    { value: 'detailing',name: 'Detailing' },
+    { value: 'specialtyService',name: 'Specialty Service' },
+    { value: 'premiumPackages',name: 'Premium Packages' },
+    { value: 'ecoFriendly',name: 'Eco-Friendly Services' },
+    { value: 'convenience',name: 'Convenience Services' },
+    { value: 'additional',name: 'Additional Services' }
+];
 
 const AddService = () => {
     const [imageFile,setImageFile] = useState<File | null>(null);
@@ -26,13 +38,14 @@ const AddService = () => {
 
     const [addService,{ isError,error }] = useAddServiceMutation(undefined)
 
-    const { register,handleSubmit,reset,setValue,getValues } = useForm<Omit<Service,'_id'>>({
+    const { register,handleSubmit,reset,setValue,getValues,control } = useForm<Omit<Service,'_id'>>({
         defaultValues: {
             name: '',
             description: '',
             price: 0,
             duration: 0,
             image: '',
+            category: '', // Add this line
         },
     });
 
@@ -161,6 +174,29 @@ const AddService = () => {
                                             placeholder="Describe the service..."
                                             className="min-h-[100px]"
                                             {...register('description')}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="category">Category</Label>
+                                        <Controller
+                                            name="category"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <Select onValueChange={field.onChange} value={field.value}>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Select a category" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectGroup>
+                                                            {categories.map((category) => (
+                                                                <SelectItem key={category.value} value={category.value}>
+                                                                    {category.name}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectGroup>
+                                                    </SelectContent>
+                                                </Select>
+                                            )}
                                         />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">

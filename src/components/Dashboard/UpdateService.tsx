@@ -9,6 +9,8 @@ import { Clock,DollarSign,Upload } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
 import { useGetServiceByIdQuery,useUpdateServiceMutation } from '@/redux/features/service/serviceApi';
 import { toast } from 'sonner';
+import { Select,SelectContent,SelectGroup,SelectItem,SelectTrigger,SelectValue } from '../ui/select';
+import { Controller } from 'react-hook-form';
 
 interface Service {
     _id: string;
@@ -17,10 +19,20 @@ interface Service {
     price: number;
     duration: number;
     image: string;
+    category: string; // Add this line
 }
 
-const UpdateService = ({ serviceId }: { serviceId: string }) => {
+const categories = [
+    { value: 'basicWash',name: 'Basic Wash' },
+    { value: 'detailing',name: 'Detailing' },
+    { value: 'specialtyService',name: 'Specialty Service' },
+    { value: 'premiumPackages',name: 'Premium Packages' },
+    { value: 'ecoFriendly',name: 'Eco-Friendly Services' },
+    { value: 'convenience',name: 'Convenience Services' },
+    { value: 'additional',name: 'Additional Services' }
+];
 
+const UpdateService = ({ serviceId }: { serviceId: string }) => {
 
     const { data: service } = useGetServiceByIdQuery(serviceId);
 
@@ -30,13 +42,14 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
 
     const [updateService,{ isError,error }] = useUpdateServiceMutation(undefined)
 
-    const { register,handleSubmit,reset,setValue,getValues } = useForm<Omit<Service,'_id'>>({
+    const { register,handleSubmit,reset,setValue,getValues,control } = useForm<Omit<Service,'_id'>>({
         defaultValues: {
             name: service?.data?.name || '',
             description: service?.data?.description || '',
             price: service?.data?.price || 0,
             duration: service?.data?.duration || 0,
             image: service?.data?.image || '',
+            category: service?.data?.category || '', // Add this line
         },
     });
 
@@ -47,6 +60,7 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
             setValue('price',service.data.price);
             setValue('duration',service.data.duration);
             setValue('image',service.data.image);
+            setValue('category',service.data.category); // Add this line
             setImagePreview(service.data.image);
         }
     },[service,setValue]);
@@ -222,7 +236,29 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div className="space-y-2">
+                                        <Label htmlFor="category">Category</Label>
+                                        <Controller
+                                            name="category"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <Select onValueChange={field.onChange} value={field.value}>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Select a category" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectGroup>
+                                                            {categories.map((category) => (
+                                                                <SelectItem key={category.value} value={category.value}>
+                                                                    {category.name}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectGroup>
+                                                    </SelectContent>
+                                                </Select>
+                                            )}
+                                        />
+                                    </div>
                                 </form>
                             </div>
                         </div>
