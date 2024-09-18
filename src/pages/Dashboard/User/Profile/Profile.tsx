@@ -1,23 +1,34 @@
-
-
 import { useState } from "react"
+import { useSelector } from "react-redux"
 import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { selectCurrentUser } from "@/redux/features/auth/authSlice"
+import { useUpdateUserProfileMutation } from "@/redux/features/users/usersApi"
+import { toast } from "sonner"
 
 function Profile() {
+    const currentUser = useSelector(selectCurrentUser)
+    const [updateUserProfile,{ isLoading }] = useUpdateUserProfileMutation()
+
     const [user,setUser] = useState({
-        name: "John Doe",
-        email: "john@example.com",
-        phone: "123-456-7890",
-        address: "123 Main St, City, Country",
+        name: currentUser?.name || "",
+        email: currentUser?.email || "",
+        phone: currentUser?.phone || "",
+        address: currentUser?.address || "",
     })
 
-    const handleProfileUpdate = (e) => {
+    const handleProfileUpdate = async (e) => {
         e.preventDefault()
-        // In a real application, you would send this data to your backend
-        console.log("Profile updated:",user)
+        try {
+            // Remove email from the payload as it shouldn't be updated
+            const { email,...updateData } = user
+            await updateUserProfile(updateData).unwrap()
+            toast.success("Profile updated successfully")
+        } catch (error) {
+            toast.error("Failed to update profile")
+        }
     }
 
     return (
@@ -44,7 +55,8 @@ function Profile() {
                                     id="email"
                                     type="email"
                                     value={user.email}
-                                    onChange={(e) => setUser({ ...user,email: e.target.value })}
+                                    disabled
+                                    className=" text-gray-300 cursor-not-allowed"
                                 />
                             </div>
                             <div className="flex flex-col space-y-1.5">
@@ -67,7 +79,9 @@ function Profile() {
                     </form>
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" onClick={handleProfileUpdate}>Save Changes</Button>
+                    <Button type="submit" onClick={handleProfileUpdate} disabled={isLoading}>
+                        {isLoading ? "Saving..." : "Save Changes"}
+                    </Button>
                 </CardFooter>
             </Card>
         </div>

@@ -43,6 +43,14 @@ const usersApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: (result, error, { id }) => [{ type: "users", id }],
     }),
+    // For getting a single user by email
+    getUserByEmail: builder.query({
+      query: (email) => ({
+        url: `/auth/users/email/${email}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, email) => [{ type: "users", email }],
+    }),
   }),
 });
 
@@ -52,4 +60,5 @@ export const {
   useUpdateUserProfileMutation,
   useDeleteUserMutation,
   useUpdateUserRoleMutation,
+  useGetUserByEmailQuery,
 } = usersApi;
