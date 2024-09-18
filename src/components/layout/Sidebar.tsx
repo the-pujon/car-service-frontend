@@ -8,6 +8,8 @@ export function Sidebar() {
         { id: "services",label: "Services",icon: PackageIcon },
         { id: "slots",label: "Slots",icon: CalendarIcon },
         { id: "users",label: "Users",icon: UsersIcon },
+        { id: "my-bookings",label: "My Bookings",icon: CalendarIcon },
+        { id: "profile",label: "My Profile",icon: CalendarIcon },
     ]
 
     return (
