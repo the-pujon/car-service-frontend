@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "@/redux/api/baseApi";
 
 const serviceApi = baseApi.injectEndpoints({
@@ -25,6 +26,22 @@ const serviceApi = baseApi.injectEndpoints({
         url: `/services/${id}`,
         method: "DELETE",
       }),
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          serviceApi.util.updateQueryData("getServices", undefined, (draft) => {
+            if (draft?.data) {
+              draft.data = draft.data.filter(
+                (service: any) => service._id !== id
+              );
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags: ["services"],
     }),
     // For updating a service by ID

@@ -95,6 +95,7 @@ export default function SlotManagement() {
     },[availableSlots])
 
     const handleCreateSlot = async (e: React.FormEvent) => {
+        console.log("newSlot",newSlot)
         e.preventDefault()
         try {
             await createSlot(newSlot).unwrap()

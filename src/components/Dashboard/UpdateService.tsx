@@ -1,16 +1,15 @@
 import React,{ useEffect,useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller,useForm,useFieldArray } from 'react-hook-form';
 import { DialogClose,DialogContent,DialogDescription,DialogHeader,DialogTitle } from '../ui/dialog';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Card,CardContent } from '../ui/card';
-import { Clock,DollarSign,Upload } from 'lucide-react';
+import { Clock,DollarSign,Upload,X,Plus } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
 import { useGetServiceByIdQuery,useUpdateServiceMutation } from '@/redux/features/service/serviceApi';
 import { toast } from 'sonner';
 import { Select,SelectContent,SelectGroup,SelectItem,SelectTrigger,SelectValue } from '../ui/select';
-import { Controller } from 'react-hook-form';
 
 interface Service {
     _id: string;
@@ -19,7 +18,9 @@ interface Service {
     price: number;
     duration: number;
     image: string;
-    category: string; // Add this line
+    category: string;
+    benefits: string[];
+    suitableFor: string[];
 }
 
 const categories = [
@@ -49,8 +50,20 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
             price: service?.data?.price || 0,
             duration: service?.data?.duration || 0,
             image: service?.data?.image || '',
-            category: service?.data?.category || '', // Add this line
+            category: service?.data?.category || '',
+            benefits: service?.data?.benefits || [''],
+            suitableFor: service?.data?.suitableFor || [''],
         },
+    });
+
+    const { fields: benefitFields,append: appendBenefit,remove: removeBenefit } = useFieldArray({
+        control,
+        name: "benefits",
+    });
+
+    const { fields: suitableForFields,append: appendSuitableFor,remove: removeSuitableFor } = useFieldArray({
+        control,
+        name: "suitableFor",
     });
 
     useEffect(() => {
@@ -60,7 +73,9 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
             setValue('price',service.data.price);
             setValue('duration',service.data.duration);
             setValue('image',service.data.image);
-            setValue('category',service.data.category); // Add this line
+            setValue('category',service.data.category);
+            setValue('benefits',service.data.benefits);
+            setValue('suitableFor',service.data.suitableFor);
             setImagePreview(service.data.image);
         }
     },[service,setValue]);
@@ -76,7 +91,7 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
 
     const onSubmit = async (_data: Omit<Service,'_id'>) => {
         setIsUploading(true);
-        const toastId = toast.loading('Adding...');
+        const toastId = toast.loading('Updating...');
 
         if (imageFile) {
             const formData = new FormData();
@@ -84,8 +99,6 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
 
             const imgbbAPI = import.meta.env.VITE_IMGBB_API_KEY;
             const imgbbURL = import.meta.env.VITE_IMGBB_API_URL;
-
-
 
             try {
                 const response = await fetch(`${imgbbURL}?key=${imgbbAPI}`,{
@@ -102,7 +115,7 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
 
                     try {
                         await updateService(updatedServiceData).unwrap();
-                        toast.success('Service Added Successfully',{ id: toastId,duration: 2000 });
+                        toast.success('Service Updated Successfully',{ id: toastId,duration: 2000 });
                     } catch (serviceError) {
                         console.error('Error adding service:',serviceError);
                         toast.error("Failed to add service",{ id: toastId });
@@ -127,10 +140,10 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
 
             try {
                 await updateService(updatedServiceData).unwrap();
-                toast.success('Service Added Successfully',{ id: toastId,duration: 2000 });
+                toast.success('Service Updated Successfully',{ id: toastId,duration: 2000 });
             } catch (serviceError) {
-                console.error('Error adding service:',serviceError);
-                toast.error("Failed to add service",{ id: toastId });
+                console.error('Error update service:',serviceError);
+                toast.error("Failed to update service",{ id: toastId });
             }
 
             reset();
@@ -149,11 +162,11 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
 
 
     return (
-        <DialogContent className="backdrop-blur-md w-full max-w-[60rem] text-white ">
+        <DialogContent className="backdrop-blur-md w-full max-w-[60rem] text-white overflow-y-scroll max-h-[90vh]">
 
             <DialogHeader>
-                <DialogTitle>Add New Service</DialogTitle>
-                <DialogDescription>Enter the details for the new service.</DialogDescription>
+                <DialogTitle>Update Service</DialogTitle>
+                <DialogDescription>Enter the details for update service.</DialogDescription>
             </DialogHeader>
             <div className="w-full max-w-4xl mx-auto p-4 bg-background ">
                 <Card className="border-none shadow-lg">
@@ -232,6 +245,7 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
                                                     min="0"
                                                     className="pl-10"
                                                     {...register('duration',{ valueAsNumber: true })}
+                                                    disabled
                                                 />
                                             </div>
                                         </div>
@@ -259,6 +273,54 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
                                             )}
                                         />
                                     </div>
+                                    <div className="space-y-2">
+                                        <Label>Service Includes</Label>
+                                        {benefitFields.map((field,index) => (
+                                            <div key={field.id} className="flex items-center space-x-2 mb-2">
+                                                <Input
+                                                    {...register(`benefits.${index}`)}
+                                                    placeholder="e.g. Exterior wash"
+                                                />
+                                                {index > 0 && (
+                                                    <Button
+                                                        type="button"
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => removeBenefit(index)}
+                                                    >
+                                                        <X className="h-4 w-4" />
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        ))}
+                                        <Button type="button" variant="outline" size="sm" onClick={() => appendBenefit('')}>
+                                            <Plus className="h-4 w-4 mr-2" /> Add Benefit
+                                        </Button>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Suitable For</Label>
+                                        {suitableForFields.map((field,index) => (
+                                            <div key={field.id} className="flex items-center space-x-2 mb-2">
+                                                <Input
+                                                    {...register(`suitableFor.${index}`)}
+                                                    placeholder="e.g. Sedan"
+                                                />
+                                                {index > 0 && (
+                                                    <Button
+                                                        type="button"
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => removeSuitableFor(index)}
+                                                    >
+                                                        <X className="h-4 w-4" />
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        ))}
+                                        <Button type="button" variant="outline" size="sm" onClick={() => appendSuitableFor('')}>
+                                            <Plus className="h-4 w-4 mr-2" /> Add Vehicle Type
+                                        </Button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -267,7 +329,7 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
             </div>
             <DialogClose asChild>
                 <Button type="submit" form='service-form' className='button'>
-                    Add Service
+                    Update Service
                 </Button>
             </DialogClose>
         </DialogContent>

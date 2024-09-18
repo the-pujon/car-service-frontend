@@ -31,6 +31,7 @@ import { useDeleteServiceMutation,useGetServicesQuery } from "@/redux/features/s
 import { Edit,Trash } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Tooltip,TooltipContent,TooltipProvider,TooltipTrigger } from "@/components/ui/tooltip";
 
 const ServiceManagement = () => {
     const { data: services,isLoading,isError,error } = useGetServicesQuery(undefined);
@@ -42,6 +43,14 @@ const ServiceManagement = () => {
         const apiError = error as { data?: { message?: string } };
         toast.error(apiError.data?.message || "Something went wrong");
     }
+
+    const renderList = (items: string[]) => (
+        <ul className="list-disc pl-4">
+            {items.map((item,index) => (
+                <li key={index}>{item}</li>
+            ))}
+        </ul>
+    );
 
     return (
         <div className="text-white h-screen p-5 relative overflow-y-auto">
@@ -69,6 +78,8 @@ const ServiceManagement = () => {
                             <TableHead>Price</TableHead>
                             <TableHead>Duration</TableHead>
                             <TableHead>Category</TableHead>
+                            <TableHead>Benefits</TableHead>
+                            <TableHead>Suitable For</TableHead>
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -81,6 +92,38 @@ const ServiceManagement = () => {
                                     <TableCell>${service.price}</TableCell>
                                     <TableCell>{service.duration} minutes</TableCell>
                                     <TableCell className="capitalize">{service.category}</TableCell>
+                                    <TableCell>
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    {service.benefits.slice(0,2).join(', ')}
+                                                    {service.benefits.length > 2 && '...'}
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <div className="max-w-xs">
+                                                        <strong>Benefits:</strong>
+                                                        {renderList(service.benefits)}
+                                                    </div>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                    </TableCell>
+                                    <TableCell>
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    {service.suitableFor.slice(0,2).join(', ')}
+                                                    {service.suitableFor.length > 2 && '...'}
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <div className="max-w-xs">
+                                                        <strong>Suitable For:</strong>
+                                                        {renderList(service.suitableFor)}
+                                                    </div>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                    </TableCell>
                                     <TableCell className="flex gap-2">
                                         <Dialog>
                                             <DialogTrigger asChild>
@@ -107,8 +150,13 @@ const ServiceManagement = () => {
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                                                     <AlertDialogAction
                                                         onClick={async () => {
-                                                            await deleteService(service._id);
-                                                            toast.success("Service Deleted");
+                                                            try {
+                                                                await deleteService(service._id).unwrap();
+                                                                toast.success("Service Deleted");
+                                                            } catch (error) {
+                                                                console.error('Error deleting service:',error);
+                                                                toast.error("Failed to delete service");
+                                                            }
                                                         }}
                                                     >
                                                         Delete
@@ -121,7 +169,7 @@ const ServiceManagement = () => {
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={6} className="text-center py-4">
+                                <TableCell colSpan={8} className="text-center py-4">
                                     No services available
                                 </TableCell>
                             </TableRow>

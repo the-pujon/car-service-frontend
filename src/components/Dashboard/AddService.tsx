@@ -1,5 +1,5 @@
 import React,{ useState } from 'react';
-import { Controller,useForm } from 'react-hook-form';
+import { Controller,useForm,useFieldArray } from 'react-hook-form';
 import { DialogClose,DialogContent,DialogDescription,DialogHeader,DialogTitle } from '../ui/dialog';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
@@ -10,6 +10,7 @@ import { Textarea } from '../ui/textarea';
 import { useAddServiceMutation } from '@/redux/features/service/serviceApi';
 import { toast } from 'sonner';
 import { Select,SelectContent,SelectGroup,SelectItem,SelectTrigger,SelectValue } from '../ui/select';
+import { Plus,X } from 'lucide-react';
 
 interface Service {
     _id: string;
@@ -18,7 +19,9 @@ interface Service {
     price: number;
     duration: number;
     image: string;
-    category: string; // Add this line
+    category: string;
+    benefits: string[];
+    suitableFor: string[];
 }
 
 const categories = [
@@ -45,8 +48,22 @@ const AddService = () => {
             price: 0,
             duration: 0,
             image: '',
-            category: '', // Add this line
+            category: '',
+            benefits: [''],
+            suitableFor: [''],
         },
+    });
+
+    const { fields: benefitFields,append: appendBenefit,remove: removeBenefit } = useFieldArray({
+        control,
+        name: "benefits",
+        shouldUnregister: false,
+    });
+
+    const { fields: suitableForFields,append: appendSuitableFor,remove: removeSuitableFor } = useFieldArray({
+        control,
+        name: "suitableFor",
+        shouldUnregister: false,
     });
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +79,8 @@ const AddService = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onSubmit = async (_data: Omit<Service,'_id'>) => {
         setIsUploading(true);
+
+        //console.log(_data)
 
         if (!imageFile) {
             console.error('Image file is missing');
@@ -116,9 +135,8 @@ const AddService = () => {
         toast.error(apiError.data?.message || "Something went wrong");
     }
 
-
     return (
-        <DialogContent className="backdrop-blur-md w-full max-w-[60rem] text-white ">
+        <DialogContent className="backdrop-blur-md w-full max-w-[60rem] text-white overflow-y-scroll max-h-[90vh]">
 
             <DialogHeader>
                 <DialogTitle>Add New Service</DialogTitle>
@@ -198,6 +216,62 @@ const AddService = () => {
                                                 </Select>
                                             )}
                                         />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Service Includes</Label>
+                                        <div className="flex items-center space-x-2 mb-2">
+                                            <Input
+                                                {...register('benefits.0')}
+                                                placeholder="e.g. Exterior wash"
+                                            />
+                                        </div>
+                                        {benefitFields.slice(1).map((field,index) => (
+                                            <div key={field.id} className="flex items-center space-x-2 mb-2">
+                                                <Input
+                                                    {...register(`benefits.${index + 1}`)}
+                                                    placeholder="e.g. Exterior wash"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => removeBenefit(index + 1)}
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                        <Button type="button" variant="outline" size="sm" onClick={() => appendBenefit('')}>
+                                            <Plus className="h-4 w-4 mr-2" /> Add Benefit
+                                        </Button>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Suitable For</Label>
+                                        <div className="flex items-center space-x-2 mb-2">
+                                            <Input
+                                                {...register('suitableFor.0')}
+                                                placeholder="e.g. Sedan"
+                                            />
+                                        </div>
+                                        {suitableForFields.slice(1).map((field,index) => (
+                                            <div key={field.id} className="flex items-center space-x-2 mb-2">
+                                                <Input
+                                                    {...register(`suitableFor.${index + 1}`)}
+                                                    placeholder="e.g. Sedan"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => removeSuitableFor(index + 1)}
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                        <Button type="button" variant="outline" size="sm" onClick={() => appendSuitableFor('')}>
+                                            <Plus className="h-4 w-4 mr-2" /> Add Vehicle Type
+                                        </Button>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-2">
