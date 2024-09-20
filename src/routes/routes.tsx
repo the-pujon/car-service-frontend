@@ -18,6 +18,7 @@ import BookingSuccess from "@/pages/Booking/BookingSuccess";
 import BookingFail from "@/pages/Booking/BookingFail";
 import RedirectPage from "@/pages/Booking/RedirectHandler";
 import RedirectHandler from "@/pages/Booking/RedirectHandler";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
     {
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
             },
             {
                 path: 'booking/:serviceId/:slotId',
-                element: <Booking />,
+                element: <ProtectedRoute role="user"><Booking /></ProtectedRoute>,
             },
             {
                 path: 'serviceDetails/:id',
@@ -43,11 +44,11 @@ const router = createBrowserRouter([
             },
             {
                 path: 'booking-success',
-                element: <BookingSuccess />,
+                element: <ProtectedRoute role="user"><BookingSuccess /></ProtectedRoute>,
             },
             {
                 path: 'booking-fail',
-                element: <BookingFail />,
+                element: <ProtectedRoute role="user"><BookingFail /></ProtectedRoute>,
             },
             //{
             //    path: "redirect",
@@ -55,7 +56,7 @@ const router = createBrowserRouter([
             //},
             {
                 path: "*",
-                element: <RedirectHandler />,
+                element: <ProtectedRoute role="user"><RedirectHandler /></ProtectedRoute>,
             }
         ]
     },
@@ -77,28 +78,28 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "",
-                element: <AdminOverview />
+                element: <ProtectedRoute role="admin"><AdminOverview /></ProtectedRoute>
             },
             {
                 path: 'services',
-                element: <ServiceManagement />
+                element: <ProtectedRoute role="admin"><ServiceManagement /></ProtectedRoute>
             },
             {
                 path: 'slots',
-                element: <SlotManagement />
+                element: <ProtectedRoute role="admin"><SlotManagement /></ProtectedRoute>
             },
             {
                 path: 'users',
-                element: <UserManagement />
+                element: <ProtectedRoute role="admin"><UserManagement /></ProtectedRoute>
 
             },
             {
                 path: 'my-bookings',
-                element: <MyBookings />
+                element: <ProtectedRoute role="user"><MyBookings /></ProtectedRoute>
             },
             {
                 path: 'profile',
-                element: <Profile />
+                element: <ProtectedRoute role="user"><Profile /></ProtectedRoute>
             }
         ]
     }

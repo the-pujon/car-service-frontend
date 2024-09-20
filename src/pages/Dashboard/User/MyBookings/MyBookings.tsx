@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { useState,useEffect } from "react"
@@ -5,6 +6,7 @@ import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "@/compone
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table"
 import { ServiceSlotCountdown } from "@/components/Dashboard/ServiceSlotCountdown"
 import { useGetUserBookingsQuery } from "@/redux/features/bookings/bookingApi"
+import Loading from "@/components/ui/Loading"
 //import { useGetUserBookingsQuery } from "@/redux/features/bookings/bookingApi"
 
 const MyBookings = () => {
@@ -17,10 +19,10 @@ const MyBookings = () => {
     useEffect(() => {
         if (data?.data) {
             const now = new Date()
-            const past = []
-            const upcoming = []
+            const past: any[] = []
+            const upcoming: any[] = []
 
-            data.data.forEach(booking => {
+            data.data.forEach((booking: any) => {
                 const bookingDate = new Date(`${booking.slot.date} ${booking.slot.startTime}`)
                 if (bookingDate < now) {
                     past.push(booking)
@@ -42,7 +44,7 @@ const MyBookings = () => {
         }
     },[data])
 
-    const renderBookingInfo = (booking) => (
+    const renderBookingInfo = (booking: any) => (
         <>
             <h3 className="text-lg font-semibold">{booking.service?.name || 'Unnamed Service'}</h3>
             <p className="text-sm text-gray-600">{`${booking.slot.date} at ${booking.slot.startTime}`}</p>
@@ -50,16 +52,17 @@ const MyBookings = () => {
         </>
     )
 
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
+
 
     if (isError) {
         return <div>Error loading bookings</div>
     }
 
     return (
-        <div className="container mx-auto p-4 space-y-6">
+        <div className=" p-4 space-y-6 overflow-y-scroll">
+            {
+                isLoading && <Loading />
+            }
             {nextBooking && (
                 <Card className="">
                     <CardHeader>
@@ -70,7 +73,7 @@ const MyBookings = () => {
                             <div>
                                 {renderBookingInfo(nextBooking)}
                             </div>
-                            <ServiceSlotCountdown date={nextBooking.slot.date} time={nextBooking.slot.startTime} />
+                            <ServiceSlotCountdown date={nextBooking?.slot.date} time={nextBooking?.slot.startTime} />
                         </div>
                     </CardContent>
                 </Card>
@@ -82,7 +85,7 @@ const MyBookings = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {upcomingBookings.map((booking) => (
+                        {upcomingBookings.map((booking: any) => (
                             <Card key={booking._id}>
                                 <CardHeader>
                                     <CardTitle>{booking.service?.name || 'Unnamed Service'}</CardTitle>
@@ -113,7 +116,7 @@ const MyBookings = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {pastBookings.map((booking) => (
+                            {pastBookings.map((booking: any) => (
                                 <TableRow key={booking._id}>
                                     <TableCell>{booking.service?.name || 'Unnamed Service'}</TableCell>
                                     <TableCell>{booking.slot.date}</TableCell>
