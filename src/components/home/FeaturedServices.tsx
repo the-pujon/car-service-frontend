@@ -6,12 +6,12 @@ import { Link } from 'react-router-dom';
 
 const FeaturedServices = () => {
 
-    const { data: services,isError,isLoading } = useGetServicesQuery(undefined);
+    const { data: services } = useGetServicesQuery(undefined);
     return (
         <div className="wrapper pt-32">
 
-            <div className='flex justify-between items-end pb-10'>
-                <div className='w-1/2 space-y-3'>
+            <div className='flex flex-col lg:flex-row justify-between sm:items-end pb-10'>
+                <div className='w-full lg:w-1/2 space-y-3'>
                     <p className='tracking-widest'>WHAT WE OFFER</p>
                     <h1 className='text-5xl font-bold'>We are dedicated to providing our best service to you</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta, laborum?</p>

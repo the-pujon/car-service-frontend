@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 const About = () => {
     return (
         <div className="wrapper py-32 z-30">
-            <div className="flex gap-9 justify-center">
+            <div className="flex flex-col lg:flex-row gap-9 justify-center">
                 <div className="relative w-11/12">
                     <img src={hero1} alt="" className="" />
                     <img
@@ -60,7 +60,7 @@ const About = () => {
                         </div>
                     </div>
                     <hr className=" border-white" />
-                    <div className="flex gap-10 items-center">
+                    <div className="flex flex-col lg:flex-row gap-10 sm:items-center">
                         <Button className="bg-foreground text-white font-bold hover:text-black ">
                             More about us
                         </Button>

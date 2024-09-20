@@ -16,7 +16,6 @@ import MyBookings from "@/pages/Dashboard/User/MyBookings/MyBookings";
 import Profile from "@/pages/Dashboard/User/Profile/Profile";
 import BookingSuccess from "@/pages/Booking/BookingSuccess";
 import BookingFail from "@/pages/Booking/BookingFail";
-import RedirectPage from "@/pages/Booking/RedirectHandler";
 import RedirectHandler from "@/pages/Booking/RedirectHandler";
 import ProtectedRoute from "./ProtectedRoute";
 

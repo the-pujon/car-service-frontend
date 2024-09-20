@@ -56,7 +56,7 @@ const Review = () => {
 
     return (
         <div className='wrapper pb-32'>
-            <div className='flex items-center'>
+            <div className='flex flex-col lg:flex-row items-center'>
                 <div className='w-full'>
 
                     <p className='text-6xl capitalize max-w-3xl tracking-wide font-bold'>Feel free to say what you think about us</p>
@@ -65,7 +65,7 @@ const Review = () => {
                     </p>
                     <img src={feedback} className='w-[35rem] z-20' alt="" />
                 </div>
-                <div className='w-1/2 relative'>
+                <div className='w-full lg:w-1/2 relative'>
                     {
                         expiredToken && <Overlay title={'Want to give feedback?'} />
                     }
