@@ -1,8 +1,12 @@
-import service1 from '../../assets/Image/Services/Full Services Wash.jpg'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useGetServicesQuery } from '@/redux/features/service/serviceApi';
 import { Button } from '../ui/button';
 import ServiceCard from '../ui/ServiceCard'
+import { Link } from 'react-router-dom';
 
 const FeaturedServices = () => {
+
+    const { data: services,isError,isLoading } = useGetServicesQuery(undefined);
     return (
         <div className="wrapper pt-32">
 
@@ -12,29 +16,21 @@ const FeaturedServices = () => {
                     <h1 className='text-5xl font-bold'>We are dedicated to providing our best service to you</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta, laborum?</p>
                 </div>
-                <Button className='tracking-widest bg-foreground text-white hover:text-black px-7 py-7'>VIEW ALL SERVICES</Button>
+                <Button asChild className='tracking-widest bg-foreground text-white hover:text-black px-7 py-7'>
+                    <Link to="/services">VIEW ALL SERVICES</Link>
+                </Button>
             </div>
             <div className='flex flex-col sm:flex-row gap-3'>
-                <ServiceCard
-                    image={service1}
-                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit accusantium quis ut ratione fuga amet veniam, temporibus aliquid quam ex."
-                    title="Full Car Wash"
-                />
-                <ServiceCard
-                    image={service1}
-                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit accusantium quis ut ratione fuga amet veniam, temporibus aliquid quam ex."
-                    title="Full Car Wash"
-                />
-                <ServiceCard
-                    image={service1}
-                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit accusantium quis ut ratione fuga amet veniam, temporibus aliquid quam ex."
-                    title="Full Car Wash"
-                />
-                {/*<ServiceCard
-                    image={service1}
-                    description="Complete exterior and interior wash for your vehicle."
-                    title="Full Car Wash"
-                />*/}
+                {services?.data?.slice(0,3).map((service: any) => (
+                    <ServiceCard
+                        key={service._id}
+                        image={service.image}
+                        description={service.description}
+                        title={service.name}
+                        price={service.price}
+                        _id={service._id}
+                    />
+                ))}
             </div>
         </div>
     );
