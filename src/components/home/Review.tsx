@@ -9,6 +9,8 @@ import { useAppSelector } from '@/redux/hook'
 import { isTokenExpired } from '@/utils/isTokenExpired'
 import { useCurrentToken } from '@/redux/features/auth/authSlice'
 import Overlay from './Overlay'
+import { useCreateReviewMutation } from '@/redux/features/review/reviewApi'
+import { toast } from 'sonner'
 
 type Inputs = {
     name: string
@@ -18,11 +20,11 @@ type Inputs = {
 }
 
 const Review = () => {
-
     const {
         register,
         handleSubmit,
         control,
+        reset,
         formState: { errors },
     } = useForm<Inputs>({
         mode: 'onBlur',
@@ -35,20 +37,24 @@ const Review = () => {
     });
 
     const token = useAppSelector(useCurrentToken)
-
     const expiredToken = isTokenExpired(token)
 
-    //form submitting
-    const onSubmit: SubmitHandler<Inputs> = (data) => {
-        alert(JSON.stringify(data,undefined,2));
-    }
+    const [createReview,{ isLoading }] = useCreateReviewMutation()
 
+    //form submitting
+    const onSubmit: SubmitHandler<Inputs> = async (data) => {
+        try {
+            const response = await createReview(data).unwrap()
+            toast.success('Review submitted successfully!')
+            reset() // Reset form after successful submission
+        } catch (error) {
+            toast.error('Failed to submit review. Please try again.')
+        }
+    }
 
     const myStyles = {
         itemShapes: ThinStar,
         activeFillColor: '#0435BE',
-        //inactiveFillColor: '#fbf1a9',
-
         itemStrokeWidth: 1,
         inactiveStrokeColor: '#0435BE',
         activeStrokeColor: '#0435BE'
@@ -58,7 +64,6 @@ const Review = () => {
         <div className='wrapper pb-32'>
             <div className='flex flex-col lg:flex-row items-center'>
                 <div className='w-full'>
-
                     <p className='text-6xl capitalize max-w-3xl tracking-wide font-bold'>Feel free to say what you think about us</p>
                     <p className='text-sm pt-2 text-gray-300'>
                         Give us your valuable ratings and tell us our mistakes or how can we improve
@@ -72,7 +77,6 @@ const Review = () => {
 
                     <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-5'>
                         <div className='max-w-sm'>
-                            {/*<div id="rating_label"></div>*/}
                             <Controller
                                 control={control}
                                 name="rating"
@@ -94,15 +98,13 @@ const Review = () => {
                         </div>
                         <Input className='backdrop-blur-sm' required type="name" placeholder="Name" id="name" {...register('name',{ required: true })} />
                         {errors.name && <div>Name is required.</div>}
-                        <Input className='backdrop-blur-sm' required type="email" placeholder="Email" id="name" {...register('email',{ required: true })} />
+                        <Input className='backdrop-blur-sm' required type="email" placeholder="Email" id="email" {...register('email',{ required: true })} />
                         {errors.email && <div>Email is required.</div>}
                         <Textarea className='backdrop-blur-sm' rows={8} placeholder="Type your message here." id="message" {...register('message',{ required: true })} />
+                        {errors.message && <div>Message is required.</div>}
 
-
-
-
-                        <Button type="submit" className='button hover:bg-white'>
-                            Submit review
+                        <Button type="submit" className='button hover:bg-white' disabled={isLoading}>
+                            {isLoading ? 'Submitting...' : 'Submit review'}
                         </Button>
                     </form>
                 </div>

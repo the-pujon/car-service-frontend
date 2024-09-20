@@ -1,5 +1,5 @@
 import { useState,useEffect } from 'react'
-import { useParams,useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -10,6 +10,7 @@ import { SubmitHandler,useForm,Controller } from 'react-hook-form'
 import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select'
 import { useGetServiceByIdQuery } from '@/redux/features/service/serviceApi'
 import { useGetSlotByIdQuery } from '@/redux/features/slot/slotApi'
+import Loading from '@/components/ui/Loading'
 
 type FormValues = {
     vehicleType: string
@@ -36,7 +37,6 @@ const vehicleTypes = [
 
 export default function Booking() {
     const { serviceId,slotId } = useParams<{ serviceId: string,slotId: string }>()
-    const navigate = useNavigate()
     const { register,control,handleSubmit,setValue,formState: { isSubmitting } } = useForm<FormValues>()
     const [isLoading,setIsLoading] = useState(false)
 
@@ -58,8 +58,6 @@ export default function Booking() {
                 ...formData,
                 serviceId,
                 slotId,
-                //serviceName: service?.data.name,
-                //servicePrice: service?.data.price
             }));
 
             // Set a flag to indicate that we're expecting a redirect
@@ -109,7 +107,7 @@ export default function Booking() {
     }
 
     if (isServiceLoading || isSlotLoading) {
-        return <div>Loading...</div>
+        return <div className='h-screen relative'><Loading /></div>
     }
 
     if (!service || !slot) {

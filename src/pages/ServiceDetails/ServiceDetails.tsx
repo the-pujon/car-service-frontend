@@ -1,3 +1,5 @@
+'use client'
+
 import { useState,useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Calendar } from '@/components/ui/calendar'
@@ -9,13 +11,13 @@ import { Clock,DollarSign,Car,Droplets,Shield,Sparkles } from 'lucide-react'
 import { useGetServiceByIdQuery } from '@/redux/features/service/serviceApi'
 import { useGetSlotAvailabilityQuery } from '@/redux/features/slot/slotApi'
 import Loading from '@/components/ui/Loading'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
-export default function CarWashServicePage() {
+export default function ServiceDetails() {
     const { id } = useParams<{ id: string }>()
     const [selectedDate,setSelectedDate] = useState<Date | undefined>(new Date())
     const [selectedSlot,setSelectedSlot] = useState<string | null>(null)
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     const { data: service,isLoading: isServiceLoading,isError: isServiceError } = useGetServiceByIdQuery(id)
     const { data: slots,isLoading: isSlotsLoading,isError: isSlotsError } = useGetSlotAvailabilityQuery({
@@ -23,22 +25,20 @@ export default function CarWashServicePage() {
         serviceID: id
     },{ skip: !selectedDate })
 
-
-    // Reset selected slot when date changes
     useEffect(() => {
         setSelectedSlot(null)
     },[selectedDate])
 
     if (isServiceLoading || isSlotsLoading) return <div className='h-screen relative'><Loading /></div>
-    //if (isServiceError || isSlotsError) return <div>Error loading service details</div>
+    if (isServiceError || isSlotsError) return <div className="text-center py-10">Error loading service details</div>
 
     const handleBooking = () => {
         if (selectedSlot && id) {
-            navigate(`/booking/${id}/${selectedSlot}`);
+            navigate(`/booking/${id}/${selectedSlot}`)
         } else {
-            alert('Please select a time slot before booking.');
+            alert('Please select a time slot before booking.')
         }
-    };
+    }
 
     const isPastDate = (date: Date) => {
         return isBefore(startOfDay(date),startOfDay(new Date()))
@@ -47,61 +47,55 @@ export default function CarWashServicePage() {
     return (
         <div className="min-h-screen relative">
             <div className="wrapper mx-auto overflow-hidden shadow-lg">
-                <div className="relative h-[30rem] overflow-hidden">
+                <div className="relative h-[20rem] md:h-[30rem] overflow-hidden">
                     <img
                         src={service.data.image}
                         alt={service.data.name}
                         className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-50 flex items-end">
-                        <div className="p-6">
+                        <div className="p-4 md:p-6">
                             <Badge className="mb-2" variant="secondary"><DollarSign className="w-4 h-4 mr-2" /> {service.data.price}</Badge>
-                            <CardTitle className="text-3xl font-bold text-white mb-2">{service.data.name}</CardTitle>
-                            <CardDescription className="text-gray-200">{service.data.description}</CardDescription>
+                            <CardTitle className="text-2xl md:text-3xl font-bold text-white mb-2">{service.data.name}</CardTitle>
+                            <CardDescription className="text-gray-200 text-sm md:text-base">{service.data.description}</CardDescription>
                         </div>
                     </div>
                 </div>
 
-                <div className="p-6">
-                    <div className="flex w-full justify-between gap-8">
-                        <div className='sticky top-4 self-start'>
+                <div className="p-4 md:p-6">
+                    <div className="flex flex-col lg:flex-row w-full justify-between gap-8">
+                        <div className='lg:sticky lg:top-4 lg:self-start'>
                             <h4 className="text-lg font-semibold mt-6 mb-2 text-white">Service Description</h4>
-                            <div>{service.data.description}</div>
+                            <div className="text-sm md:text-base">{service.data.description}</div>
                             <div>
-                                <div>
-                                    <h4 className="text-lg font-semibold mt-6 mb-2 text-white">Service Includes</h4>
-                                    <ul className="grid grid-cols-2 mb-4 gap-2">
-                                        {service?.data?.benefits.map((benefit,index) => (
-                                            <li key={index} className="flex items-center">
-                                                <Sparkles className="w-4 h-4 mr-2 text-blue-500" />
-                                                <span className="text-sm">{benefit}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h3 className="text-xl font-semibold mb-2 text-white">Service Details</h3>
-                                    <div className="space-y-2">
-                                        <div className="flex items-center">
-                                            <Clock className="w-5 h-5 mr-2 text-blue-500" />
-                                            <span><strong>Duration:</strong> {service.data.duration}</span>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <DollarSign className="w-5 h-5 mr-2 text-blue-500" />
-                                            <span><strong>Price:</strong> {service.data.price}</span>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <Car className="w-5 h-5 mr-2 text-blue-500" />
-                                            <span><strong>Suitable for:</strong> {service.data.suitableFor.join(', ')}</span>
-                                        </div>
+                                <h4 className="text-lg font-semibold mt-6 mb-2 text-white">Service Includes</h4>
+                                <ul className="grid grid-cols-1 sm:grid-cols-2 mb-4 gap-2">
+                                    {service?.data?.benefits.map((benefit,index) => (
+                                        <li key={index} className="flex items-center">
+                                            <Sparkles className="w-4 h-4 mr-2 text-blue-500" />
+                                            <span className="text-sm">{benefit}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <h3 className="text-xl font-semibold mb-2 text-white">Service Details</h3>
+                                <div className="space-y-2">
+                                    <div className="flex items-center">
+                                        <Clock className="w-5 h-5 mr-2 text-blue-500" />
+                                        <span className="text-sm"><strong>Duration:</strong> {service.data.duration}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <DollarSign className="w-5 h-5 mr-2 text-blue-500" />
+                                        <span className="text-sm"><strong>Price:</strong> {service.data.price}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <Car className="w-5 h-5 mr-2 text-blue-500" />
+                                        <span className="text-sm"><strong>Suitable for:</strong> {service.data.suitableFor.join(', ')}</span>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
-                        {/* times */}
-                        <div className='sticky top-4 self-start'>
+                        <div className='lg:sticky lg:top-4 lg:self-start mt-8 lg:mt-0'>
                             <div>
                                 <h3 className="text-xl font-semibold mb-4 text-white">Select a Date</h3>
                                 <Calendar
@@ -109,7 +103,7 @@ export default function CarWashServicePage() {
                                     selected={selectedDate}
                                     onSelect={setSelectedDate}
                                     disabled={(date) => isPastDate(date)}
-                                    className="rounded-md border shadow p-3 bg-primary-foreground/30"
+                                    className="rounded-md border shadow p-3 bg-primary-foreground/30 mx-auto"
                                 />
                             </div>
                             <div className="mt-8">
@@ -119,7 +113,7 @@ export default function CarWashServicePage() {
                                 </p>
                                 {selectedDate ? (
                                     slots && !isSlotsError && slots.data && slots.data.length > 0 ? (
-                                        <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                             {slots.data.map((slot) => (
                                                 <Button
                                                     key={slot._id}
@@ -133,14 +127,14 @@ export default function CarWashServicePage() {
                                             ))}
                                         </div>
                                     ) : (
-                                        <p className="text-gray-400 w-64 text-sm">No slots available for this date. Please select another date.</p>
+                                        <p className="text-gray-400 w-full md:w-64 text-sm">No slots available for this date. Please select another date.</p>
                                     )
                                 ) : (
                                     <p className="text-gray-400">Please select a date to view available slots.</p>
                                 )}
                             </div>
                             <Button
-                                className="w-full mt-3 bg-foreground text-white hover:bg-black"
+                                className="w-full mt-6 bg-foreground text-white hover:bg-black"
                                 size="lg"
                                 disabled={!selectedSlot || isPastDate(selectedDate!)}
                                 onClick={handleBooking}
@@ -149,11 +143,9 @@ export default function CarWashServicePage() {
                             </Button>
                         </div>
                     </div>
-
                 </div>
-
             </div>
-            <div className="mt-8 text-center wrapper mb-5">
+            <div className="mt-8 text-center wrapper mb-5 px-4">
                 <h3 className="text-2xl font-semibold mb-4 text-white">Why Choose Our Premium Car Wash?</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <Card className="bg-primary-foreground">

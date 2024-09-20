@@ -8,7 +8,7 @@ import {
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useAppSelector } from "@/redux/hook";
-import { signOut,useCurrentToken } from "@/redux/features/auth/authSlice";
+import { selectCurrentUser,signOut,useCurrentToken } from "@/redux/features/auth/authSlice";
 import { isTokenExpired } from "@/utils/isTokenExpired";
 import { Button } from "../ui/button";
 import { useDispatch } from "react-redux";
@@ -17,6 +17,7 @@ const Navbar: React.FC = () => {
     const dispatch = useDispatch();
     const token = useAppSelector(useCurrentToken);
     const expiredToken = isTokenExpired(token);
+    const user = useAppSelector(selectCurrentUser);
 
     return (
         <div>
@@ -66,7 +67,9 @@ const Navbar: React.FC = () => {
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
                                             <DropdownMenuItem asChild>
-                                                <Link to="/dashboard">Dashboard</Link>
+                                                {
+                                                    user?.role === "admin" ? <Link to="/dashboard">Dashboard</Link> : <Link to="/dashboard/my-bookings">My Bookings</Link>
+                                                }
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
                                                 onClick={() => dispatch(signOut())}
