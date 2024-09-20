@@ -23,7 +23,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ image,description,title,price
                 />
                 <Badge className="absolute top-4 left-4 bg-foreground text-white tracking-widest px-2 py-1">
                     <DollarSign className="w-4 h-4 mr-1 inline" />
-                    {price.toFixed(2)}
+                    {price?.toFixed(2)}
                 </Badge>
                 <div className="absolute -bottom-6 right-4 bg-foreground p-3 rounded-full shadow-lg transition-transform duration-300 group-hover:-translate-y-2">
                     <SettingsIcon className="w-6 h-6 text-white" />

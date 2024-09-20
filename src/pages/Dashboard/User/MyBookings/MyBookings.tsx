@@ -4,59 +4,73 @@ import { useState,useEffect } from "react"
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "@/components/ui/card"
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table"
 import { ServiceSlotCountdown } from "@/components/Dashboard/ServiceSlotCountdown"
+import { useGetUserBookingsQuery } from "@/redux/features/bookings/bookingApi"
+//import { useGetUserBookingsQuery } from "@/redux/features/bookings/bookingApi"
 
 const MyBookings = () => {
-    const [pastBookings,setPastBookings] = useState([
-        { id: 1,service: "Car Wash",date: "2023-05-15",time: "10:00 AM",price: 30 },
-        { id: 2,service: "Oil Change",date: "2023-06-01",time: "2:00 PM",price: 50 },
-    ])
+    const { data,isLoading,isError } = useGetUserBookingsQuery(undefined)
 
-    const [upcomingBookings,setUpcomingBookings] = useState([
-        {
-            id: 3,
-            service: "Tire Rotation",
-            date: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString().split('T')[0], // 2 hours from now
-            time: new Date(Date.now() + 2 * 60 * 60 * 1000).toTimeString().split(' ')[0].slice(0,5),
-            price: 40
-        },
-        {
-            id: 4,
-            service: "Car Detailing",
-            date: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 24 hours from now
-            time: new Date(Date.now() + 24 * 60 * 60 * 1000).toTimeString().split(' ')[0].slice(0,5),
-            price: 100
-        },
-    ])
-
+    const [pastBookings,setPastBookings] = useState([])
+    const [upcomingBookings,setUpcomingBookings] = useState([])
     const [nextBooking,setNextBooking] = useState(null)
 
     useEffect(() => {
-        // Sort upcoming bookings by date and time
-        const sortedBookings = [...upcomingBookings].sort((a,b) => {
-            const dateA = new Date(`${a.date} ${a.time}`)
-            const dateB = new Date(`${b.date} ${b.time}`)
-            return dateA.getTime() - dateB.getTime()
-        })
+        if (data?.data) {
+            const now = new Date()
+            const past = []
+            const upcoming = []
 
-        // Set the next booking
-        setNextBooking(sortedBookings[0])
-    },[upcomingBookings])
+            data.data.forEach(booking => {
+                const bookingDate = new Date(`${booking.slot.date} ${booking.slot.startTime}`)
+                if (bookingDate < now) {
+                    past.push(booking)
+                } else {
+                    upcoming.push(booking)
+                }
+            })
+
+            setPastBookings(past)
+            setUpcomingBookings(upcoming)
+
+            // Sort upcoming bookings and set the next booking
+            const sortedUpcoming = [...upcoming].sort((a,b) => {
+                const dateA = new Date(`${a.slot.date} ${a.slot.startTime}`)
+                const dateB = new Date(`${b.slot.date} ${b.slot.startTime}`)
+                return dateA.getTime() - dateB.getTime()
+            })
+            setNextBooking(sortedUpcoming[0] || null)
+        }
+    },[data])
+
+    const renderBookingInfo = (booking) => (
+        <>
+            <h3 className="text-lg font-semibold">{booking.service?.name || 'Unnamed Service'}</h3>
+            <p className="text-sm text-gray-600">{`${booking.slot.date} at ${booking.slot.startTime}`}</p>
+            <p className="text-sm font-medium mt-1">Price: ${booking.service?.price || 'N/A'}</p>
+        </>
+    )
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+
+    if (isError) {
+        return <div>Error loading bookings</div>
+    }
 
     return (
         <div className="container mx-auto p-4 space-y-6">
             {nextBooking && (
-                <Card className="bg-blue-50">
+                <Card className="">
                     <CardHeader>
                         <CardTitle>Next Upcoming Booking</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="flex justify-between items-center">
                             <div>
-                                <h3 className="text-lg font-semibold">{nextBooking.service}</h3>
-                                <p className="text-sm text-gray-600">{`${nextBooking.date} at ${nextBooking.time}`}</p>
-                                <p className="text-sm font-medium mt-1">Price: ${nextBooking.price}</p>
+                                {renderBookingInfo(nextBooking)}
                             </div>
-                            <ServiceSlotCountdown date={nextBooking.date} time={nextBooking.time} />
+                            <ServiceSlotCountdown date={nextBooking.slot.date} time={nextBooking.slot.startTime} />
                         </div>
                     </CardContent>
                 </Card>
@@ -69,14 +83,14 @@ const MyBookings = () => {
                 <CardContent>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {upcomingBookings.map((booking) => (
-                            <Card key={booking.id}>
+                            <Card key={booking._id}>
                                 <CardHeader>
-                                    <CardTitle>{booking.service}</CardTitle>
-                                    <CardDescription>{`${booking.date} at ${booking.time}`}</CardDescription>
+                                    <CardTitle>{booking.service?.name || 'Unnamed Service'}</CardTitle>
+                                    <CardDescription>{`${booking.slot.date} at ${booking.slot.startTime}`}</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="mb-2">Price: ${booking.price}</p>
-                                    <ServiceSlotCountdown date={booking.date} time={booking.time} />
+                                    <p className="mb-2">Price: ${booking.service?.price || 'N/A'}</p>
+                                    <ServiceSlotCountdown date={booking.slot.date} time={booking.slot.startTime} />
                                 </CardContent>
                             </Card>
                         ))}
@@ -100,11 +114,11 @@ const MyBookings = () => {
                         </TableHeader>
                         <TableBody>
                             {pastBookings.map((booking) => (
-                                <TableRow key={booking.id}>
-                                    <TableCell>{booking.service}</TableCell>
-                                    <TableCell>{booking.date}</TableCell>
-                                    <TableCell>{booking.time}</TableCell>
-                                    <TableCell>${booking.price}</TableCell>
+                                <TableRow key={booking._id}>
+                                    <TableCell>{booking.service?.name || 'Unnamed Service'}</TableCell>
+                                    <TableCell>{booking.slot.date}</TableCell>
+                                    <TableCell>{booking.slot.startTime}</TableCell>
+                                    <TableCell>${booking.service?.price || 'N/A'}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

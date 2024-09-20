@@ -1,70 +1,129 @@
-import { useState } from 'react'
-//import { useRouter } from 'next/navigation'
+import { useState,useEffect } from 'react'
+import { useParams,useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Car,Calendar,Clock,CheckCircle,Droplets } from 'lucide-react'
-import { SubmitHandler,useForm } from 'react-hook-form'
-//import { motion } from 'framer-motion'
-
-// Mock data for the selected service and time slot
-const selectedService = {
-    name: 'Premium Car Wash & Detailing',
-    price: '$49.99',
-    duration: '90 minutes',
-    date: 'July 15, 2023',
-    time: '02:00 PM',
-    features: ['Exterior Hand Wash','Interior Vacuuming','Tire Shine','Window Cleaning']
-}
+import { SubmitHandler,useForm,Controller } from 'react-hook-form'
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select'
+import { useGetServiceByIdQuery } from '@/redux/features/service/serviceApi'
+import { useGetSlotByIdQuery } from '@/redux/features/slot/slotApi'
 
 type FormValues = {
-    name: string
-    email: string
+    vehicleType: string
+    vehicleBrand: string
+    vehicleModel: string
+    manufacturingYear: number
+    registrationPlate: string
+    serviceId: string
+    slotId: string
 }
 
+const vehicleTypes = [
+    "car",
+    "truck",
+    "SUV",
+    "van",
+    "motorcycle",
+    "bus",
+    "electricVehicle",
+    "hybridVehicle",
+    "bicycle",
+    "tractor"
+]
+
 export default function Booking() {
-    const { register,handleSubmit,formState: { isSubmitting } } = useForm<FormValues>()
+    const { serviceId,slotId } = useParams<{ serviceId: string,slotId: string }>()
+    const navigate = useNavigate()
+    const { register,control,handleSubmit,setValue,formState: { isSubmitting } } = useForm<FormValues>()
     const [isLoading,setIsLoading] = useState(false)
 
-    const onSubmit: SubmitHandler<FormValues> = async (data) => {
-        setIsLoading(true)
+    const { data: service,isLoading: isServiceLoading } = useGetServiceByIdQuery(serviceId)
+    const { data: slot,isLoading: isSlotLoading } = useGetSlotByIdQuery(slotId)
 
-        const bookingData = {
-            ...data,
-            service: selectedService
+    useEffect(() => {
+        if (serviceId && slotId) {
+            setValue('serviceId',serviceId)
+            setValue('slotId',slotId)
         }
+    },[serviceId,slotId,setValue])
 
-        // Simulate payment processing and API call
-        await new Promise(resolve => setTimeout(resolve,2000))
+    const onSubmit: SubmitHandler<FormValues> = async (formData) => {
+        setIsLoading(true);
+        try {
+            // Save form data to local storage
+            localStorage.setItem('pendingBooking',JSON.stringify({
+                ...formData,
+                serviceId,
+                slotId,
+                //serviceName: service?.data.name,
+                //servicePrice: service?.data.price
+            }));
 
-        // Handle successful submission (e.g., redirect or show a success message)
-        // router.push('/booking-success') // Uncomment if using router
+            // Set a flag to indicate that we're expecting a redirect
+            localStorage.setItem('expectingRedirect','true');
 
-        console.log('Booking Data:',bookingData) // Replace with actual API call
+            const payload = new URLSearchParams({
+                store_id: 'aamarpaytest',
+                signature_key: 'dbb74894e82415a2f7ff0ec3a97e4183',
+                cus_name: 'Customer Name', // Replace with actual customer name if available
+                cus_email: 'example@gmail.com', // Replace with actual customer email if available
+                cus_phone: '01870******', // Replace with actual customer phone if available
+                amount: service?.data.price.toString() || '10',
+                currency: 'BDT',
+                tran_id: Date.now().toString(),
+                desc: `Booking for ${service?.data.name}`,
+                success_url: 'http://localhost:5173/booking-success',
+                fail_url: 'http://localhost:5173/booking-failed',
+                cancel_url: 'http://localhost:5173/booking-cancelled',
+                type: 'json'
+            })
+
+            const response = await fetch('https://sandbox.aamarpay.com/index.php',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: payload
+            })
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`)
+            }
+
+            const result = await response.json()
+
+            if (result.payment_url) {
+                window.location.href = result.payment_url
+            } else {
+                throw new Error('No payment URL received')
+            }
+        } catch (error) {
+            console.error('Payment initiation failed:',error)
+            // Handle the error (show an error message to the user)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
+    if (isServiceLoading || isSlotLoading) {
+        return <div>Loading...</div>
+    }
+
+    if (!service || !slot) {
+        return <div>Error: Service or slot not found</div>
+    }
 
     return (
         <div className="min-h-[90vh] wrapper py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-5xl mx-auto">
-                {/*<motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >*/}
                 <h1 className="text-4xl font-extrabold text-center mb-8 text-white">Complete Your Booking</h1>
                 <p className="text-center text-gray-300 mb-12">You're just a few steps away from a sparkling clean car!</p>
-                {/*</motion.div>*/}
 
                 <div className="grid md:grid-cols-2 gap-8">
                     {/* Left Side: Selected Service Details */}
-                    {/*<motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >*/}
                     <Card className="bg-background shadow-lg overflow-hidden">
                         <CardHeader className="bg-primary-foreground text-white p-6">
                             <CardTitle className="text-2xl flex items-center">
@@ -78,26 +137,26 @@ export default function Booking() {
                                     <div className="flex items-center">
                                         <Droplets className="w-6 h-6 mr-3 text-foreground" />
                                         <div>
-                                            <p className="font-semibold text-lg">{selectedService.name}</p>
-                                            <p className="text-sm text-gray-300">{selectedService.duration}</p>
+                                            <p className="font-semibold text-lg">{service.data.name}</p>
+                                            <p className="text-sm text-gray-300">{service.data.duration}</p>
                                         </div>
                                     </div>
-                                    <span className="text-2xl font-bold text-foreground">{selectedService.price}</span>
+                                    <span className="text-2xl font-bold text-foreground">${service.data.price}</span>
                                 </div>
                                 <Separator />
                                 <div className="flex items-center">
                                     <Calendar className="w-6 h-6 mr-3 text-foreground" />
-                                    <p>{selectedService.date}</p>
+                                    <p>{new Date(slot.data.date).toLocaleDateString()}</p>
                                 </div>
                                 <div className="flex items-center">
                                     <Clock className="w-6 h-6 mr-3 text-foreground" />
-                                    <p>{selectedService.time}</p>
+                                    <p>{slot.data.startTime}</p>
                                 </div>
                                 <Separator />
                                 <div>
                                     <h3 className="font-semibold mb-2">Service Includes:</h3>
                                     <ul className="grid grid-cols-2 gap-2">
-                                        {selectedService.features.map((feature,index) => (
+                                        {service.data.benefits.map((feature,index) => (
                                             <li key={index} className="flex items-center">
                                                 <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
                                                 <span className="text-sm">{feature}</span>
@@ -108,14 +167,8 @@ export default function Booking() {
                             </div>
                         </CardContent>
                     </Card>
-                    {/*</motion.div>*/}
 
                     {/* Right Side: Booking Form */}
-                    {/*<motion.div
-                        initial={{ opacity: 0,x: 20 }}
-                        animate={{ opacity: 1,x: 0 }}
-                        transition={{ duration: 0.5,delay: 0.4 }}
-                    >*/}
                     <Card className="bg-background shadow-lg">
                         <CardHeader className="p-6">
                             <CardTitle className="text-2xl text-white">Your Information</CardTitle>
@@ -125,33 +178,66 @@ export default function Booking() {
                             <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="space-y-6">
                                     <div className="space-y-2">
-                                        <Label htmlFor="name" className="text-sm font-medium text-gray-300">Full Name</Label>
+                                        <Label htmlFor="vehicleType" className="text-sm font-medium text-gray-300">Vehicle Type</Label>
+                                        <Controller
+                                            name="vehicleType"
+                                            control={control}
+                                            rules={{ required: true }}
+                                            render={({ field }) => (
+                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select vehicle type" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {vehicleTypes.map((type) => (
+                                                            <SelectItem key={type} value={type}>
+                                                                {type.charAt(0).toUpperCase() + type.slice(1)}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="vehicleBrand" className="text-sm font-medium text-gray-300">Vehicle Brand</Label>
                                         <Input
-                                            id="name"
-                                            placeholder="John Doe"
-                                            {...register('name',{ required: true })}
+                                            id="vehicleBrand"
+                                            placeholder="e.g., Toyota"
+                                            {...register('vehicleBrand',{ required: true })}
                                             className="w-full p-3"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="email" className="text-sm font-medium text-gray-300">Email</Label>
+                                        <Label htmlFor="vehicleModel" className="text-sm font-medium text-gray-300">Vehicle Model</Label>
                                         <Input
-                                            id="email"
-                                            type="email"
-                                            placeholder="john@example.com"
-                                            {...register('email',{ required: true })}
+                                            id="vehicleModel"
+                                            placeholder="e.g., Camry"
+                                            {...register('vehicleModel',{ required: true })}
                                             className="w-full p-3"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="datetime" className="text-sm font-medium text-gray-300">Selected Date & Time</Label>
+                                        <Label htmlFor="manufacturingYear" className="text-sm font-medium text-gray-300">Manufacturing Year</Label>
                                         <Input
-                                            id="datetime"
-                                            value={`${selectedService.date} at ${selectedService.time}`}
-                                            disabled
-                                            className="w-full p-3 "
+                                            id="manufacturingYear"
+                                            type="number"
+                                            placeholder="e.g., 2020"
+                                            {...register('manufacturingYear',{ required: true,valueAsNumber: true })}
+                                            className="w-full p-3"
                                         />
                                     </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="registrationPlate" className="text-sm font-medium text-gray-300">Registration Plate</Label>
+                                        <Input
+                                            id="registrationPlate"
+                                            placeholder="e.g., ABC123"
+                                            {...register('registrationPlate',{ required: true })}
+                                            className="w-full p-3"
+                                        />
+                                    </div>
+                                    <input type="hidden" {...register('serviceId')} />
+                                    <input type="hidden" {...register('slotId')} />
                                 </div>
                                 <CardFooter className="flex justify-end mt-8 px-0">
                                     <Button
@@ -159,13 +245,12 @@ export default function Booking() {
                                         className="w-full bg-foreground hover:bg-white text-white hover:text-black font-bold py-3 px-6 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
                                         disabled={isLoading || isSubmitting}
                                     >
-                                        {isLoading ? 'Processing...' : 'Pay Now'}
+                                        {isLoading ? 'Processing...' : 'Confirm Booking'}
                                     </Button>
                                 </CardFooter>
                             </form>
                         </CardContent>
                     </Card>
-                    {/*</motion.div>*/}
                 </div>
             </div>
         </div>

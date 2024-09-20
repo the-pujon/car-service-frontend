@@ -9,11 +9,13 @@ import { Clock,DollarSign,Car,Droplets,Shield,Sparkles } from 'lucide-react'
 import { useGetServiceByIdQuery } from '@/redux/features/service/serviceApi'
 import { useGetSlotAvailabilityQuery } from '@/redux/features/slot/slotApi'
 import Loading from '@/components/ui/Loading'
+import { useNavigate } from 'react-router-dom';
 
 export default function CarWashServicePage() {
     const { id } = useParams<{ id: string }>()
     const [selectedDate,setSelectedDate] = useState<Date | undefined>(new Date())
     const [selectedSlot,setSelectedSlot] = useState<string | null>(null)
+    const navigate = useNavigate();
 
     const { data: service,isLoading: isServiceLoading,isError: isServiceError } = useGetServiceByIdQuery(id)
     const { data: slots,isLoading: isSlotsLoading,isError: isSlotsError } = useGetSlotAvailabilityQuery({
@@ -30,17 +32,13 @@ export default function CarWashServicePage() {
     if (isServiceLoading || isSlotsLoading) return <div className='h-screen relative'><Loading /></div>
     //if (isServiceError || isSlotsError) return <div>Error loading service details</div>
 
-    const handleBooking = async () => {
-        //if (selectedSlot) {
-        //    try {
-        //        await updateSlotStatus({ id: selectedSlot,isBooked: 'booked' }).unwrap()
-        //        alert(`Booking confirmed for ${service.data.name} on ${format(selectedDate!,'MMMM d, yyyy')} at ${selectedSlot}`)
-        //    } catch (error) {
-        //        console.error('Booking failed:',error)
-        //        alert('Failed to book the slot. Please try again.')
-        //    }
-        //}
-    }
+    const handleBooking = () => {
+        if (selectedSlot && id) {
+            navigate(`/booking/${id}/${selectedSlot}`);
+        } else {
+            alert('Please select a time slot before booking.');
+        }
+    };
 
     const isPastDate = (date: Date) => {
         return isBefore(startOfDay(date),startOfDay(new Date()))

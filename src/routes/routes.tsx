@@ -14,6 +14,10 @@ import SlotManagement from "@/pages/Dashboard/Admin/SlotManagement/SlotManagemen
 import UserManagement from "@/pages/Dashboard/Admin/UserManagement/UserManagement";
 import MyBookings from "@/pages/Dashboard/User/MyBookings/MyBookings";
 import Profile from "@/pages/Dashboard/User/Profile/Profile";
+import BookingSuccess from "@/pages/Booking/BookingSuccess";
+import BookingFail from "@/pages/Booking/BookingFail";
+import RedirectPage from "@/pages/Booking/RedirectHandler";
+import RedirectHandler from "@/pages/Booking/RedirectHandler";
 
 const router = createBrowserRouter([
     {
@@ -30,12 +34,28 @@ const router = createBrowserRouter([
                 element: <Services />
             },
             {
-                path: 'booking',
+                path: 'booking/:serviceId/:slotId',
                 element: <Booking />,
             },
             {
                 path: 'serviceDetails/:id',
                 element: <ServiceDetails />,
+            },
+            {
+                path: 'booking-success',
+                element: <BookingSuccess />,
+            },
+            {
+                path: 'booking-fail',
+                element: <BookingFail />,
+            },
+            //{
+            //    path: "redirect",
+            //    element: <RedirectPage />,
+            //},
+            {
+                path: "*",
+                element: <RedirectHandler />,
             }
         ]
     },
