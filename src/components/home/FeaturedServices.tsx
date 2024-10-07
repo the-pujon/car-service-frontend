@@ -54,7 +54,7 @@ const FeaturedServices = () => {
                 className='flex flex-col sm:flex-row gap-3'
                 variants={containerVariants}
             >
-                {services?.data?.slice(0,3).map((service: any,index: number) => (
+                {services?.data?.slice(0,4).map((service: any,index: number) => (
                     <motion.div
                         key={service._id}
                         variants={itemVariants}
