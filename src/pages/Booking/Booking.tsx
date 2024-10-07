@@ -154,7 +154,7 @@ export default function Booking() {
                                 <div>
                                     <h3 className="font-semibold mb-2">Service Includes:</h3>
                                     <ul className="grid grid-cols-2 gap-2">
-                                        {service.data.benefits.map((feature,index) => (
+                                        {service.data.benefits.map((feature: string,index: number) => (
                                             <li key={index} className="flex items-center">
                                                 <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
                                                 <span className="text-sm">{feature}</span>

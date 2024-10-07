@@ -27,7 +27,6 @@ const slotApi = baseApi.injectEndpoints({
 
     updateSlotStatus: build.mutation({
       query: (data) => {
-        //console.log(id, isBooked);
         console.log(data);
         return {
           url: `/services/slots/${data.id}`,
@@ -43,7 +42,7 @@ const slotApi = baseApi.injectEndpoints({
         url: `/services/slots/${id}`,
         method: "GET",
       }),
-      providesTags: (result, error, id) => [{ type: "slots", id }],
+      providesTags: (_result, _error, id) => [{ type: "slots", id }],
     }),
   }),
 });

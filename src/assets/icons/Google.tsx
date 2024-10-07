@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Google = () => {
+const Google: React.FC = () => {
     return (
         <div><svg className="w-4" viewBox="0 0 533.5 544.3">
             <path

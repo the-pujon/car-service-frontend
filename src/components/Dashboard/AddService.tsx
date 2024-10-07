@@ -1,5 +1,5 @@
 import React,{ useState } from 'react';
-import { Controller,useForm,useFieldArray } from 'react-hook-form';
+import { Controller,useForm,useFieldArray,FieldArrayPath } from 'react-hook-form';
 import { DialogClose,DialogContent,DialogDescription,DialogHeader,DialogTitle } from '../ui/dialog';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
@@ -24,6 +24,8 @@ interface Service {
     suitableFor: string[];
 }
 
+type ServiceFormData = Omit<Service,'_id'>;
+
 const categories = [
     { value: 'basicWash',name: 'Basic Wash' },
     { value: 'detailing',name: 'Detailing' },
@@ -41,7 +43,7 @@ const AddService = () => {
 
     const [addService,{ isError,error }] = useAddServiceMutation(undefined)
 
-    const { register,handleSubmit,reset,setValue,getValues,control } = useForm<Omit<Service,'_id'>>({
+    const { register,handleSubmit,reset,setValue,getValues,control } = useForm<ServiceFormData>({
         defaultValues: {
             name: '',
             description: '',
@@ -56,14 +58,12 @@ const AddService = () => {
 
     const { fields: benefitFields,append: appendBenefit,remove: removeBenefit } = useFieldArray({
         control,
-        name: "benefits",
-        shouldUnregister: false,
+        name: "benefits" as FieldArrayPath<ServiceFormData>,
     });
 
     const { fields: suitableForFields,append: appendSuitableFor,remove: removeSuitableFor } = useFieldArray({
         control,
-        name: "suitableFor",
-        shouldUnregister: false,
+        name: "suitableFor" as FieldArrayPath<ServiceFormData>,
     });
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -40,10 +40,12 @@ const Review = () => {
     const token = useAppSelector(useCurrentToken)
     const expiredToken = isTokenExpired(token)
 
-    const [createReview,{ isLoading }] = useCreateReviewMutation()
+    const [createReview,{ isLoading,error }] = useCreateReviewMutation()
+    console.log(error)
 
     //form submitting
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
+        console.log(data)
         try {
             await createReview(data).unwrap()
             toast.success('Review submitted successfully!')

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Github = () => {
+const Github: React.FC = () => {
     return (
         <div><svg className="w-6" viewBox="0 0 32 32">
             <path

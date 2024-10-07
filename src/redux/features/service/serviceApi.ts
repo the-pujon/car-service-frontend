@@ -60,7 +60,7 @@ const serviceApi = baseApi.injectEndpoints({
         url: `/services/${id}`,
         method: "GET",
       }),
-      providesTags: (result, error, id) => [{ type: "services", id }],
+      providesTags: (_result, _error, id) => [{ type: "services", id }],
     }),
   }),
 });

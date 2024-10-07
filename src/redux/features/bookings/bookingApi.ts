@@ -33,7 +33,7 @@ const bookingApi = baseApi.injectEndpoints({
         url: `/bookings/customer/${customerId}`,
         method: "GET",
       }),
-      providesTags: (result, error, customerId) => [
+      providesTags: (_result, _error, customerId) => [
         { type: "bookings", id: customerId },
       ],
     }),

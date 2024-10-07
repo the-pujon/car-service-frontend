@@ -1,9 +1,8 @@
 import { useCreateBookingMutation } from '@/redux/features/bookings/bookingApi'
 import React,{ useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-//import { useCreateBookingMutation } from '@/redux/features/booking/bookingApi'
 
-const BookingSuccess = () => {
+const BookingSuccess: React.FC = () => {
     const navigate = useNavigate()
     const [createBooking,{ error }] = useCreateBookingMutation()
 

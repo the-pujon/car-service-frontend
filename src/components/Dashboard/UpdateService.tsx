@@ -1,5 +1,5 @@
 import React,{ useEffect,useState } from 'react';
-import { Controller,useForm,useFieldArray } from 'react-hook-form';
+import { Controller,useForm,useFieldArray,FieldArrayPath } from 'react-hook-form';
 import { DialogClose,DialogContent,DialogDescription,DialogHeader,DialogTitle } from '../ui/dialog';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
@@ -23,6 +23,8 @@ interface Service {
     suitableFor: string[];
 }
 
+type ServiceFormData = Omit<Service,'_id'>;
+
 const categories = [
     { value: 'basicWash',name: 'Basic Wash' },
     { value: 'detailing',name: 'Detailing' },
@@ -43,7 +45,7 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
 
     const [updateService,{ isError,error }] = useUpdateServiceMutation(undefined)
 
-    const { register,handleSubmit,reset,setValue,getValues,control } = useForm<Omit<Service,'_id'>>({
+    const { register,handleSubmit,reset,setValue,getValues,control } = useForm<ServiceFormData>({
         defaultValues: {
             name: service?.data?.name || '',
             description: service?.data?.description || '',
@@ -58,12 +60,12 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
 
     const { fields: benefitFields,append: appendBenefit,remove: removeBenefit } = useFieldArray({
         control,
-        name: "benefits",
+        name: "benefits" as FieldArrayPath<ServiceFormData>,
     });
 
     const { fields: suitableForFields,append: appendSuitableFor,remove: removeSuitableFor } = useFieldArray({
         control,
-        name: "suitableFor",
+        name: "suitableFor" as FieldArrayPath<ServiceFormData>,
     });
 
     useEffect(() => {
