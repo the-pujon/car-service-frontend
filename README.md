@@ -1,50 +1,104 @@
-# React + TypeScript + Vite
+# Sparkle Car Wash Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern car washing booking system web application built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Quick Links
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Live Demo: [Sparkle Car Wash](https://car-service-frontend-ten.vercel.app/)
+- Backend Repository: [Backend](https://github.com/the-pujon/car-service-backend)
+- Video Overview: [https://youtube.com/your-project-overview](https://youtube.com/your-project-overview)
 
-## Expanding the ESLint configuration
+## Technologies
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend**: React 18, TypeScript, Vite
+- **State Management**: Redux Toolkit, Redux Persist
+- **Routing**: React Router DOM
+- **Styling**: Tailwind CSS, clsx, tailwind-merge
+- **UI Components**: Radix UI, Lucide React icons
+- **Forms**: React Hook Form, Zod
+- **Animations**: Framer Motion
+- **Date Handling**: date-fns
+- **HTTP Client**: RTQ Query
 
-- Configure the top-level `parserOptions` property like this:
+## Features
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- 🔐 User authentication and authorization
+- 📱 Responsive design for mobile and desktop
+- 🔍 Advanced search and filtering
+- 📊 Interactive data visualizations
+- 🔄 Offline support and data synchronization
+- 🌐 Internationalization and localization
+- 🚀 Optimized performance with lazy loading and code splitting
+
+## Project Structure
+
+```
+├───assets
+│   ├───feature
+│   ├───heroImage
+│   ├───icons
+│   └───Image
+│       └───Services
+├───components
+│   ├───Dashboard
+│   ├───home
+│   ├───layout
+│   └───ui
+├───context
+├───hooks
+├───lib
+├───pages
+│   ├───Authentication
+│   ├───Booking
+│   ├───Dashboard
+│   │   ├───Admin
+│   │   │   ├───AdminOverview
+│   │   │   ├───ServiceManagement
+│   │   │   ├───SlotManagement
+│   │   │   └───UserManagement
+│   │   └───User
+│   │       ├───MyBookings
+│   │       └───Profile
+│   ├───Error
+│   ├───Home
+│   ├───Review
+│   ├───ServiceDetails
+│   └───Services
+├───redux
+│   ├───api
+│   └───features
+│       ├───auth
+│       ├───bookings
+│       ├───review
+│       ├───service
+│       ├───slot
+│       └───users
+├───routes
+└───utils
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Getting Started
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Prerequisites
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- Node.js (v14+)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+2. Navigate to the project directory
+3. Run `npm install`
+
+### Scripts
+
+- `npm run dev` : Start development server
+- `npm run build` : Build for production
+- `npm run lint` : Run linter
+
+## Credentials
+
+For testing purposes, use the following credentials:
+
+- **User**: test@example.com / password123
+- **Admin**: admin@example.com / adminpass456
