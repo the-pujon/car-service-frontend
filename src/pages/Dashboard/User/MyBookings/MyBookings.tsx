@@ -59,7 +59,7 @@ const MyBookings = () => {
     }
 
     return (
-        <div className=" p-4 space-y-6 overflow-y-scroll">
+        <div className=" p-4 space-y-6 ">
             {
                 isLoading && <Loading />
             }
