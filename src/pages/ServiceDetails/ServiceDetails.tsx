@@ -22,8 +22,12 @@ export default function ServiceDetails() {
     const { data: service,isLoading: isServiceLoading,isError: isServiceError,error: serviceError } = useGetServiceByIdQuery(id)
     const { data: slots,isLoading: isSlotsLoading,isError: isSlotsError,error: slotsError } = useGetSlotAvailabilityQuery({
         date: selectedDate ? format(selectedDate,'yyyy-MM-dd') : '',
-        serviceID: id
+        serviceId: id
     },{ skip: !selectedDate })
+
+    console.log(id)
+
+    console.log(slots)
 
 
 
@@ -31,10 +35,16 @@ export default function ServiceDetails() {
         setSelectedSlot(null)
     },[selectedDate])
 
-    if (isServiceLoading || isSlotsLoading) return <div className='h-screen relative'><Loading /></div>
-    if (isServiceError || isSlotsError) {
-        console.error(serviceError,slotsError)
+    if (isServiceError) {
+        console.error("serviceError",serviceError)
     }
+
+    if (isSlotsError) {
+        console.error("slotsError",slotsError)
+    }
+
+    if (isServiceLoading || isSlotsLoading) return <div className='h-screen relative'><Loading /></div>
+
 
     const handleBooking = () => {
         if (selectedSlot && id) {

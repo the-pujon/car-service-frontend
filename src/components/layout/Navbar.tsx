@@ -83,7 +83,7 @@ const Navbar: React.FC = () => {
 
                     <nav className="hidden sm:contents font-semibold text-sm lg:text-base">
                         <ul className="flex items-center mr-auto">
-                            {["Home","Services","About","Reviews"].map((link,index) => (
+                            {["Home","Services","About","Review"].map((link,index) => (
                                 <Link
                                     to={link === "Home" ? "/" : link.toLowerCase()}
                                     key={index}

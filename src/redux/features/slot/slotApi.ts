@@ -12,11 +12,16 @@ const slotApi = baseApi.injectEndpoints({
     }),
 
     getSlotAvailability: build.query({
-      query: (params) => ({
-        url: "/services/slots/availability",
-        method: "GET",
-        params,
-      }),
+      query: (params) => {
+        const { date, serviceId } = params;
+
+        return {
+          url: `/services/slots/availability?date=${date || ""}&serviceId=${
+            serviceId || ""
+          }`,
+          method: "GET",
+        };
+      },
       providesTags: ["slots"],
     }),
 

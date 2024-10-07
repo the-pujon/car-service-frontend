@@ -1,43 +1,43 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React,{ useMemo } from 'react'
-//import TestimonialCard from '../ui/TestimonialCard'
-//import { Button } from '../ui/button'
-import { Link } from 'react-router-dom'
+
 import { Star } from 'lucide-react'
 import { useAppSelector } from '@/redux/hook'
 import { useCurrentToken } from '@/redux/features/auth/authSlice'
 import { isTokenExpired } from '@/utils/isTokenExpired'
-//import Overlay from './Overlay'
+
 import { useGetAllReviewsQuery } from '@/redux/features/review/reviewApi'
 import Overlay from '@/components/home/Overlay'
 import TestimonialCard from '@/components/ui/TestimonialCard'
+import Loading from '@/components/ui/Loading'
 
 const Review: React.FC = () => {
     const token = useAppSelector(useCurrentToken)
     const expiredToken = isTokenExpired(token)
 
-    const { data: reviews,isLoading,isError } = useGetAllReviewsQuery(undefined)
+    const { data: reviews,isLoading } = useGetAllReviewsQuery(undefined)
 
     const { avgRating,totalReviews,displayedReviews } = useMemo(() => {
         if (!reviews || !reviews.data) return { avgRating: 0,totalReviews: 0,displayedReviews: [] }
 
-        const totalRating = reviews.data.reduce((sum,review) => sum + review.rating,0)
+
+        const totalRating = reviews.data.reduce((sum: number,review: any) => sum + review.rating,0)
         const avgRating = totalRating / reviews.data.length
         const totalReviews = reviews.data.length
-        const displayedReviews = reviews.data // Get the first 3 reviews
+        const displayedReviews = reviews.data
 
         return { avgRating,totalReviews,displayedReviews }
     },[reviews])
 
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
 
-    if (isError) {
-        return <div>Error loading reviews</div>
-    }
+
+
 
     return (
         <div className='relative' >
+            {
+                isLoading && <Loading />
+            }
             {expiredToken && <Overlay title={'Read trusted reviews from our customers'} />}
             <section className="wrapper py-32">
                 <div className="mx-auto">
@@ -65,7 +65,7 @@ const Review: React.FC = () => {
                     </div>
 
                     <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
-                        {displayedReviews.map((review,index) => (
+                        {displayedReviews.map((review: any,index: number) => (
                             <TestimonialCard
                                 key={index}
                                 rating={review.rating}

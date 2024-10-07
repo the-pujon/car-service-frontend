@@ -28,8 +28,6 @@ const authSlice = createSlice({
       state.token = token;
     },
     signOut: (state) => {
-      console.log("first");
-
       state.user = null;
       state.token = null;
     },

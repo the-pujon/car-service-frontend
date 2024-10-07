@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom'
 
 const BookingSuccess = () => {
     const navigate = useNavigate()
-    const [createBooking] = useCreateBookingMutation()
+    const [createBooking,{ error }] = useCreateBookingMutation()
+
+    console.log(error)
 
     useEffect(() => {
         const pendingBookingData = localStorage.getItem('pendingBooking')
@@ -27,9 +29,9 @@ const BookingSuccess = () => {
     },[createBooking,navigate])
 
     return (
-        <div>
-            <h1>Booking Successful!</h1>
-            <p>Processing your booking...</p>
+        <div className='wrapper h-screen flex flex-col justify-center items-center'>
+            <h1 className='text-2xl font-bold'>Booking Successful!</h1>
+            <p className='text-lg'>Processing your booking...</p>
         </div>
     )
 }

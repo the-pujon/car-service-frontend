@@ -2,9 +2,17 @@
 import { useCreateSlotMutation,useGetSlotAvailabilityQuery,useUpdateSlotStatusMutation } from '@/redux/features/slot/slotApi'
 import { useGetServicesQuery } from '@/redux/features/service/serviceApi'
 import { useState,useEffect } from 'react'
+import { format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
 import { CardContent,CardHeader,CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
     Select,
@@ -24,6 +32,10 @@ import {
 import { ChevronDown,ChevronRight } from 'lucide-react'
 import { toast } from 'sonner'
 import Loading from '@/components/ui/Loading'
+import { Input } from '@/components/ui/input'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { SerializedError } from '@reduxjs/toolkit';
+
 type TService = {
     _id: string;
     name: string;
@@ -69,13 +81,14 @@ export default function SlotManagement() {
         endTime: '',
         isBooked: 'available'
     })
+    const [date,setDate] = useState<Date>()
 
-    const [createSlot,{ isLoading: isCreating }] = useCreateSlotMutation()
-    const { data: availableSlots,isLoading: slotsLoading,error: slotsError } = useGetSlotAvailabilityQuery({})
-    const { data: services,isLoading: servicesLoading,error: servicesError } = useGetServicesQuery({})
+    const [createSlot,{ isLoading: isCreating,error: createSlotError }] = useCreateSlotMutation()
+    const { data: availableSlots,isLoading: slotsLoading,} = useGetSlotAvailabilityQuery({})
+    const { data: services,isLoading: servicesLoading } = useGetServicesQuery({})
     const [updateSlotStatus] = useUpdateSlotStatusMutation()
 
-    //console.log(serv)
+    console.log(createSlotError)
 
     useEffect(() => {
         if (availableSlots) {
@@ -95,10 +108,16 @@ export default function SlotManagement() {
     },[availableSlots])
 
     const handleCreateSlot = async (e: React.FormEvent) => {
-        console.log("newSlot",newSlot)
         e.preventDefault()
+        const formattedDate = date ? format(date,"yyyy-MM-dd") : ''
+        const slotData = {
+            ...newSlot,
+            date: formattedDate
+        }
+        console.log("newSlot",slotData)
         try {
-            await createSlot(newSlot).unwrap()
+            const result = await createSlot(slotData).unwrap()
+            console.log(result)
             toast.success('Slot created successfully')
             setNewSlot({
                 service: '',
@@ -109,6 +128,23 @@ export default function SlotManagement() {
             })
         } catch (err) {
             toast.error('Failed to create slot')
+        }
+    }
+
+
+    if (createSlotError) {
+        const error = createSlotError as FetchBaseQueryError | SerializedError;
+
+        if ('status' in error) {
+            // This is a FetchBaseQueryError
+            if (typeof error.data === 'object' && error.data && 'message' in error.data) {
+                toast.error(error.data.message as string);
+            } else {
+                toast.error('An error occurred while creating the slot.');
+            }
+        } else {
+            // This is a SerializedError
+            toast.error(error.message || 'An error occurred while creating the slot.');
         }
     }
 
@@ -172,13 +208,28 @@ export default function SlotManagement() {
                         </div>
                         <div>
                             <Label htmlFor="date">Date</Label>
-                            <Input
-                                id="date"
-                                type="date"
-                                value={newSlot.date}
-                                onChange={(e) => setNewSlot({ ...newSlot,date: e.target.value })}
-                                required
-                            />
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                            "w-full justify-start text-left font-normal",
+                                            !date && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {date ? format(date,"PPP") : <span>Pick a date</span>}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0">
+                                    <Calendar
+                                        mode="single"
+                                        selected={date}
+                                        onSelect={setDate}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
                         </div>
                         <div>
                             <Label htmlFor="startTime">Start Time</Label>
