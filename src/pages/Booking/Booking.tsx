@@ -73,9 +73,9 @@ export default function Booking() {
                 currency: 'BDT',
                 tran_id: Date.now().toString(),
                 desc: `Booking for ${service?.data.name}`,
-                success_url: 'http://localhost:5000/api/booking-success',
-                fail_url: 'http://localhost:5000/api/booking-failed',
-                cancel_url: 'http://localhost:5173/',
+                success_url: `${process.env.VITE_FRONTEND_URL as string}/booking-success`,
+                fail_url: `${process.env.VITE_FRONTEND_URL as string}/booking-failed`,
+                cancel_url: `${process.env.VITE_FRONTEND_URL as string}/`,
                 type: 'json'
             })
 
