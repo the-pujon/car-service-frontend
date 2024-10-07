@@ -2,7 +2,6 @@ import { baseApi } from "@/redux/api/baseApi";
 
 const usersApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // For getting all users (typically an admin operation)
     getUsers: builder.query({
       query: () => ({
         url: "/auth/users",
@@ -10,24 +9,21 @@ const usersApi = baseApi.injectEndpoints({
       }),
       providesTags: ["users"],
     }),
-    // For getting a single user by ID
     getUserById: builder.query({
       query: (id) => ({
         url: `/auth/users/${id}`,
         method: "GET",
       }),
-      providesTags: (result, error, id) => [{ type: "users", id }],
+      providesTags: (_result, _error, id) => [{ type: "users", id }],
     }),
-    // For updating a user's profile
     updateUserProfile: builder.mutation({
       query: (data) => ({
         url: `/auth/update-profile`,
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "users", id }],
+      invalidatesTags: (_result, _error, { id }) => [{ type: "users", id }],
     }),
-    // For deleting a user (typically an admin operation)
     deleteUser: builder.mutation({
       query: (id) => ({
         url: `/auth/users/${id}`,
@@ -41,15 +37,14 @@ const usersApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "users", id }],
+      invalidatesTags: (_result, _error, { id }) => [{ type: "users", id }],
     }),
-    // For getting a single user by email
     getUserByEmail: builder.query({
       query: (email) => ({
         url: `/auth/users/email/${email}`,
         method: "GET",
       }),
-      providesTags: (result, error, email) => [{ type: "users", email }],
+      providesTags: (_result, _error, email) => [{ type: "users", email }],
     }),
   }),
 });

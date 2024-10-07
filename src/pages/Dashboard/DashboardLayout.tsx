@@ -3,7 +3,7 @@ import { Sidebar } from '@/components/layout/Sidebar'
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 
-const DashboardLayout = () => {
+const DashboardLayout: React.FC = () => {
     return (
         <div className="flex flex-col h-screen bg-background">
             <DashboardHeader />

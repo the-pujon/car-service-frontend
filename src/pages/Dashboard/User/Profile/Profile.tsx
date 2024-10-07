@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react"
 import { useSelector } from "react-redux"
 import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from "@/components/ui/card"
@@ -5,24 +7,37 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { selectCurrentUser } from "@/redux/features/auth/authSlice"
-import { useUpdateUserProfileMutation } from "@/redux/features/users/usersApi"
+import { useGetUserByIdQuery,useUpdateUserProfileMutation } from "@/redux/features/users/usersApi"
 import { toast } from "sonner"
+import Loading from "@/components/ui/Loading"
+import { useEffect } from "react"
 
 function Profile() {
     const currentUser = useSelector(selectCurrentUser)
-    const [updateUserProfile,{ isLoading }] = useUpdateUserProfileMutation()
+    const [updateUserProfile,{ isLoading: isUpdating }] = useUpdateUserProfileMutation()
+    const { data: userData,isLoading: isLoadingUser } = useGetUserByIdQuery(currentUser?._id)
 
     const [user,setUser] = useState({
-        name: currentUser?.name || "",
-        email: currentUser?.email || "",
-        phone: currentUser?.phone || "",
-        address: currentUser?.address || "",
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
     })
 
-    const handleProfileUpdate = async (e) => {
+    useEffect(() => {
+        if (userData?.data) {
+            setUser({
+                name: userData.data.name || "",
+                email: userData.data.email || "",
+                phone: userData.data.phone || "",
+                address: userData.data.address || "",
+            })
+        }
+    },[userData])
+
+    const handleProfileUpdate = async (e: any) => {
         e.preventDefault()
         try {
-            // Remove email from the payload as it shouldn't be updated
             const { email,...updateData } = user
             await updateUserProfile(updateData).unwrap()
             toast.success("Profile updated successfully")
@@ -31,8 +46,13 @@ function Profile() {
         }
     }
 
+
+
     return (
-        <div className="container mx-auto p-4">
+        <div className="wrapper p-4">
+            {
+                isLoadingUser && <Loading />
+            }
             <Card>
                 <CardHeader>
                     <CardTitle>Profile Information</CardTitle>
@@ -79,8 +99,8 @@ function Profile() {
                     </form>
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" onClick={handleProfileUpdate} disabled={isLoading}>
-                        {isLoading ? "Saving..." : "Save Changes"}
+                    <Button type="submit" onClick={handleProfileUpdate} disabled={isUpdating}>
+                        {isUpdating ? "Saving..." : "Save Changes"}
                     </Button>
                 </CardFooter>
             </Card>

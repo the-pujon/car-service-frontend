@@ -30,8 +30,7 @@ export function ServiceSlotCountdown({ date,time }: { date: string,time: string 
         return () => clearInterval(timer)
     },[date,time])
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const formatTime = (value: number) => value.toString().padStart(2,'0')
+
 
     return (
         <div className="text-center">
