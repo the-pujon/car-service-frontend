@@ -60,15 +60,15 @@ export default function Booking() {
                 slotId,
             }));
 
-            // Set a flag to indicate that we're expecting a redirect
+
             localStorage.setItem('expectingRedirect','true');
 
             const payload = new URLSearchParams({
                 store_id: 'aamarpaytest',
                 signature_key: 'dbb74894e82415a2f7ff0ec3a97e4183',
-                cus_name: 'Customer Name', // Replace with actual customer name if available
-                cus_email: 'example@gmail.com', // Replace with actual customer email if available
-                cus_phone: '01870******', // Replace with actual customer phone if available
+                cus_name: 'Customer Name',
+                cus_email: 'example@gmail.com',
+                cus_phone: '01870******',
                 amount: service?.data.price.toString() || '10',
                 currency: 'BDT',
                 tran_id: Date.now().toString(),
@@ -100,7 +100,6 @@ export default function Booking() {
             }
         } catch (error) {
             console.error('Payment initiation failed:',error)
-            // Handle the error (show an error message to the user)
         } finally {
             setIsLoading(false)
         }
