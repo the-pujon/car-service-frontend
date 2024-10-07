@@ -9,7 +9,6 @@ import { useGetUsersQuery,useUpdateUserRoleMutation } from '@/redux/features/use
 import { toast } from 'sonner'
 import { useGetBookingsByCustomerIdQuery } from '@/redux/features/bookings/bookingApi'
 import Loading from '@/components/ui/Loading'
-// Remove the import for useGetBookingsQuery
 
 type TUser = {
     _id: string
@@ -75,7 +74,7 @@ const UserManagement: React.FC = () => {
 
     const handleViewBookings = (user: TUser) => {
         setSelectedUser(user);
-        setUserBookings([]); // Clear previous bookings when a new user is selected
+        setUserBookings([]);
     };
 
     return (

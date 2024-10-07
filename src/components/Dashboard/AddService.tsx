@@ -80,7 +80,6 @@ const AddService = () => {
     const onSubmit = async (_data: Omit<Service,'_id'>) => {
         setIsUploading(true);
 
-        //console.log(_data)
 
         if (!imageFile) {
             console.error('Image file is missing');

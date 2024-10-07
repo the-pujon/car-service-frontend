@@ -15,8 +15,6 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ rating,name,message }
 
   const ratingArray = createRatingArray(rating)
 
-  //console.log(rating as number)
-
   return (
     <div className="border border-foreground/20 backdrop-blur-sm">
       <blockquote className="flex h-full flex-col justify-between p-6 sm:p-8">

@@ -51,5 +51,5 @@ export const {
   useCreateSlotMutation,
   useGetSlotAvailabilityQuery,
   useUpdateSlotStatusMutation,
-  useGetSlotByIdQuery, // Add this line
+  useGetSlotByIdQuery,
 } = slotApi;

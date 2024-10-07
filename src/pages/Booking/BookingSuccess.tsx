@@ -20,7 +20,6 @@ const BookingSuccess: React.FC = () => {
                 })
                 .catch((error) => {
                     console.error('Failed to create booking:',error)
-                    // Handle error (show error message to user)
                 })
         } else {
             navigate('/services')

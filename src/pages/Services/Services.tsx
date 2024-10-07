@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label'
 import { useGetServicesQuery } from '@/redux/features/service/serviceApi'
 import Loading from '@/components/ui/Loading'
 import { Button } from '@/components/ui/button'
-import { motion,AnimatePresence } from 'framer-motion' // Import Framer Motion
+import { motion,AnimatePresence } from 'framer-motion'
 
 interface Category {
     value: string;

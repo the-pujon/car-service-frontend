@@ -49,7 +49,7 @@ const Review = () => {
         try {
             await createReview(data).unwrap()
             toast.success('Review submitted successfully!')
-            reset() // Reset form after successful submission
+            reset()
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toast.error('Failed to submit review. Please try again.')

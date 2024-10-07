@@ -176,8 +176,6 @@ export default function SlotManagement() {
         });
     }
 
-    //if (slotsLoading || servicesLoading) return <div>Loading...</div>
-    //if (slotsError || servicesError) return <div>Error: An error occurred</div>
 
     return (
         <div className="w-full max-w-screen-2xl mx-auto text-white relative">
