@@ -1,93 +1,69 @@
-import { motion,useAnimation,useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { CheckCircle,PhoneCall } from "lucide-react";
-import { useEffect,useRef } from "react";
 import hero1 from "../../assets/heroImage/hero4.jpg";
 import hero2 from "../../assets/heroImage/hero5.jpeg";
 import { Button } from "../ui/button";
 
 const About = () => {
-    const ref = useRef(null);
-    const isInView = useInView(ref,{ once: true,amount: 0.3 });
-    const mainControls = useAnimation();
-
-    useEffect(() => {
-        if (isInView) {
-            mainControls.start("visible");
-        }
-    },[isInView,mainControls]);
-
     return (
         <motion.div
-            ref={ref}
-            variants={{
-                hidden: { opacity: 0,y: 75 },
-                visible: { opacity: 1,y: 0 },
-            }}
-            initial="hidden"
-            animate={mainControls}
-            transition={{ duration: 0.5,delay: 0.25 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
             className="wrapper py-32 z-30"
         >
             <div className="flex flex-col lg:flex-row gap-9 justify-center">
                 <motion.div
-                    variants={{
-                        hidden: { opacity: 0,x: -50 },
-                        visible: { opacity: 1,x: 0 },
-                    }}
+                    initial={{ x: -50,opacity: 0 }}
+                    animate={{ x: 0,opacity: 1 }}
+                    transition={{ duration: 0.5,delay: 0.2 }}
                     className="relative w-11/12"
                 >
                     <img src={hero1} alt="Car being washed" className="" />
                     <motion.img
-                        variants={{
-                            hidden: { opacity: 0,y: 50 },
-                            visible: { opacity: 1,y: 0 },
-                        }}
-                        transition={{ delay: 0.2 }}
+                        initial={{ y: 50,opacity: 0 }}
+                        animate={{ y: 0,opacity: 1 }}
+                        transition={{ duration: 0.5,delay: 0.4 }}
                         src={hero2}
                         alt="Detailed car interior"
                         className="w-72 absolute -right-10 border-[12px] border-background -bottom-4"
                     />
                 </motion.div>
                 <motion.div
-                    variants={{
-                        hidden: { opacity: 0,x: 50 },
-                        visible: { opacity: 1,x: 0 },
-                    }}
+                    initial={{ x: 50,opacity: 0 }}
+                    animate={{ x: 0,opacity: 1 }}
+                    transition={{ duration: 0.5,delay: 0.2 }}
                     className="flex flex-col gap-5"
                 >
                     <motion.p
-                        variants={{
-                            hidden: { opacity: 0,y: -20 },
-                            visible: { opacity: 1,y: 0 },
-                        }}
+                        initial={{ y: -20,opacity: 0 }}
+                        animate={{ y: 0,opacity: 1 }}
+                        transition={{ duration: 0.5,delay: 0.4 }}
                         className='tracking-widest'
                     >
                         ABOUT SPARKLE CAR WASH
                     </motion.p>
                     <motion.h1
-                        variants={{
-                            hidden: { opacity: 0,y: -20 },
-                            visible: { opacity: 1,y: 0 },
-                        }}
+                        initial={{ y: -20,opacity: 0 }}
+                        animate={{ y: 0,opacity: 1 }}
+                        transition={{ duration: 0.5,delay: 0.5 }}
                         className="text-5xl font-bold"
                     >
                         Your Trusted Car Wash and Detailing Center
                     </motion.h1>
                     <motion.div
-                        variants={{
-                            hidden: { opacity: 0,y: -20 },
-                            visible: { opacity: 1,y: 0 },
-                        }}
+                        initial={{ y: -20,opacity: 0 }}
+                        animate={{ y: 0,opacity: 1 }}
+                        transition={{ duration: 0.5,delay: 0.6 }}
                     >
                         At Sparkle Car Wash, we're dedicated to keeping your vehicle looking its best.
                         With state-of-the-art equipment and eco-friendly products, we provide top-notch
                         car washing and detailing services that will make your car shine like new.
                     </motion.div>
                     <motion.div
-                        variants={{
-                            hidden: { opacity: 0,y: -20 },
-                            visible: { opacity: 1,y: 0 },
-                        }}
+                        initial={{ y: -20,opacity: 0 }}
+                        animate={{ y: 0,opacity: 1 }}
+                        transition={{ duration: 0.5,delay: 0.7 }}
                         className="flex justify-around"
                     >
                         <div className="flex flex-col gap-3">
@@ -114,17 +90,15 @@ const About = () => {
                         </div>
                     </motion.div>
                     <motion.hr
-                        variants={{
-                            hidden: { scaleX: 0 },
-                            visible: { scaleX: 1 },
-                        }}
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ duration: 0.5,delay: 0.8 }}
                         className="border-white"
                     />
                     <motion.div
-                        variants={{
-                            hidden: { opacity: 0,y: 20 },
-                            visible: { opacity: 1,y: 0 },
-                        }}
+                        initial={{ y: 20,opacity: 0 }}
+                        animate={{ y: 0,opacity: 1 }}
+                        transition={{ duration: 0.5,delay: 0.9 }}
                         className="flex flex-col lg:flex-row gap-10 sm:items-center"
                     >
                         <Button className="bg-foreground text-white font-bold hover:text-black">
