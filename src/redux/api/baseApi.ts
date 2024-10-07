@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { RootState } from "../store";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.VITE_SERVER_URL as string,
+  baseUrl: import.meta.env.VITE_SERVER_URL as string,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
