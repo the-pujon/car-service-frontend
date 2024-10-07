@@ -1,4 +1,4 @@
-import { Search,User } from "lucide-react";
+import { User } from "lucide-react";
 import MobileNav from "../MobileNav";
 import { Link } from "react-router-dom";
 import {
@@ -25,12 +25,12 @@ const Navbar: React.FC = () => {
             <div className="container mx-auto px-4 py-8 ">
                 <div className="flex items-center wrapper">
                     {/* Logo */}
-                    <div className="mr-auto md:w-48 flex-shrink-0 text-3xl font-extrabold">
-                        Car Service
+                    <div className="mr-auto md:w-72 flex-shrink-0 text-3xl font-extrabold">
+                        Sparkle Car Wash
                     </div>
 
                     {/* Search */}
-                    <form className="w-full max-w-xs xl:max-w-lg 2xl:max-w-2xl p-2 bg-gray-100 rounded-md hidden xl:flex items-center">
+                    {/*<form className="w-full max-w-xs xl:max-w-lg 2xl:max-w-2xl p-2 bg-gray-100 rounded-md hidden xl:flex items-center">
                         <input
                             className="border-none outline-none text-background text-base bg-transparent font-semibold w-full pl-4"
                             type="text"
@@ -39,7 +39,7 @@ const Navbar: React.FC = () => {
                         <button>
                             <Search className="text-black" />
                         </button>
-                    </form>
+                    </form>*/}
 
                     {/* Phone Number */}
                     <div className="ml-auto md:w-48 hidden sm:flex flex-col place-items-end">
