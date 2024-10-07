@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
     const user = useAppSelector(selectCurrentUser);
 
     return (
-        <div>
+        <div className="sticky top-0 z-50 backdrop-blur-2xl bg-black/50">
             {/* top */}
             <div className="container mx-auto px-4 py-4 sm:py-8">
                 <div className="flex items-center wrapper">
@@ -74,7 +74,7 @@ const Navbar: React.FC = () => {
                 </div>
             </div>
 
-            <div className="bg-primary-foreground text-white">
+            <div className="bg-primary-foreground/50 text-white">
                 <div className="wrapper flex justify-between items-center">
                     {/* for small device */}
                     <nav className="sm:hidden">
@@ -96,9 +96,9 @@ const Navbar: React.FC = () => {
                     </nav>
 
                     <div className="flex items-center px-2 sm:px-4 lg:px-6">
-                        <button className="bg-background hover:bg-gray-700 text-white font-bold px-3 sm:px-4 xl:px-6 py-2 xl:py-3 text-xs sm:text-sm uppercase tracking-widest">
+                        <Link to="/services" className="bg-background hover:bg-gray-700 text-white font-bold px-3 sm:px-4 xl:px-6 py-2 xl:py-3 text-xs sm:text-sm uppercase tracking-widest">
                             Book Now
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

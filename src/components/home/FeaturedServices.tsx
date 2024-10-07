@@ -66,7 +66,6 @@ const FeaturedServices = () => {
                             title={service.name}
                             price={service.price}
                             _id={service._id}
-                            duration={service.duration}
                         />
                     </motion.div>
                 ))}

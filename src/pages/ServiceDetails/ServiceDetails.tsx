@@ -1,4 +1,4 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState,useEffect } from 'react'
 import { useParams } from 'react-router-dom'
@@ -19,18 +19,22 @@ export default function ServiceDetails() {
     const [selectedSlot,setSelectedSlot] = useState<string | null>(null)
     const navigate = useNavigate()
 
-    const { data: service,isLoading: isServiceLoading,isError: isServiceError } = useGetServiceByIdQuery(id)
-    const { data: slots,isLoading: isSlotsLoading,isError: isSlotsError } = useGetSlotAvailabilityQuery({
+    const { data: service,isLoading: isServiceLoading,isError: isServiceError,error: serviceError } = useGetServiceByIdQuery(id)
+    const { data: slots,isLoading: isSlotsLoading,isError: isSlotsError,error: slotsError } = useGetSlotAvailabilityQuery({
         date: selectedDate ? format(selectedDate,'yyyy-MM-dd') : '',
         serviceID: id
     },{ skip: !selectedDate })
+
+
 
     useEffect(() => {
         setSelectedSlot(null)
     },[selectedDate])
 
     if (isServiceLoading || isSlotsLoading) return <div className='h-screen relative'><Loading /></div>
-    if (isServiceError || isSlotsError) return <div className="text-center py-10">Error loading service details</div>
+    if (isServiceError || isSlotsError) {
+        console.error(serviceError,slotsError)
+    }
 
     const handleBooking = () => {
         if (selectedSlot && id) {
@@ -70,7 +74,7 @@ export default function ServiceDetails() {
                             <div>
                                 <h4 className="text-lg font-semibold mt-6 mb-2 text-white">Service Includes</h4>
                                 <ul className="grid grid-cols-1 sm:grid-cols-2 mb-4 gap-2">
-                                    {service?.data?.benefits.map((benefit,index) => (
+                                    {service?.data?.benefits.map((benefit: string,index: number) => (
                                         <li key={index} className="flex items-center">
                                             <Sparkles className="w-4 h-4 mr-2 text-blue-500" />
                                             <span className="text-sm">{benefit}</span>
@@ -114,7 +118,7 @@ export default function ServiceDetails() {
                                 {selectedDate ? (
                                     slots && !isSlotsError && slots.data && slots.data.length > 0 ? (
                                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                            {slots.data.map((slot) => (
+                                            {slots.data.map((slot: any) => (
                                                 <Button
                                                     key={slot._id}
                                                     variant={slot.isBooked === 'available' ? (selectedSlot === slot._id ? 'default' : 'outline') : 'ghost'}
