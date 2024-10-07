@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
 
 import { useState,useEffect } from "react"
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "@/components/ui/card"
@@ -7,22 +5,33 @@ import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/comp
 import { ServiceSlotCountdown } from "@/components/Dashboard/ServiceSlotCountdown"
 import { useGetUserBookingsQuery } from "@/redux/features/bookings/bookingApi"
 import Loading from "@/components/ui/Loading"
-//import { useGetUserBookingsQuery } from "@/redux/features/bookings/bookingApi"
+
+interface Booking {
+    _id: string;
+    service: {
+        name: string;
+        price: number;
+    };
+    slot: {
+        date: string;
+        startTime: string;
+    };
+}
 
 const MyBookings = () => {
     const { data,isLoading,isError } = useGetUserBookingsQuery(undefined)
 
-    const [pastBookings,setPastBookings] = useState([])
-    const [upcomingBookings,setUpcomingBookings] = useState([])
-    const [nextBooking,setNextBooking] = useState(null)
+    const [pastBookings,setPastBookings] = useState<Booking[]>([])
+    const [upcomingBookings,setUpcomingBookings] = useState<Booking[]>([])
+    const [nextBooking,setNextBooking] = useState<Booking | null>(null)
 
     useEffect(() => {
         if (data?.data) {
             const now = new Date()
-            const past: any[] = []
-            const upcoming: any[] = []
+            const past: Booking[] = []
+            const upcoming: Booking[] = []
 
-            data.data.forEach((booking: any) => {
+            data.data.forEach((booking: Booking) => {
                 const bookingDate = new Date(`${booking.slot.date} ${booking.slot.startTime}`)
                 if (bookingDate < now) {
                     past.push(booking)
@@ -44,7 +53,7 @@ const MyBookings = () => {
         }
     },[data])
 
-    const renderBookingInfo = (booking: any) => (
+    const renderBookingInfo = (booking: Booking) => (
         <>
             <h3 className="text-lg font-semibold">{booking.service?.name || 'Unnamed Service'}</h3>
             <p className="text-sm text-gray-600">{`${booking.slot.date} at ${booking.slot.startTime}`}</p>
@@ -85,7 +94,12 @@ const MyBookings = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {upcomingBookings.map((booking: any) => (
+                        {
+                            upcomingBookings.length === 0 && (
+                                <p className="text-center text-gray-500">No upcoming bookings</p>
+                            )
+                        }
+                        {upcomingBookings.map((booking: Booking) => (
                             <Card key={booking._id}>
                                 <CardHeader>
                                     <CardTitle>{booking.service?.name || 'Unnamed Service'}</CardTitle>
@@ -116,7 +130,7 @@ const MyBookings = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {pastBookings.map((booking: any) => (
+                            {pastBookings.map((booking: Booking) => (
                                 <TableRow key={booking._id}>
                                     <TableCell>{booking.service?.name || 'Unnamed Service'}</TableCell>
                                     <TableCell>{booking.slot.date}</TableCell>

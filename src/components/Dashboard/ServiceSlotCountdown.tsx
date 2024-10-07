@@ -2,7 +2,7 @@
 
 import { useState,useEffect } from "react"
 
-export function ServiceSlotCountdown({ date,time }) {
+export function ServiceSlotCountdown({ date,time }: { date: string,time: string }) {
     const [timeLeft,setTimeLeft] = useState({ days: 0,hours: 0,minutes: 0,seconds: 0 })
 
     useEffect(() => {
@@ -30,7 +30,8 @@ export function ServiceSlotCountdown({ date,time }) {
         return () => clearInterval(timer)
     },[date,time])
 
-    const formatTime = (value) => value.toString().padStart(2,'0')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const formatTime = (value: number) => value.toString().padStart(2,'0')
 
     return (
         <div className="text-center">
@@ -45,7 +46,7 @@ export function ServiceSlotCountdown({ date,time }) {
     )
 }
 
-function TimeUnit({ value,label }) {
+function TimeUnit({ value,label }: { value: number,label: string }) {
     return (
         <div className="flex flex-col items-center">
             <span className="text-2xl font-bold">{value.toString().padStart(2,'0')}</span>
