@@ -1,15 +1,17 @@
 import React,{ useMemo } from 'react'
-import TestimonialCard from '../ui/TestimonialCard'
-import { Button } from '../ui/button'
+//import TestimonialCard from '../ui/TestimonialCard'
+//import { Button } from '../ui/button'
 import { Link } from 'react-router-dom'
 import { Star } from 'lucide-react'
 import { useAppSelector } from '@/redux/hook'
 import { useCurrentToken } from '@/redux/features/auth/authSlice'
 import { isTokenExpired } from '@/utils/isTokenExpired'
-import Overlay from './Overlay'
+//import Overlay from './Overlay'
 import { useGetAllReviewsQuery } from '@/redux/features/review/reviewApi'
+import Overlay from '@/components/home/Overlay'
+import TestimonialCard from '@/components/ui/TestimonialCard'
 
-const Testimonials: React.FC = () => {
+const Review: React.FC = () => {
     const token = useAppSelector(useCurrentToken)
     const expiredToken = isTokenExpired(token)
 
@@ -21,7 +23,7 @@ const Testimonials: React.FC = () => {
         const totalRating = reviews.data.reduce((sum,review) => sum + review.rating,0)
         const avgRating = totalRating / reviews.data.length
         const totalReviews = reviews.data.length
-        const displayedReviews = reviews.data.slice(0,3) // Get the first 3 reviews
+        const displayedReviews = reviews.data // Get the first 3 reviews
 
         return { avgRating,totalReviews,displayedReviews }
     },[reviews])
@@ -58,12 +60,7 @@ const Testimonials: React.FC = () => {
                                 </p>
                             </div>
 
-                            <Button
-                                asChild
-                                className='bg-foreground hover:bg-gray-200 hover:text-black text-white font-bold'
-                            >
-                                <Link to='/review' className="font-medium"> Check all ratings and reviews </Link>
-                            </Button>
+
                         </div>
                     </div>
 
@@ -83,4 +80,4 @@ const Testimonials: React.FC = () => {
     )
 }
 
-export default Testimonials
+export default Review

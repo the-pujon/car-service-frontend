@@ -18,6 +18,7 @@ import BookingSuccess from "@/pages/Booking/BookingSuccess";
 import BookingFail from "@/pages/Booking/BookingFail";
 import RedirectHandler from "@/pages/Booking/RedirectHandler";
 import ProtectedRoute from "./ProtectedRoute";
+import Review from "@/pages/Review/Review";
 
 const router = createBrowserRouter([
     {
@@ -56,8 +57,14 @@ const router = createBrowserRouter([
             {
                 path: "*",
                 element: <ProtectedRoute role="user"><RedirectHandler /></ProtectedRoute>,
+            },
+            {
+                path: 'review',
+                element: <Review />
+
             }
         ]
+
     },
     {
         path: "/auth",
