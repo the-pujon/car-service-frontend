@@ -75,8 +75,8 @@ const DashboardHeader: React.FC = () => {
 
                 <div className={`flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto ${isMenuOpen ? 'block' : 'hidden md:flex'}`}>
                     {userRole === 'user' && nextBooking && (
-                        <div className="flex items-center space-x-2 text-center md:text-left">
-                            <span className="text-sm">Next: {nextBooking.service.name}</span>
+                        <div className="flex flex-col md:flex-row items-center space-x-2 text-center md:text-left">
+                            <span className="text-sm font-semibold">Next: {nextBooking.service.name}</span>
                             <ServiceSlotCountdown date={nextBooking.slot.date} time={nextBooking.slot.startTime} />
                         </div>
                     )}

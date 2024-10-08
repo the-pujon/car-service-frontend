@@ -78,7 +78,7 @@ const MyBookings = () => {
                         <CardTitle>Next Upcoming Booking</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="flex justify-between items-center">
+                        <div className="flex flex-col md:flex-row gap-4 justify-between md:items-center">
                             <div>
                                 {renderBookingInfo(nextBooking)}
                             </div>
