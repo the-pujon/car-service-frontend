@@ -6,7 +6,7 @@ A modern car washing booking system web application built with React, TypeScript
 
 - Live Demo: [Sparkle Car Wash](https://car-service-frontend-ten.vercel.app/)
 - Backend Repository: [Backend](https://github.com/the-pujon/car-service-backend)
-- Video Overview: [https://youtube.com/your-project-overview](https://youtube.com/your-project-overview)
+- Video Overview: [Overview](https://drive.google.com/file/d/17T3AQg9l1rsLo3HS8PT1xSZsCwprgdXA/view?usp=sharing)
 
 ## Technologies
 

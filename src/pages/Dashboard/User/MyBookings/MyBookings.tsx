@@ -21,6 +21,8 @@ interface Booking {
 const MyBookings = () => {
     const { data,isLoading,isError } = useGetUserBookingsQuery(undefined)
 
+    console.log(data)
+
     const [pastBookings,setPastBookings] = useState<Booking[]>([])
     const [upcomingBookings,setUpcomingBookings] = useState<Booking[]>([])
     const [nextBooking,setNextBooking] = useState<Booking | null>(null)

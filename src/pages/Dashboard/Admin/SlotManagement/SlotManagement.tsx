@@ -88,6 +88,8 @@ export default function SlotManagement() {
     const { data: services,isLoading: servicesLoading } = useGetServicesQuery({})
     const [updateSlotStatus] = useUpdateSlotStatusMutation()
 
+    console.log(availableSlots)
+
     console.log(createSlotError)
 
     useEffect(() => {

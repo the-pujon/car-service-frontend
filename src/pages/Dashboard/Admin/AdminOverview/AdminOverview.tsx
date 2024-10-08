@@ -37,11 +37,11 @@ const AdminOverview: React.FC = () => {
                         {recentBookings.map((booking: any) => (
                             <TableRow key={booking._id}>
                                 <TableCell>{booking.customer.name}</TableCell>
-                                <TableCell>{booking.service.name}</TableCell>
+                                <TableCell>{booking?.service?.name}</TableCell>
                                 <TableCell>{booking.slot.date}</TableCell>
                                 <TableCell>{`${booking.slot.startTime} - ${booking.slot.endTime}`}</TableCell>
                                 <TableCell>{booking.vehicleType} - {booking.vehicleBrand} {booking.vehicleModel} ({booking.registrationPlate})</TableCell>
-                                <TableCell>${booking.service.price}</TableCell>
+                                <TableCell>${booking?.service?.price}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
