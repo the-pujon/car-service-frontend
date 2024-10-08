@@ -8,7 +8,8 @@ import Loading from '@/components/ui/Loading'
 const AdminOverview: React.FC = () => {
     const { data: bookings,isLoading } = useGetBookingsQuery(undefined)
 
-    const recentBookings = bookings?.data?.slice(0,15) || []
+    // Reverse the bookings array and get the latest 15
+    const recentBookings = bookings?.data?.slice().reverse().slice(0,15) || []
 
     return (
         <div className='text-white relative h-screen'>
