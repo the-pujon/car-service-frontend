@@ -11,6 +11,7 @@ import Loading from '@/components/ui/Loading';
 import { useAppDispatch } from '@/redux/hook';
 import { setUser } from '@/redux/features/auth/authSlice';
 import { useSigninMutation } from '@/redux/features/auth/authApi';
+import signinImage from '@/assets/Auth/Signin.png';
 
 type Inputs = {
     email: string;
@@ -118,10 +119,10 @@ const SignIn: React.FC = () => {
                 </div>
                 <div className="flex-1 bg-primary-foreground text-center hidden lg:flex">
                     <div
-                        className="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
+                        className="m-12 xl:m-16 w-11/12 bg-contain bg-center bg-no-repeat"
                         style={{
                             backgroundImage:
-                                "url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg')",
+                                `url(${signinImage})`,
                         }}
                     ></div>
                 </div>

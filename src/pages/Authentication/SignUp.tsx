@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import Loading from '@/components/ui/Loading';
 import { useSignupMutation } from '@/redux/features/auth/authApi';
-
+import signupImage from '@/assets/Auth/Signup.png';
 type Inputs = {
     name: string
     email: string
@@ -128,10 +128,10 @@ const SignUp: React.FC = () => {
                 </div>
                 <div className="flex-1 bg-primary-foreground text-center hidden lg:flex">
                     <div
-                        className="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
+                        className="m-12 xl:m-16 w-11/12 bg-contain bg-center bg-no-repeat"
                         style={{
                             backgroundImage:
-                                "url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg')",
+                                `url(${signupImage})`,
                         }}
                     ></div>
                 </div>
