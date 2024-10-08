@@ -5,7 +5,7 @@ import Github from '@/assets/icons/Github';
 import { UserPlus } from 'lucide-react';
 import { SubmitHandler,useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
-import { useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import Loading from '@/components/ui/Loading';
 import { useSignupMutation } from '@/redux/features/auth/authApi';
@@ -121,6 +121,12 @@ const SignUp: React.FC = () => {
                                     <a href="#" className="border-b border-gray-500 border-dotted">
                                         Privacy Policy
                                     </a>
+                                </p>
+                                <p className="text-sm text-gray-600 text-center">
+                                    Already have an account?{' '}
+                                    <Link to="/auth/signin" className="font-medium text-primary-600 hover:underline">
+                                        Sign in
+                                    </Link>
                                 </p>
                             </form>
                         </div>
