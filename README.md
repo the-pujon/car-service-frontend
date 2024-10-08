@@ -15,7 +15,7 @@ A modern car washing booking system web application built with React, TypeScript
 - **Routing**: React Router DOM
 - **Styling**: Tailwind CSS, clsx, tailwind-merge
 - **UI Components**: Radix UI, Lucide React icons
-- **Forms**: React Hook Form, Zod
+- **Forms**: React Hook Form
 - **Animations**: Framer Motion
 - **Date Handling**: date-fns
 - **HTTP Client**: RTQ Query
@@ -100,5 +100,5 @@ A modern car washing booking system web application built with React, TypeScript
 
 For testing purposes, use the following credentials:
 
-- **User**: test@example.com / password123
-- **Admin**: admin@example.com / adminpass456
+- **User**: web@programming-hero1.com / ph-password
+- **Admin**: user@gmail.com / user-password
