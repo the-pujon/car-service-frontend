@@ -1,6 +1,6 @@
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { useAppSelector } from "@/redux/hook";
-import { CalendarIcon,HomeIcon,PackageIcon,UsersIcon,Menu,XIcon,UserRoundPen } from "lucide-react";
+import { CalendarIcon,HomeIcon,PackageIcon,UsersIcon,Menu,XIcon,UserRoundPen,UserIcon,LockIcon } from "lucide-react";
 import { Link,useLocation } from "react-router-dom";
 import { useState } from "react";
 
@@ -12,15 +12,22 @@ export function Sidebar() {
     console.log(location.pathname)
 
     const menuItemsAdmin = [
+        { id: "home",label: "Home",icon: HomeIcon,path: "/dashboard" },
         { id: "overview",label: "Overview",icon: HomeIcon,path: "/dashboard" },
         { id: "services",label: "Services",icon: PackageIcon,path: "/dashboard/services" },
         { id: "slots",label: "Slots",icon: CalendarIcon,path: "/dashboard/slots" },
         { id: "users",label: "Users",icon: UsersIcon,path: "/dashboard/users" },
+        { id: "profile",label: "My Profile",icon: UserIcon,path: "/dashboard/profile" },
+        { id: "edit-profile",label: "Edit Profile",icon: UserRoundPen,path: "/dashboard/edit-profile" },
+        { id: "change-password",label: "Change Password",icon: LockIcon,path: "/dashboard/change-password" },
     ]
 
     const menuItemsUser = [
+        { id: "home",label: "Home",icon: HomeIcon,path: "/dashboard" },
         { id: "my-bookings",label: "My Bookings",icon: CalendarIcon,path: "/dashboard/my-bookings" },
-        { id: "profile",label: "My Profile",icon: UserRoundPen,path: "/dashboard/profile" },
+        { id: "profile",label: "My Profile",icon: UserIcon,path: "/dashboard/profile" },
+        { id: "edit-profile",label: "Edit Profile",icon: UserRoundPen,path: "/dashboard/edit-profile" },
+        { id: "change-password",label: "Change Password",icon: LockIcon,path: "/dashboard/change-password" },
     ]
 
 
