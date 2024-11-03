@@ -8,7 +8,9 @@ interface RecentReviewsProps {
 }
 
 export function RecentReviews({ reviews }: RecentReviewsProps) {
-    const recentReviews = reviews.slice(0,5);
+    const recentReviews = [...reviews]
+        .sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0,5);
 
     return (
         <Card className="col-span-1">

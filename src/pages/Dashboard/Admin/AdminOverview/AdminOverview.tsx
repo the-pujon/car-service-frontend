@@ -898,20 +898,6 @@ const AdminOverview: React.FC = () => {
 
             {/* Booking Trends */}
             <BookingTrends bookings={bookings?.data || []} />
-
-            {/* Services Overview and Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <ServicesOverview
-                    services={services?.data || []}
-                    bookings={bookings?.data || []}
-                />
-                <VehicleDistribution bookings={bookings?.data || []} />
-                <RecentReviews reviews={reviews?.data || []} totalReviews={totalReviews} />
-            </div>
-
-            {/* Recent Bookings */}
-            <RecentBookings bookings={bookings?.data || []} />
-
             {/* Services Insights Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <ServicePerformance
@@ -924,11 +910,26 @@ const AdminOverview: React.FC = () => {
                 />
             </div>
 
-            {/* Service Performance Overview */}
-            <ServicePerformance
+            {/* Services Overview and Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <VehicleDistribution bookings={bookings?.data || []} />
+                <RecentReviews reviews={reviews?.data || []} totalReviews={totalReviews} />
+            </div>
+
+            {/* Recent Bookings */}
+            <RecentBookings bookings={bookings?.data || []} />
+
+            <ServicesOverview
                 services={services?.data || []}
                 bookings={bookings?.data || []}
             />
+
+            {/* Service Performance Overview */}
+            {/*<ServicePerformance
+                services={services?.data || []}
+                bookings={bookings?.data || []}
+            />*/}
         </div>
     );
 };

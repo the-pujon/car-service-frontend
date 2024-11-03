@@ -3,4 +3,6 @@ export type TReview = {
   name: string;
   rating: number;
   message: string;
+  createdAt: string;
+  email: string;
 };

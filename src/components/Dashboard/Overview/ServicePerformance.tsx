@@ -3,7 +3,8 @@ import { BarChart,Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ResponsiveContain
 import { TBooking } from "@/types/bookingType";
 import { TService } from "@/types/serviceType";
 import { CustomTooltip } from "./CustomTooltip";
-
+import { TrendingUp } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 interface ServicePerformanceProps {
     services: TService[];
     bookings: TBooking[];
@@ -16,6 +17,8 @@ export function ServicePerformance({ services,bookings }: ServicePerformanceProp
         const bookingCount = serviceBookings.length;
 
         return {
+            _id: service._id,
+            price: service.price,
             name: service.name,
             revenue,
             bookings: bookingCount,
@@ -23,43 +26,53 @@ export function ServicePerformance({ services,bookings }: ServicePerformanceProp
         };
     }).sort((a,b) => b.revenue - a.revenue);
 
+
+    console.log(servicePerformance);
+
     return (
-        <Card className="col-span-1 lg:col-span-2">
+        <Card>
             <CardHeader>
-                <CardTitle>Service Performance</CardTitle>
-                <CardDescription>Revenue and booking metrics by service</CardDescription>
+                <div className="flex justify-between items-center">
+                    <div>
+                        <CardTitle className="flex items-center gap-2">
+                            <TrendingUp className="h-5 w-5 text-primary" />
+                            Top Performing Services
+                        </CardTitle>
+                        <CardDescription>Most booked services this month</CardDescription>
+                    </div>
+                    <Badge variant="secondary">Top 5</Badge>
+                </div>
             </CardHeader>
             <CardContent>
-                <div className="h-[400px] w-full">
-                    <ResponsiveContainer>
-                        <BarChart data={servicePerformance}>
-                            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                            <XAxis
-                                dataKey="name"
-                                angle={-45}
-                                textAnchor="end"
-                                height={70}
-                                interval={0}
-                            />
-                            <YAxis yAxisId="left" />
-                            <YAxis yAxisId="right" orientation="right" />
-                            <Tooltip content={<CustomTooltip />} />
-                            <Legend />
-                            <Bar
-                                yAxisId="left"
-                                dataKey="revenue"
-                                fill="hsl(var(--primary))"
-                                name="Revenue ($)"
-                            />
-                            <Bar
-                                yAxisId="right"
-                                dataKey="bookings"
-                                fill="hsl(var(--secondary))"
-                                name="Bookings"
-                            />
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
+                {[...(servicePerformance || [])]
+                    //.sort((a,b) => {
+                    //    const aBookings = (bookings || []).filter(booking => booking.service._id === a._id).length;
+                    //    const bBookings = (bookings || []).filter(booking => booking.service._id === b._id).length;
+                    //    return bBookings - aBookings;
+                    //})
+                    .slice(0,5)
+                    .map((service: any,index: number) => {
+                        //const serviceBookings = (bookings || []).filter(booking => booking.service._id === service._id);
+                        //const revenue = serviceBookings.reduce((sum,booking) => sum + booking.service.price,0);
+
+                        return (
+                            <div key={service._id} className="flex items-center justify-between py-4 border-b last:border-0">
+                                <div className="flex items-center gap-4">
+                                    <div className="bg-primary/10 text-primary font-semibold h-8 w-8 rounded-full flex items-center justify-center">
+                                        {index + 1}
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold">{service.name}</h4>
+                                        <p className="text-sm text-muted-foreground">{service.bookings} bookings</p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-semibold">${service.revenue.toFixed(2)}</p>
+                                    <p className="text-sm text-muted-foreground">${service.price} per service</p>
+                                </div>
+                            </div>
+                        );
+                    })}
             </CardContent>
         </Card>
     );
