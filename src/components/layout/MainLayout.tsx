@@ -44,7 +44,7 @@ const MainLayout = () => {
                     }
                     className="bg-foreground/30 inset-x-0 -z-10 top-1/2 left-[30%] xl:left-1/3  w-[50rem] h-[30rem] blur-3xl fixed -translate-y-1/2  flex justify-center"></div>*/}
 
-                <div className="z-10 min-h-screen">
+                <div className="z-10 min-h-[80vh]">
                     <Outlet />
                 </div>
             </div>
