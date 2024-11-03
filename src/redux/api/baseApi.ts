@@ -32,13 +32,16 @@ const baseQueryWithErrorHandling: BaseQueryFn<
 
     if (result.error) {
       if (result.error.status === 401) {
+        console.log(result);
+        toast.error((result.error.data as { message: string }).message);
         console.error("Unauthorized access. Please check your credentials.");
       } else if (result.error.status === 403) {
         console.error(
           "Forbidden. You do not have permission to access this resource."
         );
       } else if (result.error.status === 404) {
-        toast.error("Resource not found.");
+        //toast.error("Resource not found.");
+        console.error("Resource not found.");
       } else if (result.error.status === 500) {
         console.error("Server error:", result.error);
         toast.error(
