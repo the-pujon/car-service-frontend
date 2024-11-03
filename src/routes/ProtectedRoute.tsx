@@ -22,7 +22,7 @@ const ProtectedRoute = ({ children,role }: TProtectedRoute) => {
         return <Navigate to="/auth/signin" replace={true} />;
     }
 
-    if (role !== undefined && role !== user?.role) {
+    if (role === undefined && role !== user?.role) {
         dispatch(signOut());
         return <Navigate to="/auth/signin" replace={true} />;
     }

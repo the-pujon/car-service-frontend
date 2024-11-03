@@ -36,7 +36,7 @@ const Review: React.FC = () => {
     return (
         <div className='relative' >
             {
-                isLoading && <Loading />
+                true && <Loading />
             }
             {expiredToken && <Overlay title={'Read trusted reviews from our customers'} />}
             <section className="wrapper py-32">
