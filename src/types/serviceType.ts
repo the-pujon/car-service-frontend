@@ -6,3 +6,9 @@ export type TService = {
   category?: string;
   duration?: number;
 };
+
+export type TServicePerformance = TService & {
+  revenue: number;
+  bookings: number;
+  averageRevenue: number;
+};

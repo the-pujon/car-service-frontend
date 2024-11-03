@@ -6,12 +6,25 @@ import {
   UserIcon,
   UserRoundPen,
   LockIcon,
+  LayoutGrid,
+  LayoutDashboardIcon,
 } from "lucide-react";
 import { TMenuItem } from "@/types/menuTypes";
 
 export const menuItemsAdmin: TMenuItem[] = [
-  { id: "home", label: "Home", icon: HomeIcon, path: "/dashboard" },
-  { id: "overview", label: "Overview", icon: HomeIcon, path: "/dashboard" },
+  { id: "home", label: "Home", icon: HomeIcon, path: "/" },
+  {
+    id: "overview",
+    label: "Overview",
+    icon: LayoutDashboardIcon,
+    path: "/dashboard",
+  },
+  {
+    id: "services-overview",
+    label: "Services Overview",
+    icon: LayoutGrid,
+    path: "/dashboard/services-overview",
+  },
   {
     id: "services",
     label: "Services",
@@ -41,7 +54,7 @@ export const menuItemsAdmin: TMenuItem[] = [
 ];
 
 export const menuItemsUser: TMenuItem[] = [
-  { id: "home", label: "Home", icon: HomeIcon, path: "/dashboard" },
+  { id: "home", label: "Home", icon: HomeIcon, path: "/" },
   {
     id: "my-bookings",
     label: "My Bookings",
