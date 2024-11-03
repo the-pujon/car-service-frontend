@@ -1,14 +1,15 @@
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Calendar,Clock,Car } from "lucide-react";
+//import { Badge } from "@/components/ui/badge";
+//import { Calendar,Clock,Car } from "lucide-react";
 import { TBooking } from "@/types/bookingType";
+import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table";
 
 interface RecentBookingsProps {
     bookings: TBooking[];
 }
 
 export function RecentBookings({ bookings }: RecentBookingsProps) {
-    const recentBookings = bookings
+    const recentBookings = [...bookings]
         .sort((a,b) => new Date(b.slot.date).getTime() - new Date(a.slot.date).getTime())
         .slice(0,5);
 
@@ -31,57 +32,61 @@ export function RecentBookings({ bookings }: RecentBookingsProps) {
                 <div className="flex items-center justify-between">
                     <div>
                         <CardTitle>Recent Bookings</CardTitle>
-                        <CardDescription>Latest service bookings</CardDescription>
+                        <CardDescription>Latest {recentBookings.length} bookings</CardDescription>
                     </div>
-                    <Badge variant="outline">
-                        {bookings.length} total
-                    </Badge>
+                    {/*<Badge variant="outline" className="ml-auto">
+                            Total: {totalBookings}
+                        </Badge>*/}
                 </div>
             </CardHeader>
             <CardContent>
-                <div className="space-y-4">
-                    {recentBookings.map((booking) => (
-                        <div
-                            key={booking._id}
-                            className="bg-card hover:bg-accent transition-colors p-4 rounded-lg"
-                        >
-                            <div className="flex items-center justify-between mb-2">
-                                <div>
-                                    <h4 className="font-semibold">{booking.customer.name}</h4>
-                                    <p className="text-sm text-muted-foreground">
-                                        {booking.service.name}
-                                    </p>
-                                </div>
-                                <Badge
-                                    className={getStatusColor(booking.status)}
-                                    variant="outline"
-                                >
-                                    {booking.status}
-                                </Badge>
-                            </div>
-                            <div className="grid grid-cols-3 gap-4 mt-3">
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                                    <span className="text-sm">
-                                        {new Date(booking.slot.date).toLocaleDateString()}
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Customer</TableHead>
+                            <TableHead>Service</TableHead>
+                            <TableHead>Date</TableHead>
+                            <TableHead>Time</TableHead>
+                            <TableHead>Vehicle</TableHead>
+                            <TableHead>Price</TableHead>
+                            <TableHead>Status</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {recentBookings.map((booking) => (
+                            <TableRow key={booking._id}>
+                                <TableCell>
+                                    <div>
+                                        <p className="font-medium">{booking.customer.name}</p>
+                                        <p className="text-sm text-muted-foreground">{booking.customer.email}</p>
+                                    </div>
+                                </TableCell>
+                                <TableCell>
+                                    <div>
+                                        <p className="font-medium">{booking.service.name}</p>
+                                        <p className="text-sm text-muted-foreground">{booking.service.description}</p>
+                                    </div>
+                                </TableCell>
+                                <TableCell>{booking.slot.date}</TableCell>
+                                <TableCell>{`${booking.slot.startTime} - ${booking.slot.endTime}`}</TableCell>
+                                <TableCell>
+                                    <div>
+                                        <p className="font-medium">{booking.vehicleType} - {booking.vehicleBrand}</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            {booking.vehicleModel} ({booking.registrationPlate})
+                                        </p>
+                                    </div>
+                                </TableCell>
+                                <TableCell>${booking.service.price}</TableCell>
+                                <TableCell>
+                                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusColor(booking.status)}`}>
+                                        {booking.status}
                                     </span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Clock className="h-4 w-4 text-muted-foreground" />
-                                    <span className="text-sm">
-                                        {booking.slot.startTime}
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Car className="h-4 w-4 text-muted-foreground" />
-                                    <span className="text-sm">
-                                        {booking.vehicleBrand} {booking.vehicleModel}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
             </CardContent>
         </Card>
     );
