@@ -1,7 +1,8 @@
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CartesianGrid,Legend,Line,LineChart,ResponsiveContainer,Tooltip,TooltipProps,XAxis,YAxis } from 'recharts';
+import { CartesianGrid,Legend,Line,LineChart,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 import { TBooking } from "@/types/bookingType";
+import { CustomTooltip } from "./CustomTooltip";
 
 interface BookingTrendsProps {
     bookings: TBooking[];
@@ -27,16 +28,16 @@ export function BookingTrends({ bookings }: BookingTrendsProps) {
     }));
 
 
-    const CustomTooltip = ({ active,payload,label }: TooltipProps<number,string>) => {
-        if (active && payload && payload.length) {
-            return (
-                <div className="bg-background p-2 border border-border rounded-lg shadow-lg">
-                    <p className="text-foreground">{`${label}: ${payload[0].value}`}</p>
-                </div>
-            );
-        }
-        return null;
-    };
+    //const CustomTooltip = ({ active,payload,label }: TooltipProps<number,string>) => {
+    //    if (active && payload && payload.length) {
+    //        return (
+    //            <div className="bg-background p-2 border border-border rounded-lg shadow-lg">
+    //                <p className="text-foreground">{`${label}: ${payload[0].value}`}</p>
+    //            </div>
+    //        );
+    //    }
+    //    return null;
+    //};
 
     return (
         <Card className="col-span-1 lg:col-span-2">
