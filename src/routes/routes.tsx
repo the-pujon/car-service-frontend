@@ -19,6 +19,7 @@ import BookingFail from "@/pages/Booking/BookingFail";
 import RedirectHandler from "@/pages/Booking/RedirectHandler";
 import ProtectedRoute from "./ProtectedRoute";
 import Review from "@/pages/Review/Review";
+import About from "@/pages/About/About";
 
 const router = createBrowserRouter([
     {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
                 path: 'review',
                 element: <Review />
 
+            },
+            {
+                path: 'about',
+                element: <About />
             }
         ]
 

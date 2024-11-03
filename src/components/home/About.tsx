@@ -3,6 +3,7 @@ import { CheckCircle,PhoneCall } from "lucide-react";
 import hero1 from "../../assets/heroImage/hero4.jpg";
 import hero2 from "../../assets/heroImage/hero5.jpeg";
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 
 const About = () => {
     return (
@@ -99,8 +100,11 @@ const About = () => {
                         initial={{ y: 20,opacity: 0 }}
                         animate={{ y: 0,opacity: 1 }}
                         transition={{ duration: 0.5,delay: 0.9 }}
-                        className="flex flex-col lg:flex-row gap-10 sm:items-center"
+                        className="flex flex-col lg:flex-row gap-4 sm:items-center"
                     >
+                        <Button asChild className="bg-foreground text-white font-bold hover:text-black">
+                            <Link to="/about">Learn More</Link>
+                        </Button>
                         <Button className="bg-foreground text-white font-bold hover:text-black">
                             Book Now
                         </Button>
