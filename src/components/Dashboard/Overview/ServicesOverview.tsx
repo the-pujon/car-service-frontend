@@ -67,7 +67,7 @@ export function ServicesOverview({ services,bookings }: ServicesOverviewProps) {
                         <Button
                             variant="default"
                             className="flex items-center gap-2"
-                            onClick={() => navigate('/dashboard/admin/services')}
+                            onClick={() => navigate('/dashboard/service-overview')}
                         >
                             <LayoutGrid className="h-4 w-4" />
                             View All Services Overview

@@ -20,6 +20,7 @@ import RedirectHandler from "@/pages/Booking/RedirectHandler";
 import ProtectedRoute from "./ProtectedRoute";
 import Review from "@/pages/Review/Review";
 import About from "@/pages/About/About";
+import ServiceOverview from "@/pages/Dashboard/Admin/ServiceOverview/ServiceOverview";
 
 const router = createBrowserRouter([
     {
@@ -95,10 +96,10 @@ const router = createBrowserRouter([
                 path: 'services',
                 element: <ProtectedRoute role="admin"><ServiceManagement /></ProtectedRoute>
             },
-            //{
-            //    path: 'service-overview',
-            //    element: <ProtectedRoute role="admin"><ServiceOverview /></ProtectedRoute>
-            //},
+            {
+                path: 'service-overview',
+                element: <ProtectedRoute role="admin"><ServiceOverview /></ProtectedRoute>
+            },
             {
                 path: 'slots',
                 element: <ProtectedRoute role="admin"><SlotManagement /></ProtectedRoute>

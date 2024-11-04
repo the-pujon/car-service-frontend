@@ -23,8 +23,7 @@ export const menuItemsAdmin: TMenuItem[] = [
     id: "services-overview",
     label: "Services Overview",
     icon: LayoutGrid,
-    //path: "/dashboard/service-overview",
-    path: "/dashboard/users",
+    path: "/dashboard/service-overview",
   },
   {
     id: "services",
