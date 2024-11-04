@@ -51,7 +51,7 @@ export const useServiceMetrics = () => {
     servicesWithMetrics,
     totalBookings,
     totalRevenue,
-    services,
+    servicesLength: services.length,
     isLoading: servicesLoading || bookingsLoading,
   };
 };

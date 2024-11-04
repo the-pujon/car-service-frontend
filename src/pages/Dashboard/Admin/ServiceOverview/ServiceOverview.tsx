@@ -1,53 +1,26 @@
-
-import { useGetBookingsQuery } from '@/redux/features/bookings/bookingApi';
-import { useGetServicesQuery } from '@/redux/features/service/serviceApi';
-import { TBooking } from '@/types/bookingType';
-import { TService,TServiceOverview } from '@/types/serviceType';
+import { TServiceOverview } from '@/types/serviceType';
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Clock } from 'lucide-react';
 import ServiceOverviewCard from '@/components/Dashboard/ServiceOverviewCard';
 import Loading from '@/components/ui/Loading';
+import { useServiceMetrics } from '@/hooks/useServiceMetrics';
 
 const ServiceOverview = (): React.ReactElement => {
 
-    const { data: servicesData,isLoading: servicesLoading } = useGetServicesQuery({});
-    const { data: bookingsData,isLoading: bookingsLoading } = useGetBookingsQuery({});
-    const services = servicesData?.data || [];
-    const bookings = bookingsData?.data || [];
-
-    // Calculate total revenue and bookings
-    const totalBookingsCount = bookings.length;
-    const totalRevenue = bookings.reduce((sum: number,booking: TBooking) => sum + booking.service.price,0);
-
-    // Calculate and sort services by revenue contribution
-    const servicesWithMetrics = services.map((service: TService) => {
-        const serviceBookings = bookings.filter(
-            (booking: TBooking) => booking.service._id === service._id
-        );
-        const revenue = serviceBookings.reduce(
-            (sum: number,booking: TBooking) => sum + booking.service.price,
-            0
-        );
-        const bookingPercentage = (serviceBookings.length / totalBookingsCount) * 100;
-        const revenuePercentage = (revenue / totalRevenue) * 100;
-
-        return {
-            ...service,
-            bookings: serviceBookings.length,
-            revenue,
-            bookingPercentage,
-            revenuePercentage
-        };
-    }).sort((a: TServiceOverview,b: TServiceOverview) => b.revenue - a.revenue);
+    const {
+        servicesWithMetrics,
+        totalRevenue,
+        servicesLength,
+        isLoading
+    } = useServiceMetrics();
 
     return (
         <div className="text-white h-screen p-5 relative">
 
             {
-                servicesLoading && bookingsLoading && <Loading />
+                isLoading && <Loading />
             }
-            {/*<CardHeader>*/}
             <div className="flex items-center justify-between mb-5">
                 <div>
                     <h2 className="text-4xl font-bold flex items-center gap-2">
@@ -64,14 +37,12 @@ const ServiceOverview = (): React.ReactElement => {
                             Total Revenue: ${totalRevenue.toFixed(2)}
                         </Badge>
                         <Badge variant="secondary">
-                            {services.length} Active Services
+                            {servicesLength} Active Services
                         </Badge>
                     </div>
 
                 </div>
             </div>
-            {/*</CardHeader>*/}
-            {/*<CardContent>*/}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {servicesWithMetrics.map((service: TServiceOverview) => (
                     <ServiceOverviewCard service={service} />
