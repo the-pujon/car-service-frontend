@@ -12,3 +12,10 @@ export type TServicePerformance = TService & {
   bookings: number;
   averageRevenue: number;
 };
+
+export type TServiceOverview = TService & {
+  revenue: number;
+  bookings: number;
+  revenuePercentage: number;
+  bookingPercentage: number;
+};
