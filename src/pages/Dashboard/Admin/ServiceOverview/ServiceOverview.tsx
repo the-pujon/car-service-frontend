@@ -9,7 +9,7 @@ import { Clock } from 'lucide-react';
 import ServiceOverviewCard from '@/components/Dashboard/ServiceOverviewCard';
 import Loading from '@/components/ui/Loading';
 
-const ServiceOverview = () => {
+const ServiceOverview = (): React.ReactElement => {
 
     const { data: servicesData,isLoading: servicesLoading } = useGetServicesQuery({});
     const { data: bookingsData,isLoading: bookingsLoading } = useGetBookingsQuery({});
@@ -39,7 +39,7 @@ const ServiceOverview = () => {
             bookingPercentage,
             revenuePercentage
         };
-    }).sort((a: TServiceOverview,b: TServiceOverview) => b.revenue - a.revenue); // Sort by revenue by default
+    }).sort((a: TServiceOverview,b: TServiceOverview) => b.revenue - a.revenue);
 
     return (
         <div className="text-white h-screen p-5 relative">
