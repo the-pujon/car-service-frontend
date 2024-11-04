@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card,CardHeader,CardContent,CardTitle,CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ServiceMetric } from "@/pages/Dashboard/Admin/ServiceOverview/ServiceOverview";
+import { ServiceMetric } from "@/components/Dashboard/ServiceMetric";
 import { ServiceStat } from "@/components/Dashboard/ServiceStat";
 import { TServiceOverview } from '@/types/serviceType';
 import { Clock,DollarSign } from 'lucide-react';
