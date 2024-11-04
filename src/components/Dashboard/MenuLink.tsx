@@ -4,7 +4,7 @@ import { TMenuItemProps } from "@/types/menuTypes";
 export function MenuLink({ item,isOpen,onClick,isActive }: TMenuItemProps) {
     return (
         <Link
-            to={item.id === "overview" ? "" : item.id}
+            to={item.id === "overview" ? "" : item.path}
             key={item.id}
             className={`flex items-center w-full px-4 py-3 text-left hover:bg-gray-700 transition-all duration-300 ${isOpen ? "ml-10" : ""
                 } ${isActive ? "bg-gray-700" : ""}`}
