@@ -3,11 +3,12 @@
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock,DollarSign,LayoutGrid,LucideIcon } from "lucide-react";
+import { Clock,DollarSign,LayoutGrid } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { TBooking } from "@/types/bookingType";
 import { TService } from "@/types/serviceType";
 import { ServiceMetric } from "@/pages/Dashboard/Admin/ServiceOverview/ServiceOverview";
+import { ServiceStat } from "../ServiceStat";
 
 interface ServicesOverviewProps {
     services: TService[];
@@ -139,17 +140,5 @@ export function ServicesOverview({ services,bookings }: ServicesOverviewProps) {
                 </div>
             </CardContent>
         </Card>
-    );
-}
-
-
-
-
-function ServiceStat({ label,value }: { label: string; value: string | number }) {
-    return (
-        <div className="bg-background rounded-md p-3">
-            <div className="text-sm text-muted-foreground mb-1">{label}</div>
-            <div className="font-semibold text-lg">{value}</div>
-        </div>
     );
 }
