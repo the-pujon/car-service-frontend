@@ -23,7 +23,7 @@ const SignIn: React.FC = () => {
     const navigate = useNavigate();
     const [signin,{ isLoading,isError,error }] = useSigninMutation();
     const dispatch = useAppDispatch();
-    const { register,handleSubmit,formState: { errors } } = useForm<Inputs>({
+    const { register,handleSubmit,formState: { errors },setValue } = useForm<Inputs>({
         mode: 'onBlur',
         defaultValues: {
             email: 'web@programming-hero1.com',
@@ -48,6 +48,15 @@ const SignIn: React.FC = () => {
         }
     };
 
+    const setDemoUser = () => {
+        setValue('email','user@gmail.com');
+        setValue('password','user-password');
+    };
+
+    const setDemoAdmin = () => {
+        setValue('email','web@programming-hero1.com');
+        setValue('password','ph-password');
+    };
 
     if (isError) {
         console.error(error);
@@ -93,6 +102,25 @@ const SignIn: React.FC = () => {
                             </div>
 
                             <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-xs">
+                                <div className="flex gap-2 mb-4">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="flex-1 text-sm button"
+                                        onClick={setDemoUser}
+                                    >
+                                        Demo User
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="flex-1 text-sm button"
+                                        onClick={setDemoAdmin}
+                                    >
+                                        Demo Admin
+                                    </Button>
+                                </div>
+
                                 <Input className='backdrop-blur-sm my-2 text-white' required type="email" placeholder="Email" id="name" {...register('email',{ required: true })} />
                                 {errors.email && <div>Email is required.</div>}
                                 <Input className='backdrop-blur-sm text-white' required type="password" placeholder="Password" id="password" {...register('password',{ required: true })} />
