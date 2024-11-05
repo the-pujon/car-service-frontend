@@ -58,9 +58,12 @@ const Profile = () => {
 
                         {/* Profile Image */}
                         <motion.div
+                            initial={{ opacity: 0,y: 20 }}
+                            animate={{ opacity: 1,y: 0 }}
+                            transition={{ duration: 0.6,ease: "easeOut" }}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="absolute left-[40%] -translate-x-1/2 -bottom-20"
+                            className="absolute left-[40%] -bottom-20"
                         >
                             <div className="relative">
                                 <div className="absolute inset-0 rounded-full bg-accent blur-2xl opacity-20 animate-pulse" />
