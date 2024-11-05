@@ -22,6 +22,7 @@ import Review from "@/pages/Review/Review";
 import About from "@/pages/About/About";
 import ServiceOverview from "@/pages/Dashboard/Admin/ServiceOverview/ServiceOverview";
 import EditProfile from "@/pages/Dashboard/User/EditProfile/EditProfile";
+import ChangePassword from "@/pages/Authentication/ChangePassword";
 
 const router = createBrowserRouter([
     {
@@ -121,6 +122,10 @@ const router = createBrowserRouter([
             {
                 path: 'profile',
                 element: <ProtectedRoute role=""><Profile /></ProtectedRoute>
+            },
+            {
+                path: 'change-password',
+                element: <ProtectedRoute role=""><ChangePassword /></ProtectedRoute>
             }
         ]
     }
