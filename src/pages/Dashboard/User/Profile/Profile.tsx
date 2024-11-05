@@ -23,7 +23,7 @@ import Loading from '@/components/ui/Loading';
 //  };
 //}
 
-const Profile = () => {
+const Profile = (): React.ReactElement => {
 
     const currentUser = useSelector(selectCurrentUser)
     const { data: userData,isLoading: isLoadingUser } = useGetUserByIdQuery(currentUser?._id)
