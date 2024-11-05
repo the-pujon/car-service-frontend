@@ -1,111 +1,137 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from "react"
-import { useSelector } from "react-redux"
-import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { selectCurrentUser } from "@/redux/features/auth/authSlice"
-import { useGetUserByIdQuery,useUpdateUserProfileMutation } from "@/redux/features/users/usersApi"
-import { toast } from "sonner"
-import Loading from "@/components/ui/Loading"
-import { useEffect } from "react"
+import React from 'react';
+import { motion } from 'framer-motion';
+import { User } from 'lucide-react';
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { Avatar,AvatarFallback,AvatarImage } from '@/components/ui/avatar';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '@/redux/features/auth/authSlice';
+import { useGetUserByIdQuery } from '@/redux/features/users/usersApi';
+import Loading from '@/components/ui/Loading';
 
-function Profile() {
+//interface ProfileProps {
+//  user: {
+//    name: string;
+//    email: string;
+//    phone: string;
+//    address: string;
+//    profileImage?: string;
+//  };
+//}
+
+const Profile = () => {
+
     const currentUser = useSelector(selectCurrentUser)
-    const [updateUserProfile,{ isLoading: isUpdating }] = useUpdateUserProfileMutation()
     const { data: userData,isLoading: isLoadingUser } = useGetUserByIdQuery(currentUser?._id)
-
-    const [user,setUser] = useState({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-    })
-
-    useEffect(() => {
-        if (userData?.data) {
-            setUser({
-                name: userData.data.name || "",
-                email: userData.data.email || "",
-                phone: userData.data.phone || "",
-                address: userData.data.address || "",
-            })
-        }
-    },[userData])
-
-    const handleProfileUpdate = async (e: any) => {
-        e.preventDefault()
-        try {
-            const { email,...updateData } = user
-            await updateUserProfile(updateData).unwrap()
-            toast.success("Profile updated successfully")
-        } catch (error) {
-            toast.error("Failed to update profile")
-        }
-    }
-
+    const user = userData?.data;
 
 
     return (
-        <div className="wrapper p-4">
-            {
-                isLoadingUser && <Loading />
-            }
-            <Card>
-                <CardHeader>
-                    <CardTitle>Profile Information</CardTitle>
-                    <CardDescription>Update your personal information here</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleProfileUpdate}>
-                        <div className="grid w-full items-center gap-4">
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                    id="name"
-                                    value={user.name}
-                                    onChange={(e) => setUser({ ...user,name: e.target.value })}
+        <div className="min-h-screen py-10">
+            {isLoadingUser && <Loading />}
+            <motion.div
+                initial={{ opacity: 0,y: 20 }}
+                animate={{ opacity: 1,y: 0 }}
+                transition={{ duration: 0.6,ease: "easeOut" }}
+                className="container mx-auto p-6"
+            >
+                <Card className="max-w-4xl mx-auto backdrop-blur-sm bg-card/50 shadow-xl border">
+                    <CardHeader className="text-center relative pb-24 p-0">
+                        {/* Cover Image Section */}
+                        <div className="relative h-[200px] rounded-t-lg overflow-hidden">
+                            {user?.profileImage ? (
+                                <img
+                                    src={user.profileImage}
+                                    alt="cover"
+                                    className="w-full h-full object-cover"
                                 />
-                            </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="email">Email</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    value={user.email}
-                                    disabled
-                                    className=" text-gray-300 cursor-not-allowed"
-                                />
-                            </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="phone">Phone</Label>
-                                <Input
-                                    id="phone"
-                                    value={user.phone}
-                                    onChange={(e) => setUser({ ...user,phone: e.target.value })}
-                                />
-                            </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="address">Address</Label>
-                                <Input
-                                    id="address"
-                                    value={user.address}
-                                    onChange={(e) => setUser({ ...user,address: e.target.value })}
-                                />
-                            </div>
+                            ) : (
+                                <div className="w-full h-full bg-gradient-to-r from-muted via-accent to-muted" />
+                            )}
+                            {/* Overlay gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/95" />
                         </div>
-                    </form>
-                </CardContent>
-                <CardFooter>
-                    <Button type="submit" onClick={handleProfileUpdate} disabled={isUpdating}>
-                        {isUpdating ? "Saving..." : "Save Changes"}
-                    </Button>
-                </CardFooter>
-            </Card>
-        </div>
-    )
-}
 
-export default Profile
+                        {/* Profile Image */}
+                        <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="absolute left-[40%] -translate-x-1/2 -bottom-20"
+                        >
+                            <div className="relative">
+                                <div className="absolute inset-0 rounded-full bg-accent blur-2xl opacity-20 animate-pulse" />
+                                <Avatar className="w-40 h-40 border-4 border-background shadow-2xl">
+                                    <AvatarImage src={user?.profileImage} className="object-cover" />
+                                    <AvatarFallback className="bg-muted">
+                                        <User className="w-20 h-20 text-muted-foreground" />
+                                    </AvatarFallback>
+                                </Avatar>
+                                {/* Decorative rings */}
+                                <div className="absolute inset-0 rounded-full border-2 border-accent/20 animate-pulse" />
+                                <div className="absolute -inset-1 rounded-full border border-accent/10 animate-pulse" />
+                            </div>
+                        </motion.div>
+                    </CardHeader>
+
+                    <CardContent className="space-y-6 px-8 pb-8 pt-24">
+                        <div className="text-center space-y-2">
+                            <CardTitle className="text-4xl font-bold text-accent-foreground">
+                                {user?.name}
+                            </CardTitle>
+                            <p className="text-sm text-muted-foreground">@{user?.email.split('@')[0]}</p>
+                        </div>
+
+                        <motion.div
+                            initial={{ opacity: 0,y: 20 }}
+                            animate={{ opacity: 1,y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="grid grid-cols-2 gap-6"
+                        >
+                            <motion.div
+                                whileHover={{ scale: 1.02 }}
+                                className="group space-y-2 p-6 rounded-xl bg-card hover:bg-accent/5 border border-border hover:border-accent/20 transition-all duration-300"
+                            >
+                                <h3 className="font-semibold text-accent-foreground text-lg flex items-center gap-2">
+                                    Email
+                                </h3>
+                                <p className="text-muted-foreground group-hover:text-foreground break-all transition-colors">
+                                    {user?.email}
+                                </p>
+                            </motion.div>
+
+                            <motion.div
+                                whileHover={{ scale: 1.02 }}
+                                className="group space-y-2 p-6 rounded-xl bg-card hover:bg-accent/5 border border-border hover:border-accent/20 transition-all duration-300"
+                            >
+                                <h3 className="font-semibold text-accent-foreground text-lg flex items-center gap-2">
+                                    Phone
+                                </h3>
+                                <p className="text-muted-foreground group-hover:text-foreground transition-colors">
+                                    {user?.phone}
+                                </p>
+                            </motion.div>
+
+                            <motion.div
+                                whileHover={{ scale: 1.02 }}
+                                className="group col-span-2 space-y-2 p-6 rounded-xl bg-card hover:bg-accent/5 border border-border hover:border-accent/20 transition-all duration-300"
+                            >
+                                <h3 className="font-semibold text-accent-foreground text-lg flex items-center gap-2">
+                                    Address
+                                </h3>
+                                <p className="text-muted-foreground group-hover:text-foreground transition-colors">
+                                    {user?.address}
+                                </p>
+                            </motion.div>
+                        </motion.div>
+                    </CardContent>
+                </Card>
+            </motion.div>
+        </div>
+    );
+};
+
+export default Profile;

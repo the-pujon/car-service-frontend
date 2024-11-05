@@ -21,6 +21,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Review from "@/pages/Review/Review";
 import About from "@/pages/About/About";
 import ServiceOverview from "@/pages/Dashboard/Admin/ServiceOverview/ServiceOverview";
+import EditProfile from "@/pages/Dashboard/User/EditProfile/EditProfile";
 
 const router = createBrowserRouter([
     {
@@ -114,8 +115,12 @@ const router = createBrowserRouter([
                 element: <ProtectedRoute role="user"><MyBookings /></ProtectedRoute>
             },
             {
+                path: 'edit-profile',
+                element: <ProtectedRoute role=""><EditProfile /></ProtectedRoute>
+            },
+            {
                 path: 'profile',
-                element: <ProtectedRoute role="user"><Profile /></ProtectedRoute>
+                element: <ProtectedRoute role=""><Profile /></ProtectedRoute>
             }
         ]
     }
