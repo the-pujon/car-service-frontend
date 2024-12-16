@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Select,SelectContent,SelectGroup,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select'
 import ServiceCard from '@/components/ui/ServiceCard'
 import { Search,Menu,X } from 'lucide-react'
@@ -11,6 +11,15 @@ import { useGetServicesQuery } from '@/redux/features/service/serviceApi'
 import Loading from '@/components/ui/Loading'
 import { Button } from '@/components/ui/button'
 import { motion,AnimatePresence } from 'framer-motion'
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
 
 interface Category {
     value: string;
@@ -31,11 +40,30 @@ const categories: Category[] = [
 export default function Services() {
     const [selectedCategory,setSelectedCategory] = useState<string>('all');
     const [searchTerm,setSearchTerm] = useState<string>('');
+    const [debouncedSearchTerm,setDebouncedSearchTerm] = useState<string>('');
     const [sortOrder,setSortOrder] = useState<'high' | 'low' | ''>('');
+    const [currentPage,setCurrentPage] = useState<number>(1);
     const [isSidebarOpen,setIsSidebarOpen] = useState(false);
 
-    const { data: services,isError,isLoading,error } = useGetServicesQuery(undefined);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
+    const { data: servicesData,isError,isLoading,error } = useGetServicesQuery({
+        page: currentPage,
+        search: debouncedSearchTerm,
+        category: selectedCategory === 'all' ? '' : selectedCategory,
+        sortBy: sortOrder === 'high' ? 'desc' : sortOrder === 'low' ? 'asc' : '',
+    });
     console.log(error);
+    const services = servicesData?.data;
+    const meta = servicesData?.data?.meta;
+
+    console.log('Meta data:', meta);
 
     console.log(services)
     const handleRadioChange = (value: string) => {
@@ -51,17 +79,50 @@ export default function Services() {
         setSortOrder(value as 'high' | 'low' | '');
     };
 
-    const filteredAndSortedServices = services?.data
-        ?.filter((service: any) =>
-            (selectedCategory === 'all' || service.category === selectedCategory) &&
-            (service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                service.description.toLowerCase().includes(searchTerm.toLowerCase()))
-        )
-        .sort((a: any,b: any) => {
-            if (sortOrder === 'high') return b.price - a.price;
-            if (sortOrder === 'low') return a.price - b.price;
-            return 0;
-        });
+    const filteredAndSortedServices = services?.data;
+
+    // Pagination handlers
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const generatePaginationNumbers = () => {
+        if (!meta?.totalPages) return [];
+        
+        const pageNumbers: number[] = [];
+        const currentPage = meta.page;
+        const totalPages = meta.totalPages;
+        
+        // Always show first page
+        pageNumbers.push(1);
+        
+        // Calculate range around current page
+        const start = Math.max(2, currentPage - 1);
+        const end = Math.min(totalPages - 1, currentPage + 1);
+        
+        // Add ellipsis after first page if needed
+        if (start > 2) {
+            pageNumbers.push(-1); // -1 represents ellipsis
+        }
+        
+        // Add pages around current page
+        for (let i = start; i <= end; i++) {
+            pageNumbers.push(i);
+        }
+        
+        // Add ellipsis before last page if needed
+        if (end < totalPages - 1) {
+            pageNumbers.push(-1); // -1 represents ellipsis
+        }
+        
+        // Always show last page if there's more than one page
+        if (totalPages > 1) {
+            pageNumbers.push(totalPages);
+        }
+        
+        return pageNumbers;
+    };
 
     if (isError) return <div className="text-center py-10">Error loading services</div>;
 
@@ -177,6 +238,50 @@ export default function Services() {
                                 </motion.div>
                             ))}
                         </motion.div>
+
+                        {/* Updated Pagination Check */}
+                        {meta && (
+                            <motion.div 
+                                className="mt-8 mb-12"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                <Pagination>
+                                    <PaginationContent>
+                                        <PaginationItem>
+                                            <PaginationPrevious 
+                                                onClick={() => handlePageChange(meta.prevPage || 1)}
+                                                className={!meta.hasPrevPage ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                                            />
+                                        </PaginationItem>
+
+                                        {generatePaginationNumbers().map((pageNum, index) => (
+                                            <PaginationItem key={index}>
+                                                {pageNum === -1 ? (
+                                                    <PaginationEllipsis />
+                                                ) : (
+                                                    <PaginationLink
+                                                        onClick={() => handlePageChange(pageNum)}
+                                                        isActive={pageNum === meta.page}
+                                                        className="cursor-pointer"
+                                                    >
+                                                        {pageNum}
+                                                    </PaginationLink>
+                                                )}
+                                            </PaginationItem>
+                                        ))}
+
+                                        <PaginationItem>
+                                            <PaginationNext 
+                                                onClick={() => handlePageChange(meta.nextPage || meta.totalPages)}
+                                                className={!meta.hasNextPage ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                                            />
+                                        </PaginationItem>
+                                    </PaginationContent>
+                                </Pagination>
+                            </motion.div>
+                        )}
                     </div>
                 </div>
             </div>
