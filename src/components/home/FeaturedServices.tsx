@@ -7,7 +7,13 @@ import { motion } from 'framer-motion';
 
 const FeaturedServices = () => {
 
-    const { data: services } = useGetServicesQuery(undefined);
+    const { data: servicesData } = useGetServicesQuery({
+        page: 1,
+        search: '',
+        category: '',
+        sortBy: 'desc',
+    });
+    const services = servicesData?.data;
 
     const containerVariants = {
         hidden: { opacity: 0 },
