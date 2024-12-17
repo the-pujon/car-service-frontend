@@ -29,20 +29,82 @@ import {
 } from "@/components/ui/table";
 import { useDeleteServiceMutation,useGetServicesQuery } from "@/redux/features/service/serviceApi";
 import { Edit,Trash } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Tooltip,TooltipContent,TooltipProvider,TooltipTrigger } from "@/components/ui/tooltip";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const ServiceManagement = () => {
-    const { data: services,isLoading,isError,error } = useGetServicesQuery(undefined);
-    const [deleteService] = useDeleteServiceMutation();
-    const [serviceId,setServiceId] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
+    const [selectedCategory, setSelectedCategory] = useState<string>('all');
+    const [sortOrder, setSortOrder] = useState<'high' | 'low' | ''>('');
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [serviceId, setServiceId] = useState<string | null>(null);
 
-    if (isError) {
-        console.error(error);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
+    const { data: servicesData, isError, isLoading, error } = useGetServicesQuery({
+        page: currentPage,
+        search: debouncedSearchTerm,
+        category: selectedCategory === 'all' ? '' : selectedCategory,
+        sortBy: sortOrder === 'high' ? 'desc' : sortOrder === 'low' ? 'asc' : '',
+    });
+
+    console.log(servicesData)
+
+    const services = servicesData?.data;
+    const meta = servicesData?.data?.meta;
+    const [deleteService] = useDeleteServiceMutation();
+
+    if (isError && error) {
         const apiError = error as { data?: { message?: string } };
         toast.error(apiError.data?.message || "Something went wrong");
     }
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const generatePaginationNumbers = () => {
+        if (!meta?.totalPages) return [];
+        
+        const pageNumbers: number[] = [];
+        const currentPage = meta.page;
+        const totalPages = meta.totalPages;
+        
+        pageNumbers.push(1);
+        const start = Math.max(2, currentPage - 1);
+        const end = Math.min(totalPages - 1, currentPage + 1);
+        
+        if (start > 2) pageNumbers.push(-1);
+        
+        for (let i = start; i <= end; i++) {
+            pageNumbers.push(i);
+        }
+        
+        if (end < totalPages - 1) pageNumbers.push(-1);
+        
+        if (totalPages > 1) pageNumbers.push(totalPages);
+        
+        return pageNumbers;
+    };
 
     const renderList = (items: string[]) => (
         <ul className="list-disc pl-4">
@@ -53,23 +115,61 @@ const ServiceManagement = () => {
     );
 
     return (
-        <div className="text-white h-screen p-5 relative overflow-y-auto">
+        <div className="text-white min-h-screen p-5 relative">
             {isLoading && <Loading />}
-            <div className="flex justify-between gap-2">
+            <div className="flex justify-between gap-2 mb-6">
                 <div className="flex flex-col gap-2">
                     <h2 className="text-4xl font-bold">Service Management</h2>
                     <p className="text-sm text-gray-500">Manage your services</p>
                 </div>
-                <div>
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button className="mb-4">Add Service</Button>
-                        </DialogTrigger>
-                        <AddService />
-                    </Dialog>
-                </div>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button>Add Service</Button>
+                    </DialogTrigger>
+                    <AddService />
+                </Dialog>
             </div>
-            <CardContent>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="relative">
+                    <Input
+                        placeholder="Search services..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="bg-white text-black"
+                    />
+                </div>
+                
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger className="bg-white text-black">
+                        <SelectValue placeholder="Filter by Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem value="all">All Categories</SelectItem>
+                            <SelectItem value="basicWash">Basic Wash</SelectItem>
+                            <SelectItem value="detailing">Detailing</SelectItem>
+                            <SelectItem value="specialtyService">Specialty Service</SelectItem>
+                            <SelectItem value="premiumPackages">Premium Packages</SelectItem>
+                            <SelectItem value="ecoFriendly">Eco-Friendly</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+
+                <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as 'high' | 'low' | '')}>
+                    <SelectTrigger className="bg-white text-black">
+                        <SelectValue placeholder="Sort by Price" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem value="high">Price: High to Low</SelectItem>
+                            <SelectItem value="low">Price: Low to High</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+            </div>
+
+            <CardContent className="bg-white/5 rounded-lg backdrop-blur-sm">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -177,6 +277,44 @@ const ServiceManagement = () => {
                     </TableBody>
                 </Table>
             </CardContent>
+
+            {meta && (
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious 
+                                    onClick={() => handlePageChange(meta.prevPage || 1)}
+                                    className={!meta.hasPrevPage ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                                />
+                            </PaginationItem>
+
+                            {generatePaginationNumbers().map((pageNum, index) => (
+                                <PaginationItem key={index}>
+                                    {pageNum === -1 ? (
+                                        <PaginationEllipsis />
+                                    ) : (
+                                        <PaginationLink
+                                            onClick={() => handlePageChange(pageNum)}
+                                            isActive={pageNum === meta.page}
+                                            className="cursor-pointer"
+                                        >
+                                            {pageNum}
+                                        </PaginationLink>
+                                    )}
+                                </PaginationItem>
+                            ))}
+
+                            <PaginationItem>
+                                <PaginationNext 
+                                    onClick={() => handlePageChange(meta.nextPage || meta.totalPages)}
+                                    className={!meta.hasNextPage ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     );
 };

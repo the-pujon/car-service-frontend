@@ -85,8 +85,10 @@ export default function SlotManagement() {
 
     const [createSlot,{ isLoading: isCreating,error: createSlotError }] = useCreateSlotMutation()
     const { data: availableSlots,isLoading: slotsLoading,} = useGetSlotAvailabilityQuery({})
-    const { data: services,isLoading: servicesLoading } = useGetServicesQuery({})
+    const { data: servicesData,isLoading: servicesLoading } = useGetServicesQuery({})
     const [updateSlotStatus] = useUpdateSlotStatusMutation()
+
+    const services = servicesData?.data
 
     console.log(availableSlots)
 

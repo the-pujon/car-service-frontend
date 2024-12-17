@@ -6,7 +6,7 @@ const serviceApi = baseApi.injectEndpoints({
     // For getting services
     getServices: builder.query({
       query: (data) => ({
-        url: `/services?page=${data.page}&search=${data.search}&category=${data.category}&sortBy=${data.sortBy}`,
+        url: `/services?page=${data.page || 1}&search=${data.search || ''}&category=${data.category || ''}&sortBy=${data.sortBy || ''}`,
         method: "GET",
       }),
       providesTags: ["services"],

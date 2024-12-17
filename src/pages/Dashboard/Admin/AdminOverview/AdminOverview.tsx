@@ -18,9 +18,11 @@ import { TReview } from '@/types/reviewType';
 
 const AdminOverview: React.FC = () => {
     const { data: bookings,isLoading: bookingsLoading } = useGetBookingsQuery(undefined);
-    const { data: services,isLoading: servicesLoading } = useGetServicesQuery(undefined);
+    const { data: servicesData,isLoading: servicesLoading } = useGetServicesQuery({});
     const { data: users,isLoading: usersLoading } = useGetUsersQuery(undefined);
     const { data: reviews,isLoading: reviewsLoading } = useGetAllReviewsQuery(undefined);
+
+    const services = servicesData?.data
 
     const isLoading = bookingsLoading || servicesLoading || usersLoading || reviewsLoading;
 

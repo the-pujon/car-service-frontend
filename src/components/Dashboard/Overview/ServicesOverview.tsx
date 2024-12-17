@@ -75,8 +75,8 @@ export function ServicesOverview({ services,bookings }: ServicesOverviewProps) {
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {servicesWithMetrics.slice(0,6).map((service) => (
-                        <ServiceOverviewCard service={service} />
+                    {servicesWithMetrics.slice(0,6).map((service,index) => (
+                        <ServiceOverviewCard key={index} service={service} />
                     ))}
                 </div>
             </CardContent>

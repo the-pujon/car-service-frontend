@@ -21,7 +21,6 @@ import {
   Shield,
   Sparkles,
   Star,
-  StarHalf,
   MessageCircle,
 } from "lucide-react";
 import { useGetServiceByIdQuery } from "@/redux/features/service/serviceApi";
@@ -38,7 +37,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Avatar } from "@/components/ui/avatar";
 import { AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { format as formatDate } from "date-fns";
 import { Input } from "@/components/ui/input";
 
 interface IReview {
@@ -144,6 +142,7 @@ export default function ServiceDetails() {
       toast.success("Review submitted successfully");
       setRating(0);
       setReviewText("");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Failed to submit review");
     }

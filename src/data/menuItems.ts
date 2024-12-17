@@ -8,6 +8,7 @@ import {
   LockIcon,
   LayoutGrid,
   LayoutDashboardIcon,
+  PlusIcon,
 } from "lucide-react";
 import { TMenuItem } from "@/types/menuTypes";
 
@@ -30,6 +31,12 @@ export const menuItemsAdmin: TMenuItem[] = [
     label: "Services",
     icon: PackageIcon,
     path: "/dashboard/services",
+  },
+  {
+    id: "add-service",
+    label: "Add Service",
+    icon: PlusIcon,
+    path: "/dashboard/add-service",
   },
   { id: "slots", label: "Slots", icon: CalendarIcon, path: "/dashboard/slots" },
   { id: "users", label: "Users", icon: UsersIcon, path: "/dashboard/users" },

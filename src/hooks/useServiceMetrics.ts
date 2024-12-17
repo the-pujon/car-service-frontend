@@ -35,7 +35,7 @@ export const useServiceMetrics = () => {
   const { data: bookingsData, isLoading: bookingsLoading } =
     useGetBookingsQuery({});
 
-  const services = servicesData?.data || [];
+  const services = servicesData?.data?.data || [];
   const bookings = bookingsData?.data || [];
 
   const totalBookings = bookings.length;
