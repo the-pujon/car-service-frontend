@@ -23,6 +23,7 @@ import About from "@/pages/About/About";
 import ServiceOverview from "@/pages/Dashboard/Admin/ServiceOverview/ServiceOverview";
 import EditProfile from "@/pages/Dashboard/User/EditProfile/EditProfile";
 import ChangePassword from "@/pages/Authentication/ChangePassword";
+import AddService from "@/pages/Dashboard/Admin/AddService/AddService";
 
 const router = createBrowserRouter([
     {
@@ -97,6 +98,10 @@ const router = createBrowserRouter([
             {
                 path: 'services',
                 element: <ProtectedRoute role="admin"><ServiceManagement /></ProtectedRoute>
+            },
+            {
+                path: 'add-service',
+                element: <ProtectedRoute role="admin"><AddService /></ProtectedRoute>
             },
             {
                 path: 'service-overview',
