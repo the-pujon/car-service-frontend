@@ -53,19 +53,17 @@ export default function Services() {
         return () => clearTimeout(timer);
     }, [searchTerm]);
 
-    const { data: servicesData,isError,isLoading,error } = useGetServicesQuery({
+    const { data: servicesData,isError,isLoading } = useGetServicesQuery({
         page: currentPage,
         search: debouncedSearchTerm,
         category: selectedCategory === 'all' ? '' : selectedCategory,
         sortBy: sortOrder === 'high' ? 'desc' : sortOrder === 'low' ? 'asc' : '',
     });
-    console.log(error);
+    
     const services = servicesData?.data;
     const meta = servicesData?.data?.meta;
 
-    console.log('Meta data:', meta);
-
-    console.log(services)
+   
     const handleRadioChange = (value: string) => {
         setSelectedCategory(value);
         setIsSidebarOpen(false);
@@ -79,7 +77,7 @@ export default function Services() {
         setSortOrder(value as 'high' | 'low' | '');
     };
 
-    const filteredAndSortedServices = services?.data;
+    const filteredAndSortedServices = services?.data || [];
 
     // Pagination handlers
     const handlePageChange = (page: number) => {

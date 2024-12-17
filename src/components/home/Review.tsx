@@ -8,7 +8,6 @@ import feedback from "@/assets/icons/Feedback-rafiki.png"
 import { useAppSelector } from '@/redux/hook'
 import { isTokenExpired } from '@/utils/isTokenExpired'
 import { useCurrentToken } from '@/redux/features/auth/authSlice'
-import Overlay from './Overlay'
 import { useCreateReviewMutation } from '@/redux/features/review/reviewApi'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
@@ -45,7 +44,6 @@ const Review = () => {
 
     //form submitting
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
-        console.log(data)
         try {
             await createReview(data).unwrap()
             toast.success('Review submitted successfully!')
@@ -85,6 +83,10 @@ const Review = () => {
         }
     }
 
+    if(expiredToken){
+        return null
+    }
+
     return (
         <motion.div
             className='wrapper pb-16 md:pb-24 lg:pb-32'
@@ -114,9 +116,9 @@ const Review = () => {
                     />
                 </motion.div>
                 <motion.div className='w-full lg:w-1/2 relative' variants={itemVariants}>
-                    {
+                    {/* {
                         expiredToken && <Overlay title={'Want to give feedback?'} />
-                    }
+                    } */}
 
                     <motion.form
                         onSubmit={handleSubmit(onSubmit)}

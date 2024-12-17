@@ -5,15 +5,15 @@ import TestimonialCard from '../ui/TestimonialCard'
 import { Button } from '../ui/button'
 import { Link } from 'react-router-dom'
 import { Star } from 'lucide-react'
-import { useAppSelector } from '@/redux/hook'
-import { useCurrentToken } from '@/redux/features/auth/authSlice'
-import { isTokenExpired } from '@/utils/isTokenExpired'
-import Overlay from './Overlay'
+// import { useAppSelector } from '@/redux/hook'
+// import { useCurrentToken } from '@/redux/features/auth/authSlice'
+// import { isTokenExpired } from '@/utils/isTokenExpired'
+// import Overlay from './Overlay'
 import { useGetAllReviewsQuery } from '@/redux/features/review/reviewApi'
 
 const Testimonials: React.FC = () => {
-    const token = useAppSelector(useCurrentToken)
-    const expiredToken = isTokenExpired(token)
+    // const token = useAppSelector(useCurrentToken)
+    // const expiredToken = isTokenExpired(token)
 
     const { data: reviews,isLoading,isError } = useGetAllReviewsQuery(undefined)
 
@@ -61,7 +61,6 @@ const Testimonials: React.FC = () => {
 
     return (
         <div className='relative'>
-            {expiredToken && <Overlay title={'Read trusted reviews from our customers'} />}
             <motion.section
                 className="wrapper py-16 sm:py-24 md:py-32"
                 initial="hidden"

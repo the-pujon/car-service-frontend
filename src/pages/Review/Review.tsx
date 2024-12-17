@@ -2,18 +2,12 @@
 import React,{ useMemo } from 'react'
 
 import { Star } from 'lucide-react'
-import { useAppSelector } from '@/redux/hook'
-import { useCurrentToken } from '@/redux/features/auth/authSlice'
-import { isTokenExpired } from '@/utils/isTokenExpired'
 
 import { useGetAllReviewsQuery } from '@/redux/features/review/reviewApi'
-import Overlay from '@/components/home/Overlay'
 import TestimonialCard from '@/components/ui/TestimonialCard'
 import Loading from '@/components/ui/Loading'
 
 const Review: React.FC = () => {
-    const token = useAppSelector(useCurrentToken)
-    const expiredToken = isTokenExpired(token)
 
     const { data: reviews,isLoading } = useGetAllReviewsQuery(undefined)
 
@@ -38,7 +32,6 @@ const Review: React.FC = () => {
             {
                 isLoading && <Loading />
             }
-            {expiredToken && <Overlay title={'Read trusted reviews from our customers'} />}
             <section className="wrapper py-32">
                 <div className="mx-auto">
                     <div className="md:flex md:items-end md:justify-between">
