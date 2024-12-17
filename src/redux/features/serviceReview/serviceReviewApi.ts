@@ -8,6 +8,7 @@ const serviceReviewApi = baseApi.injectEndpoints({
         url: "/service-reviews",
         method: "GET",
       }),
+      providesTags: ["serviceReview", "services"],
     }),
     // For adding a new service review
     addServiceReview: builder.mutation({
@@ -16,6 +17,7 @@ const serviceReviewApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["serviceReview", "services"],
     }),
     // For deleting a service review by ID
     deleteServiceReview: builder.mutation({
@@ -23,6 +25,7 @@ const serviceReviewApi = baseApi.injectEndpoints({
         url: `/service-reviews/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["serviceReview", "services"],
     }),
 
     // For updating a service review by ID
@@ -32,16 +35,18 @@ const serviceReviewApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
+      invalidatesTags: ["serviceReview", "services"],
     }),
 
     // For getting a single service review by ID
-    getSingleServiceReview: builder.query({
+    getServiceReviewsByServiceID: builder.query({
       query: (id) => ({
         url: `/service-reviews/${id}`,
         method: "GET",
       }),
+      providesTags: ["serviceReview", "services"],
     }),
   }),
 });
 
-export const { useGetServiceReviewsQuery, useAddServiceReviewMutation, useDeleteServiceReviewMutation, useUpdateServiceReviewMutation, useGetSingleServiceReviewQuery } = serviceReviewApi;
+export const { useGetServiceReviewsQuery, useAddServiceReviewMutation, useDeleteServiceReviewMutation, useUpdateServiceReviewMutation, useGetServiceReviewsByServiceIDQuery } = serviceReviewApi;
