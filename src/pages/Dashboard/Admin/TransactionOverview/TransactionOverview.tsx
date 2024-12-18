@@ -4,7 +4,7 @@ import {
   useGetAllTransactionsQuery,
   useGetServiceWiseTransactionsQuery,
   useGetStatusWiseTransactionsQuery,
-  useGetDateWiseTransactionsQuery,
+//   useGetDateWiseTransactionsQuery,
 } from "@/redux/features/transaction/transactionApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -32,12 +32,12 @@ import {
   PieChart,
   Pie,
   Cell,
-  LineChart,
-  Line,
+//   LineChart,
+//   Line,
 } from "recharts";
 import {  ArrowUpRight, ArrowDownRight, DollarSign, Activity } from "lucide-react";
 // import { toast } from "sonner";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+// import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
@@ -47,17 +47,11 @@ const TransactionOverview = () => {
     to: new Date(),
   });
 
-  const [interval, setInterval] = useState<'day' | 'week' | 'month'>('day');
   const [filteredTransactions, setFilteredTransactions] = useState<any[]>([]);
 
   const { data: allTransactions, isLoading } = useGetAllTransactionsQuery(undefined);
   const { data: serviceWiseData } = useGetServiceWiseTransactionsQuery(undefined);
   const { data: statusWiseData } = useGetStatusWiseTransactionsQuery(undefined);
-  const { data: dateWiseData, isLoading: isDateWiseLoading } = useGetDateWiseTransactionsQuery({
-    startDate: date?.from?.toISOString() || '',
-    endDate: date?.to?.toISOString() || '',
-    interval
-  });
 
   // Filter transactions based on date range
   useEffect(() => {
@@ -72,18 +66,6 @@ const TransactionOverview = () => {
     }
   }, [allTransactions?.data, date]);
 
-  console.log(dateWiseData)
-
-//   const [updateStatus] = useUpdateTransactionStatusMutation();
-
-//   const handleStatusChange = async (transactionId: string, newStatus: string) => {
-//     try {
-//       await updateStatus({ id: transactionId, status: newStatus }).unwrap();
-//       toast.success("Transaction status updated successfully");
-//     } catch (error) {
-//       toast.error("Failed to update transaction status");
-//     }
-//   };
 
   if (isLoading) return <Loading />;
 
@@ -109,51 +91,6 @@ const TransactionOverview = () => {
     }
   };
 
-  const formatChartDate = (value: string) => {
-    if (!value) return '';
-    
-    if (interval === 'week') {
-      const [year, week] = value.split('-W');
-      return `Week ${week}, ${year}`;
-    }
-    
-    if (interval === 'month') {
-      const date = new Date(value + '-01'); // Add day for proper parsing
-      return date.toLocaleDateString('en-US', { 
-        year: 'numeric',
-        month: 'short'
-      });
-    }
-    
-    // Daily format
-    return new Date(value).toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric'
-    });
-  };
-
-  const formatTooltipDate = (value: string) => {
-    if (!value) return '';
-    
-    if (interval === 'week') {
-      const [year, week] = value.split('-W');
-      return `Week ${week} of ${year}`;
-    }
-    
-    if (interval === 'month') {
-      const date = new Date(value + '-01');
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long'
-      });
-    }
-    
-    return new Date(value).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
   return (
     <div className="p-6 space-y-8">
@@ -230,98 +167,6 @@ const TransactionOverview = () => {
         </Card>
       </div>
 
-      {/* Transaction Trends with Interval Toggle */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Transaction Trends</CardTitle>
-          <ToggleGroup
-            type="single"
-            value={interval}
-            onValueChange={(value: 'day' | 'week' | 'month') => value && setInterval(value)}
-          >
-            <ToggleGroupItem value="day" className="px-3">Daily</ToggleGroupItem>
-            <ToggleGroupItem value="week" className="px-3">Weekly</ToggleGroupItem>
-            <ToggleGroupItem value="month" className="px-3">Monthly</ToggleGroupItem>
-          </ToggleGroup>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[300px]">
-            {isDateWiseLoading ? (
-              <div className="flex items-center justify-center h-full">
-                <Loading />
-              </div>
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={dateWiseData?.data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="_id"
-                    tickFormatter={formatChartDate}
-                    interval={0}
-                    angle={-15}
-                    textAnchor="end"
-                    height={60}
-                  />
-                  <YAxis 
-                    yAxisId="left" 
-                    orientation="left" 
-                    stroke="#8884d8"
-                    label={{ 
-                      value: 'Number of Transactions', 
-                      angle: -90, 
-                      position: 'insideLeft',
-                      style: { textAnchor: 'middle' }
-                    }}
-                  />
-                  <YAxis 
-                    yAxisId="right" 
-                    orientation="right" 
-                    stroke="#82ca9d"
-                    label={{ 
-                      value: 'Total Amount ($)', 
-                      angle: 90, 
-                      position: 'insideRight',
-                      style: { textAnchor: 'middle' }
-                    }}
-                  />
-                  <Tooltip
-                    labelFormatter={formatTooltipDate}
-                    formatter={(value: number) => [
-                      typeof value === 'number' ? 
-                        value.toLocaleString('en-US', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        }) : value,
-                      ''
-                    ]}
-                  />
-                  <Legend />
-                  <Line
-                    yAxisId="left"
-                    type="monotone"
-                    dataKey="totalTransactions"
-                    stroke="#8884d8"
-                    name="Number of Transactions"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                  <Line
-                    yAxisId="right"
-                    type="monotone"
-                    dataKey="totalAmount"
-                    stroke="#82ca9d"
-                    name="Total Amount ($)"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Charts Section */}
       <div className="grid gap-6 md:grid-cols-2">
