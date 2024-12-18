@@ -1,30 +1,50 @@
 import { useCreateBookingMutation } from '@/redux/features/bookings/bookingApi'
+import { useCreateTransactionMutation } from '@/redux/features/transaction/transactionApi'
 import React,{ useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 const BookingSuccess: React.FC = () => {
     const navigate = useNavigate()
     const [createBooking,{ error }] = useCreateBookingMutation()
+    const [createTransaction,{ error: transactionError }] = useCreateTransactionMutation()
 
     console.log(error)
+    console.log(transactionError)
 
     useEffect(() => {
         const pendingBookingData = localStorage.getItem('pendingBooking')
         if (pendingBookingData) {
             const bookingData = JSON.parse(pendingBookingData)
-            createBooking(bookingData)
+            const transactionData = {
+                customer: bookingData.customer,
+                service: bookingData.service,
+                amount: bookingData.service.price,
+                status: 'success',
+                transactionId: `T-${Date.now()}-${bookingData.customer}-${bookingData.service}`
+            }
+            createTransaction(transactionData)
                 .unwrap()
                 .then(() => {
-                    localStorage.removeItem('pendingBooking')
-                    navigate('/services')
+                    toast.success('Payment successful')
+                    createBooking(bookingData)
+                        .unwrap()
+                        .then(() => {
+                            localStorage.removeItem('pendingBooking')
+                            toast.success('Booking successful')
+                            navigate('/services')
+                        })
+                        .catch((error) => {
+                            console.error('Failed to create booking:',error)
+                        })
                 })
                 .catch((error) => {
-                    console.error('Failed to create booking:',error)
+                    console.error('Failed to create transaction:',error)
                 })
-        } else {
+        } else {    
             navigate('/services')
         }
-    },[createBooking,navigate])
+    },[createBooking, createTransaction, navigate])
 
     return (
         <div className='wrapper h-screen flex flex-col justify-center items-center'>
