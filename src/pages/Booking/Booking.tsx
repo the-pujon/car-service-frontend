@@ -11,6 +11,8 @@ import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/com
 import { useGetServiceByIdQuery } from '@/redux/features/service/serviceApi'
 import { useGetSlotByIdQuery } from '@/redux/features/slot/slotApi'
 import Loading from '@/components/ui/Loading'
+import { useAppSelector } from '@/redux/hook'
+import { selectCurrentUser } from '@/redux/features/auth/authSlice'
 
 type FormValues = {
     vehicleType: string
@@ -39,6 +41,8 @@ export default function Booking() {
     const { serviceId,slotId } = useParams<{ serviceId: string,slotId: string }>()
     const { register,control,handleSubmit,setValue,formState: { isSubmitting } } = useForm<FormValues>()
     const [isLoading,setIsLoading] = useState(false)
+    const user = useAppSelector(selectCurrentUser);
+    // console.log(user)
 
     const { data: service,isLoading: isServiceLoading } = useGetServiceByIdQuery(serviceId)
     const { data: slot,isLoading: isSlotLoading } = useGetSlotByIdQuery(slotId)
@@ -58,6 +62,8 @@ export default function Booking() {
                 ...formData,
                 serviceId,
                 slotId,
+                amount: service?.data.price.toString(),
+                customer: user?.email
             }));
 
 

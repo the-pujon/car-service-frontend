@@ -18,8 +18,8 @@ const BookingSuccess: React.FC = () => {
             const bookingData = JSON.parse(pendingBookingData)
             const transactionData = {
                 customer: bookingData.customer,
-                service: bookingData.service,
-                amount: bookingData.service.price,
+                service: bookingData.serviceId,
+                amount: bookingData.amount,
                 status: 'success',
                 transactionId: `T-${Date.now()}-${bookingData.customer}-${bookingData.service}`
             }
