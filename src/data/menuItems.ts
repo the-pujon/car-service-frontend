@@ -40,6 +40,7 @@ export const menuItemsAdmin: TMenuItem[] = [
     path: "/dashboard/add-service",
   },
   { id: "slots", label: "Slots", icon: CalendarIcon, path: "/dashboard/slots" },
+  { id: "transaction-overview", label: "Transaction Overview", icon: DollarSignIcon, path: "/dashboard/transaction-overview" },
   { id: "users", label: "Users", icon: UsersIcon, path: "/dashboard/users" },
   {
     id: "profile",

@@ -61,8 +61,8 @@ const transactionApi = baseApi.injectEndpoints({
 
     // Get date-wise transaction calculations
     getDateWiseTransactions: builder.query({
-      query: ({ startDate, endDate }) => ({
-        url: `/transactions/calculate/date-wise?startDate=${startDate}&endDate=${endDate}`,
+      query: ({ startDate, endDate, interval = 'day' }) => ({
+        url: `/transactions/calculate/date-wise?startDate=${startDate}&endDate=${endDate}&interval=${interval}`,
         method: "GET",
       }),
       providesTags: ["transactions"],

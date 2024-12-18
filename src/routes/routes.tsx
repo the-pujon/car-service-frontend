@@ -25,6 +25,7 @@ import EditProfile from "@/pages/Dashboard/User/EditProfile/EditProfile";
 import ChangePassword from "@/pages/Authentication/ChangePassword";
 import AddService from "@/pages/Dashboard/Admin/AddService/AddService";
 import MyTransaction from "@/pages/Dashboard/User/MyTransaction/MyTransaction";
+import TransactionOverview from "@/pages/Dashboard/Admin/TransactionOverview/TransactionOverview";
 
 const router = createBrowserRouter([
     {
@@ -136,6 +137,10 @@ const router = createBrowserRouter([
             {
                 path: 'my-transactions',
                 element: <ProtectedRoute role="user"><MyTransaction /></ProtectedRoute>
+            },
+            {
+                path: 'transaction-overview',
+                element: <ProtectedRoute role="admin"><TransactionOverview /></ProtectedRoute>
             }
         ]
     }
