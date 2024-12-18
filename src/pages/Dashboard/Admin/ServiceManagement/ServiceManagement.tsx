@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AddService from "@/components/Dashboard/AddService";
+// import AddService from "@/components/Dashboard/AddService";
 import UpdateService from "@/components/Dashboard/UpdateService";
 import {
     AlertDialog,
@@ -28,7 +28,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useDeleteServiceMutation,useGetServicesQuery } from "@/redux/features/service/serviceApi";
-import { Edit,Trash } from "lucide-react";
+import { Edit,Plus,Trash } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Tooltip,TooltipContent,TooltipProvider,TooltipTrigger } from "@/components/ui/tooltip";
@@ -43,6 +43,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Link } from "react-router-dom";
 
 const ServiceManagement = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -122,12 +123,13 @@ const ServiceManagement = () => {
                     <h2 className="text-4xl font-bold">Service Management</h2>
                     <p className="text-sm text-gray-500">Manage your services</p>
                 </div>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button>Add Service</Button>
-                    </DialogTrigger>
-                    <AddService />
-                </Dialog>
+              
+                        <Button asChild>
+                            <Link to="/dashboard/add-service">
+                                <Plus className="h-4 w-4 mr-2" />
+                                Add Service
+                            </Link>
+                        </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
