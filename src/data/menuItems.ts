@@ -9,6 +9,7 @@ import {
   LayoutGrid,
   LayoutDashboardIcon,
   PlusIcon,
+  DollarSignIcon,
 } from "lucide-react";
 import { TMenuItem } from "@/types/menuTypes";
 
@@ -67,6 +68,12 @@ export const menuItemsUser: TMenuItem[] = [
     label: "My Bookings",
     icon: CalendarIcon,
     path: "/dashboard/my-bookings",
+  },
+  {
+    id: "my-transactions",
+    label: "My Transactions",
+    icon: DollarSignIcon,
+    path: "/dashboard/my-transactions",
   },
   {
     id: "profile",

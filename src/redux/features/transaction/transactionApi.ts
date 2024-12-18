@@ -33,7 +33,7 @@ const transactionApi = baseApi.injectEndpoints({
     // Get transactions by user email (current user)
     getUserTransactions: builder.query({
       query: () => ({
-        url: "/transactions/user-transactions",
+        url: "/transactions/user/my-transactions",
         method: "GET",
       }),
       providesTags: ["transactions"],
@@ -88,15 +88,15 @@ const transactionApi = baseApi.injectEndpoints({
     }),
 
     // Get transactions by customer ID
-    getCustomerTransactions: builder.query({
-      query: (customerId) => ({
-        url: `/transactions/customer/${customerId}`,
-        method: "GET",
-      }),
-      providesTags: (_result, _error, customerId) => [
-        { type: "transactions", customerId },
-      ],
-    }),
+    // getCustomerTransactions: builder.query({
+    //   query: (customerId) => ({
+    //     url: `/transactions/customer/${customerId}`,
+    //     method: "GET",
+    //   }),
+    //   providesTags: (_result, _error, customerId) => [
+    //     { type: "transactions", customerId },
+    //   ],
+    // }),
   }),
 });
 
@@ -110,5 +110,4 @@ export const {
   useGetDateWiseTransactionsQuery,
   useGetStatusWiseTransactionsQuery,
   useUpdateTransactionStatusMutation,
-  useGetCustomerTransactionsQuery,
 } = transactionApi;

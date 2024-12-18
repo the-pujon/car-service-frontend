@@ -21,7 +21,7 @@ const BookingSuccess: React.FC = () => {
                 service: bookingData.serviceId,
                 amount: bookingData.amount,
                 status: 'success',
-                transactionId: `T-${Date.now()}-${bookingData.customer}-${bookingData.service}`
+                transactionId: `T-${Date.now()}-${bookingData.customer}-${bookingData.serviceId}`
             }
             createTransaction(transactionData)
                 .unwrap()

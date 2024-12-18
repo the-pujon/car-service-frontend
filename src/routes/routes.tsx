@@ -24,6 +24,7 @@ import ServiceOverview from "@/pages/Dashboard/Admin/ServiceOverview/ServiceOver
 import EditProfile from "@/pages/Dashboard/User/EditProfile/EditProfile";
 import ChangePassword from "@/pages/Authentication/ChangePassword";
 import AddService from "@/pages/Dashboard/Admin/AddService/AddService";
+import MyTransaction from "@/pages/Dashboard/User/MyTransaction/MyTransaction";
 
 const router = createBrowserRouter([
     {
@@ -131,6 +132,10 @@ const router = createBrowserRouter([
             {
                 path: 'change-password',
                 element: <ProtectedRoute role=""><ChangePassword /></ProtectedRoute>
+            },
+            {
+                path: 'my-transactions',
+                element: <ProtectedRoute role="user"><MyTransaction /></ProtectedRoute>
             }
         ]
     }

@@ -42,7 +42,7 @@ export default function Booking() {
     const { register,control,handleSubmit,setValue,formState: { isSubmitting } } = useForm<FormValues>()
     const [isLoading,setIsLoading] = useState(false)
     const user = useAppSelector(selectCurrentUser);
-    // console.log(user)
+
 
     const { data: service,isLoading: isServiceLoading } = useGetServiceByIdQuery(serviceId)
     const { data: slot,isLoading: isSlotLoading } = useGetSlotByIdQuery(slotId)
