@@ -18,15 +18,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ image,description,title,price
             <div className="relative">
                 <img
                     src={image}
-                    alt={title}
+                    alt={`${title} service`}
                     className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <Badge className="absolute top-4 left-4 bg-foreground text-white tracking-widest px-2 py-1">
-                    <DollarSign className="w-4 h-4 mr-1 inline" />
+                    <DollarSign className="w-4 h-4 mr-1 inline" aria-hidden="true" />
                     {price?.toFixed(2)}
                 </Badge>
                 <div className="absolute -bottom-6 right-4 bg-foreground p-3 rounded-full shadow-lg transition-transform duration-300 group-hover:-translate-y-2">
-                    <SettingsIcon className="w-6 h-6 text-white" />
+                    <SettingsIcon className="w-6 h-6 text-white" aria-hidden="true" />
                 </div>
             </div>
             <CardContent className="p-6">
@@ -37,9 +37,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ image,description,title,price
                 <Button asChild
                     className="w-full group bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 button"
                 >
-                    <Link to={`/serviceDetails/${_id}`}>
+                    <Link 
+                        to={`/serviceDetails/${_id}`}
+                        aria-label={`Book ${title} service - View details and pricing`}
+                    >
                         <span className="mr-2">Book Now</span>
-                        <MoveRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                        <MoveRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
                     </Link>
                 </Button>
             </CardFooter>
