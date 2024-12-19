@@ -1,15 +1,14 @@
+/* eslint-disable react-refresh/only-export-components */
+import { lazy } from 'react'
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import Home from "../pages/Home/Home";
 import SignUp from "@/pages/Authentication/SignUp";
 import SignIn from "@/pages/Authentication/SignIn";
 import Booking from "@/pages/Booking/Booking";
-import Services from "@/pages/Services/Services";
 import ServiceDetails from "@/pages/ServiceDetails/ServiceDetails";
 import Error from "@/pages/Error/Error";
 import DashboardLayout from "@/pages/Dashboard/DashboardLayout";
 import AdminOverview from "@/pages/Dashboard/Admin/AdminOverview/AdminOverview";
-import ServiceManagement from "@/pages/Dashboard/Admin/ServiceManagement/ServiceManagement";
 import SlotManagement from "@/pages/Dashboard/Admin/SlotManagement/SlotManagement";
 import UserManagement from "@/pages/Dashboard/Admin/UserManagement/UserManagement";
 import MyBookings from "@/pages/Dashboard/User/MyBookings/MyBookings";
@@ -26,6 +25,11 @@ import ChangePassword from "@/pages/Authentication/ChangePassword";
 import AddService from "@/pages/Dashboard/Admin/AddService/AddService";
 import MyTransaction from "@/pages/Dashboard/User/MyTransaction/MyTransaction";
 import TransactionOverview from "@/pages/Dashboard/Admin/TransactionOverview/TransactionOverview";
+
+// Lazy load page components
+const Home = lazy(() => import('@/pages/Home/Home'))
+const Services = lazy(() => import('@/pages/Services/Services'))
+const ServiceManagement = lazy(() => import('@/pages/Dashboard/Admin/ServiceManagement/ServiceManagement'))
 
 const router = createBrowserRouter([
     {
@@ -145,5 +149,4 @@ const router = createBrowserRouter([
         ]
     }
 ])
-
 export default router;
