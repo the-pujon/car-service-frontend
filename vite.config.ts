@@ -16,22 +16,16 @@ export default defineConfig({
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'ui-vendor': [
             '@radix-ui/react-alert-dialog',
-            '@radix-ui/react-avatar',
             '@radix-ui/react-dialog',
             '@radix-ui/react-dropdown-menu',
             '@radix-ui/react-label',
             '@radix-ui/react-popover',
-            '@radix-ui/react-radio-group',
             '@radix-ui/react-select',
             '@radix-ui/react-separator',
             '@radix-ui/react-slot',
-            '@radix-ui/react-toggle',
-            '@radix-ui/react-toggle-group',
-            '@radix-ui/react-tooltip'
           ],
           'chart-vendor': ['recharts'],
           'form-vendor': ['react-hook-form', 'zod'],
-          'animation-vendor': ['framer-motion']
         },
       },
     },
@@ -39,8 +33,8 @@ export default defineConfig({
     terserOptions: {
       compress: {
         drop_console: true,
-        drop_debugger: true
-      }
-    }
-  }
+        drop_debugger: true,
+      },
+    },
+  },
 })
