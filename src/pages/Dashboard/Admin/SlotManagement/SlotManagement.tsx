@@ -118,7 +118,7 @@ export default function SlotManagement() {
         }
      
         try {
-            const result = await createSlot(slotData).unwrap()
+          createSlot(slotData).unwrap()
              
             toast.success('Slot created successfully')
             setNewSlot({
