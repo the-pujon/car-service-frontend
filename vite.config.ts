@@ -11,8 +11,21 @@ export default defineConfig({
         manualChunks: {
           'vendor': ['react', 'react-dom'],
           'redux': ['@reduxjs/toolkit', 'react-redux'],
-          'ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+          'ui': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-label',
+            '@radix-ui/react-select'
+          ],
+          'utils': ['date-fns', 'clsx', 'tailwind-merge'],
         }
+      }
+    },
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
       }
     },
     chunkSizeWarningLimit: 1000,
@@ -21,6 +34,9 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', '@reduxjs/toolkit']
   },
   server: {
     open: true,
