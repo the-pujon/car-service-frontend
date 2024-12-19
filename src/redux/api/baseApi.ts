@@ -32,7 +32,7 @@ const baseQueryWithErrorHandling: BaseQueryFn<
 
     if (result.error) {
       if (result.error.status === 401) {
-        console.log(result);
+     
         toast.error((result.error.data as { message: string }).message);
         console.error("Unauthorized access. Please check your credentials.");
       } else if (result.error.status === 403) {

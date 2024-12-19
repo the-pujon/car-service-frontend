@@ -138,7 +138,7 @@ const UpdateService = ({ serviceId }: { serviceId: string }) => {
 
         if (!imageFile) {
             const updatedServiceData = { ..._data,_id: serviceId };
-            console.log(updatedServiceData)
+         
 
             try {
                 await updateService(updatedServiceData).unwrap();

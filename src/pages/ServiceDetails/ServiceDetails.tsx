@@ -76,16 +76,14 @@ export default function ServiceDetails() {
 
   const { data: reviews, isLoading: isReviewsLoading } =
     useGetServiceReviewsByServiceIDQuery(id);
-  console.log("reviews", reviews);
+ 
   const [addReview] = useAddServiceReviewMutation();
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [name, setName] = useState("");
   const user = "pujondas@gmail.com";
 
-  console.log(id);
-
-  console.log(slots);
+ 
 
   useEffect(() => {
     setSelectedSlot(null);
@@ -127,10 +125,7 @@ export default function ServiceDetails() {
       toast.error("Please select a rating");
       return;
     }
-    console.log("rating", rating);
-    console.log("reviewText", reviewText);
-    console.log("id", id);
-    console.log("user", user);
+ 
     try {
       await addReview({
         rating,

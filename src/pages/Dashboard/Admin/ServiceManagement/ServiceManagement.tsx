@@ -68,7 +68,7 @@ const ServiceManagement = () => {
         sortBy: sortOrder === 'high' ? 'desc' : sortOrder === 'low' ? 'asc' : '',
     });
 
-    console.log(servicesData)
+  
 
     const services = servicesData?.data;
     const meta = servicesData?.data?.meta;

@@ -9,8 +9,8 @@ const BookingSuccess: React.FC = () => {
     const [createBooking,{ error }] = useCreateBookingMutation()
     const [createTransaction,{ error: transactionError }] = useCreateTransactionMutation()
 
-    console.log(error)
-    console.log(transactionError)
+    console.error(error)
+    console.error(transactionError)
 
     useEffect(() => {
         const pendingBookingData = localStorage.getItem('pendingBooking')

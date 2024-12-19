@@ -51,7 +51,7 @@ const SignUp: React.FC = () => {
     }
 
     if (isError) {
-        console.log(error)
+        console.error(error)
         const apiError = error as { data?: { message?: string } }
         toast.error(apiError.data?.message || "Something went wrong");
     }

@@ -26,8 +26,7 @@ const slotApi = baseApi.injectEndpoints({
     }),
 
     updateSlotStatus: build.mutation({
-      query: (data) => {
-        console.log(data);
+      query: (data) => { 
         return {
           url: `/services/slots/${data.id}`,
           method: "PATCH",

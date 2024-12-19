@@ -47,14 +47,14 @@ const UserManagement: React.FC = () => {
         }
     },[fetchedBookings])
 
-    console.log(users)
+ 
 
     //update user role
     const handleUpdateUserRole = async (id: string,newRole: string) => {
 
         const toastID = toast.loading("Updating user role...")
 
-        console.log(id)
+     
         try {
             await updateUser({ id,role: newRole }).unwrap()
             toast.success("User role updated successfully",{ id: toastID })
@@ -67,8 +67,7 @@ const UserManagement: React.FC = () => {
     const handleDialogOpenChange = (open: boolean) => {
         if (!open) {
             setSelectedUser(null);
-            setUserBookings([]);
-            console.log("hi")
+            setUserBookings([]); 
         }
     };
 

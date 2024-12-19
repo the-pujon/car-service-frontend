@@ -90,9 +90,7 @@ export default function SlotManagement() {
 
     const services = servicesData?.data
 
-    console.log(availableSlots)
-
-    console.log(createSlotError)
+    console.error(createSlotError)
 
     useEffect(() => {
         if (availableSlots) {
@@ -118,10 +116,10 @@ export default function SlotManagement() {
             ...newSlot,
             date: formattedDate
         }
-        console.log("newSlot",slotData)
+     
         try {
             const result = await createSlot(slotData).unwrap()
-            console.log(result)
+             
             toast.success('Slot created successfully')
             setNewSlot({
                 service: '',
