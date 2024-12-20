@@ -32,12 +32,10 @@ const Navbar: React.FC = () => {
 
                     {/* Phone Number */}
                     <div className="ml-auto hidden sm:flex flex-col place-items-end">
-                        <a href="tel:88003326566" aria-label="Call our 24/7 support">
                             <span className="font-bold text-lg md:text-xl">8 800 332 65-66</span>
                             <span className="font-semibold text-xs sm:text-sm text-gray-400">
                                 Support 24/7
                             </span>
-                        </a>
                     </div>
 
                     {/* User Menu */}

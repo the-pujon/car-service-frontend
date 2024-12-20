@@ -83,14 +83,16 @@ export default function SlotManagement() {
     })
     const [date,setDate] = useState<Date>()
 
-    const [createSlot,{ isLoading: isCreating,error: createSlotError }] = useCreateSlotMutation()
+    const [createSlot,{ isLoading: isCreating,error: createSlotError,isError: createSlotIsError }] = useCreateSlotMutation()
     const { data: availableSlots,isLoading: slotsLoading,} = useGetSlotAvailabilityQuery({})
     const { data: servicesData,isLoading: servicesLoading } = useGetServicesQuery({})
     const [updateSlotStatus] = useUpdateSlotStatusMutation()
 
     const services = servicesData?.data
 
-    console.error(createSlotError)
+    if(createSlotIsError){
+        console.error(createSlotError)
+    }
 
     useEffect(() => {
         if (availableSlots) {

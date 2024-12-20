@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import { lazy } from 'react'
-import { createBrowserRouter } from "react-router-dom";
+import { lazy, Suspense } from 'react'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "../App";
 import SignUp from "@/pages/Authentication/SignUp";
 import SignIn from "@/pages/Authentication/SignIn";
@@ -25,6 +25,7 @@ import ChangePassword from "@/pages/Authentication/ChangePassword";
 import AddService from "@/pages/Dashboard/Admin/AddService/AddService";
 import MyTransaction from "@/pages/Dashboard/User/MyTransaction/MyTransaction";
 import TransactionOverview from "@/pages/Dashboard/Admin/TransactionOverview/TransactionOverview";
+import Loading from '@/components/ui/Loading'
 
 // Lazy load page components
 const Home = lazy(() => import('@/pages/Home/Home'))
@@ -149,4 +150,14 @@ const router = createBrowserRouter([
         ]
     }
 ])
+
+export function AppRoutes() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <RouterProvider router={router} />
+    </Suspense>
+  )
+}
+
+// Add back the default export
 export default router;
