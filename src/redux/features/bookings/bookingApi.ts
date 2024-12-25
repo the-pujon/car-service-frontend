@@ -37,6 +37,23 @@ const bookingApi = baseApi.injectEndpoints({
         { type: "bookings", id: customerId },
       ],
     }),
+
+    // For cancelling a booking
+    cancelBooking: builder.mutation({
+      query: (bookingId) => ({
+        url: `/bookings/${bookingId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["bookings", "slots"],
+    }),
+
+    // For rescheduling a booking
+    reScheduleBooking: builder.mutation({
+      query: (bookingId) => ({
+        url: `/bookings/${bookingId}`,
+        method: "PUT",
+      }),
+    }),
   }),
 });
 
