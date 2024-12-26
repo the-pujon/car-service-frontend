@@ -8,7 +8,7 @@ import { Search,Menu,X } from 'lucide-react'
 import { RadioGroup,RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { useGetServicesQuery } from '@/redux/features/service/serviceApi'
-import Loading from '@/components/ui/Loading'
+// import Loading from '@/components/ui/Loading'
 import { Button } from '@/components/ui/button'
 import { motion,AnimatePresence } from 'framer-motion'
 import {
@@ -20,6 +20,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import ServiceCardSkeleton from '@/components/skeletons/ServiceCardSkeleton'
 
 interface Category {
     value: string;
@@ -203,7 +204,13 @@ export default function Services() {
                     </div>
                     <hr />
                     <div className='relative min-h-[70vh]'>
-                        {isLoading && <Loading />}
+                        {isLoading && (
+                            <div className='grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-2 lg:grid-cols-3 my-8'>
+                                {[...Array(6)].map((_, index) => (
+                                    <ServiceCardSkeleton key={index} />
+                                ))}
+                            </div>
+                        )}
                         <motion.div
                             className='grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-2 lg:grid-cols-3 my-8'
                             initial="hidden"
