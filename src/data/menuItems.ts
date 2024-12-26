@@ -71,6 +71,12 @@ export const menuItemsUser: TMenuItem[] = [
     path: "/dashboard/my-bookings",
   },
   {
+    id: "reschedule-booking",
+    label: "Reschedule Booking",
+    icon: CalendarIcon,
+    path: "/dashboard/reschedule-booking",
+  },
+  {
     id: "my-transactions",
     label: "My Transactions",
     icon: DollarSignIcon,

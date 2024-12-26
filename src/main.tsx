@@ -8,10 +8,10 @@ import { Toaster } from 'sonner'
 // import { AppRoutes } from './routes/Routes'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  <>
     <Provider store={store}>
       <AppRoutes />
       <Toaster position='top-center' className='text-white' richColors />
     </Provider>
-  </React.StrictMode>,
+  </>
 )

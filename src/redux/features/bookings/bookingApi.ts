@@ -48,11 +48,12 @@ const bookingApi = baseApi.injectEndpoints({
     }),
 
     // For rescheduling a booking
-    reScheduleBooking: builder.mutation({
-      query: (bookingId) => ({
-        url: `/bookings/${bookingId}`,
-        method: "PUT",
+    rescheduleBooking: builder.mutation({
+      query: ({ bookingId, slotId }) => ({
+        url: `/bookings/reschedule?bookingId=${bookingId}&slotId=${slotId}`,
+        method: "PATCH",
       }),
+      invalidatesTags: ["bookings", "slots"],
     }),
   }),
 });
@@ -62,4 +63,6 @@ export const {
   useGetBookingsQuery,
   useGetUserBookingsQuery,
   useGetBookingsByCustomerIdQuery,
+  useCancelBookingMutation,
+  useRescheduleBookingMutation,
 } = bookingApi;

@@ -26,6 +26,7 @@ import AddService from "@/pages/Dashboard/Admin/AddService/AddService";
 import MyTransaction from "@/pages/Dashboard/User/MyTransaction/MyTransaction";
 import TransactionOverview from "@/pages/Dashboard/Admin/TransactionOverview/TransactionOverview";
 import Loading from '@/components/ui/Loading'
+import RescheduleBooking from '@/pages/Dashboard/User/RescheduleBooking/RescheduleBooking';
 
 // Lazy load page components
 const Home = lazy(() => import('@/pages/Home/Home'))
@@ -146,6 +147,10 @@ const router = createBrowserRouter([
             {
                 path: 'transaction-overview',
                 element: <ProtectedRoute role="admin"><TransactionOverview /></ProtectedRoute>
+            },
+            {
+                path: 'reschedule-booking',
+                element: <ProtectedRoute role="user"><RescheduleBooking /></ProtectedRoute>
             }
         ]
     }
