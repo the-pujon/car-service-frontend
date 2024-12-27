@@ -154,14 +154,19 @@ export default function ServiceDetails() {
           />
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-end">
             <div className="p-4 md:p-6">
+            <div className="flex gap-2">
+            <Badge className="mb-2" variant="secondary">
+                <Star className="w-4 h-4 mr-2" /> {service.data.rating}
+              </Badge>
               <Badge className="mb-2" variant="secondary">
                 <DollarSign className="w-4 h-4 mr-2" /> {service.data.price}
               </Badge>
+            </div>
               <CardTitle className="text-2xl md:text-3xl font-bold text-white mb-2">
                 {service.data.name}
               </CardTitle>
               <CardDescription className="text-gray-200 text-sm md:text-base">
-                {service.data.description}
+                {service.data.category}
               </CardDescription>
             </div>
           </div>

@@ -24,7 +24,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { motion, AnimatePresence } from "framer-motion";
-import { Skeleton } from "@/components/ui/skeleton";
 import { BookingSkeleton, TimeSlotsSkeleton, PageHeaderSkeleton } from "@/components/skeletons";
 
 const containerVariants = {

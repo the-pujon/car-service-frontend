@@ -235,6 +235,7 @@ export default function Services() {
                                 >
                                     <ServiceCard
                                         image={service.image}
+                                        category={service.category}
                                         description={service.description}
                                         title={service.name}
                                         price={service.price}
