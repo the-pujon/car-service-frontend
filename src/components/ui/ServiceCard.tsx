@@ -3,6 +3,7 @@ import { Card,CardContent,CardFooter } from "./card";
 import { Button } from "./button";
 import { Badge } from "./badge";
 import { Link } from "react-router-dom";
+import { getCategoryName } from "@/utils/categoriesName";
 
 interface ServiceCardProps {
     _id: string;
@@ -32,7 +33,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ image,description,title,price
             </div>
             <CardContent className="p-6">
                 <h3 className="text-2xl font-bold mb-2 text-white">{title}</h3>
-                <p className="text-sm text-muted-foreground mb-2">{category}</p>
+                <p className="text-sm text-muted-foreground mb-2">
+                    {category}
+                    <p>{getCategoryName(category)}</p>
+                    </p>
                 <p className="text-sm">{description.slice(0, 95)}...</p>
             </CardContent>
             <CardFooter className="p-6 pt-0">

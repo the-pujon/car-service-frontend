@@ -168,11 +168,12 @@ export default function Services() {
           <RadioGroup
             value={selectedCategory}
             onValueChange={handleRadioChange}
+            className="flex flex-col gap-0"
           >
             {categories.map((category) => (
               <div
                 key={category.value}
-                className="flex items-center gap-2 py-2 border-b hover:bg-secondary rounded-md px-2 transition-colors"
+                className="flex items-center gap-2 py-3 border-b hover:bg-secondary rounded-md px-4 transition-colors duration-300 ease-in-out"
               >
                 <RadioGroupItem value={category.value} id={category.value} />
                 <Label htmlFor={category.value} className="cursor-pointer">
