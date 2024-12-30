@@ -190,15 +190,15 @@ const ServiceManagement = () => {
                             services.data.map((service: any) => (
                                 <TableRow key={service._id}>
                                     <TableCell>{service.name}</TableCell>
-                                    <TableCell>{service.description}</TableCell>
+                                    <TableCell className="w-96">{service.description.slice(0, 80)}...</TableCell>
                                     <TableCell>${service.price}</TableCell>
                                     <TableCell>{service.duration} minutes</TableCell>
                                     <TableCell className="capitalize">{service.category}</TableCell>
                                     <TableCell>
                                         <TooltipProvider>
                                             <Tooltip>
-                                                <TooltipTrigger>
-                                                    {service.benefits.slice(0,2).join(', ')}
+                                                <TooltipTrigger className="text-start">
+                                                    {service.benefits.slice(0,1)}
                                                     {service.benefits.length > 2 && '...'}
                                                 </TooltipTrigger>
                                                 <TooltipContent>
@@ -213,7 +213,7 @@ const ServiceManagement = () => {
                                     <TableCell>
                                         <TooltipProvider>
                                             <Tooltip>
-                                                <TooltipTrigger>
+                                                <TooltipTrigger className="text-start">
                                                     {service.suitableFor.slice(0,2).join(', ')}
                                                     {service.suitableFor.length > 2 && '...'}
                                                 </TooltipTrigger>
