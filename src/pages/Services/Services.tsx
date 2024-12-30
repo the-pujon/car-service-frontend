@@ -226,7 +226,7 @@ export default function Services() {
         <AnimatePresence>
     {isSidebarOpen && (
         <motion.div
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+            className="md:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
@@ -234,7 +234,7 @@ export default function Services() {
         >
             <div className="relative w-3/4 bg-background h-full shadow-lg flex flex-col">
                 <Button variant="ghost" className="absolute top-0 right-0" onClick={() => setIsSidebarOpen(false)}>
-                    <X className="h-10 w-10" />
+                    <X className="h-10 w-10" size={1000} />
                 </Button>
                 <div className="p-6 overflow-y-auto mt-4">
                     <div className="flex justify-between items-center mb-6">

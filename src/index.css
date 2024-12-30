@@ -35,6 +35,34 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Entire scrollbar */
+::-webkit-scrollbar {
+  width: 4px; /* Width of the vertical scrollbar */
+  height: 4px; /* Height of the horizontal scrollbar */
+}
+
+/* Scrollbar track */
+::-webkit-scrollbar-track {
+  background: hsl(var(--background)); /* Background of the scrollbar track */
+  border-radius: 10px; /* Optional: Rounded corners */
+}
+
+/* Scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--secondary)); /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Optional: Rounded corners */
+}
+
+/* Scrollbar thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Darker color on hover */
+}
+
+/* Scrollbar corner (intersection of horizontal and vertical scrollbars) */
+::-webkit-scrollbar-corner {
+  background: hsl(var(--background)); /* Matches the track background */
+}
+
 @layer base {
   * {
     @apply border-border;
