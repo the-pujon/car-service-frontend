@@ -10,6 +10,7 @@ import { Textarea } from '../ui/textarea';
 import { useGetServiceByIdQuery,useUpdateServiceMutation } from '@/redux/features/service/serviceApi';
 import { toast } from 'sonner';
 import { Select,SelectContent,SelectGroup,SelectItem,SelectTrigger,SelectValue } from '../ui/select';
+import { categories } from '@/utils/categoriesName';
 
 interface Service {
     _id: string;
@@ -25,15 +26,7 @@ interface Service {
 
 type ServiceFormData = Omit<Service,'_id'>;
 
-const categories = [
-    { value: 'basicWash',name: 'Basic Wash' },
-    { value: 'detailing',name: 'Detailing' },
-    { value: 'specialtyService',name: 'Specialty Service' },
-    { value: 'premiumPackages',name: 'Premium Packages' },
-    { value: 'ecoFriendly',name: 'Eco-Friendly Services' },
-    { value: 'convenience',name: 'Convenience Services' },
-    { value: 'additional',name: 'Additional Services' }
-];
+
 
 const UpdateService = ({ serviceId }: { serviceId: string }) => {
 

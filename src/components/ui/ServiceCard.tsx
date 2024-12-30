@@ -34,7 +34,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ image,description,title,price
             <CardContent className="p-6">
                 <h3 className="text-2xl font-bold mb-2 text-white">{title}</h3>
                 <p className="text-sm text-muted-foreground mb-2">
-                    {category}
+                    {/* {category} */}
                     <p>{getCategoryName(category)}</p>
                     </p>
                 <p className="text-sm">{description.slice(0, 95)}...</p>
